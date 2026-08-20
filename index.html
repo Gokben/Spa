@@ -1,0 +1,536 @@
+<?php
+// Bu şablon mevcut PHP projenize dahil edilebilir. action değerini kendi kayıt
+// endpoint'inizle değiştirin; input name değerleri backend sözleşmeniz için korunur.
+?>
+<!doctype html>
+<html lang="tr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Yeni Hasta Kaydı</title>
+  <style>
+    :root { --brand:#107c41; --brand-dark:#0b5c30; --ink:#1f2937; --muted:#5f6b7a; --line:#d7dde6; --canvas:#f3f5f7; --surface:#fff; --focus:#0067c0; }
+    * { box-sizing:border-box; } body { margin:0; background:var(--canvas); color:var(--ink); font:14px/1.4 "Segoe UI", system-ui, sans-serif; }
+    .app { max-width:1440px; margin:auto; min-height:100vh; display:grid; grid-template-columns:240px 1fr; }
+    .sidebar { background:#fff; border-right:1px solid var(--line); padding:20px 12px; }
+    .brand { display:flex; gap:10px; align-items:center; padding:10px 12px 24px; font-size:18px; font-weight:650; }
+    .brand-mark,.section-icon { display:grid; place-items:center; width:32px; height:32px; border-radius:8px; background:#e7f4ec; color:var(--brand); font-weight:800; }
+    .nav-label { color:var(--muted); font-size:12px; padding:10px 12px 6px; } .nav a { display:flex; gap:12px; align-items:center; border-radius:6px; color:#344054; padding:11px 12px; text-decoration:none; margin:2px 0; } .nav a.active,.nav a:hover { background:#e8f3eb; color:var(--brand-dark); font-weight:600; }
+    main { padding:32px; } .topbar { display:flex; justify-content:space-between; align-items:center; gap:16px; margin-bottom:24px; } h1 { font-size:28px; margin:0 0 4px; letter-spacing:-.3px; } .subtitle { color:var(--muted); margin:0; }
+    .actions,.footer-actions { display:flex; gap:10px; } button { border:1px solid var(--line); background:#fff; border-radius:6px; padding:9px 15px; font:inherit; font-weight:600; color:#344054; cursor:pointer; } button:hover { background:#f7f9fb; } .primary { border-color:var(--brand); background:var(--brand); color:#fff; } .primary:hover { background:var(--brand-dark); }
+    form { display:grid; grid-template-columns:minmax(360px,1fr) minmax(360px,1fr); gap:18px; } .card { background:var(--surface); border:1px solid #e3e7ed; border-radius:10px; box-shadow:0 1px 2px rgba(16,24,40,.04); padding:22px; } .card.primary-card { grid-row:span 2; }
+    .card-heading { display:flex; align-items:center; gap:10px; font-size:17px; font-weight:650; margin:0 0 20px; padding-bottom:14px; border-bottom:1px solid var(--line); } .section-icon { width:28px; height:28px; border-radius:50%; font-size:13px; }
+    .field-grid { display:grid; grid-template-columns:1fr 1fr; gap:16px; } .field { display:grid; gap:6px; } .field.full { grid-column:1/-1; } label,legend { color:#344054; font-size:13px; font-weight:600; } .required { color:#c62828; }
+    input,select,textarea { width:100%; min-height:40px; border:1px solid #b9c3d0; background:#fff; border-radius:5px; padding:9px 11px; color:var(--ink); font:inherit; outline:none; } textarea { min-height:84px; resize:vertical; } input:focus,select:focus,textarea:focus { border-color:var(--focus); box-shadow:0 0 0 2px rgba(0,103,192,.15); }
+    .rating { display:flex; gap:4px; } .rating button { border:0; padding:0; background:transparent; color:#98a2b3; font-size:26px; line-height:1; } .rating button.selected { color:#f2a900; } fieldset { border:0; padding:0; margin:0; } .radios { display:flex; gap:20px; padding-top:7px; } .radios label { display:flex; gap:7px; align-items:center; font-weight:400; } .radios input { width:16px; min-height:auto; accent-color:var(--brand); }
+    .form-footer { grid-column:1/-1; position:sticky; bottom:12px; display:flex; align-items:center; justify-content:space-between; gap:16px; padding:16px 20px; background:rgba(255,255,255,.96); backdrop-filter:blur(10px); border:1px solid var(--line); border-radius:10px; box-shadow:0 8px 24px rgba(16,24,40,.1); } .hint { color:var(--muted); font-size:13px; }
+    @media (max-width:900px) { .app { grid-template-columns:1fr; } .sidebar { display:none; } main { padding:20px; } form { grid-template-columns:1fr; } .card.primary-card { grid-row:auto; } } @media (max-width:560px) { main { padding:14px; } .topbar,.form-footer { align-items:flex-start; flex-direction:column; } .field-grid { grid-template-columns:1fr; } .field.full { grid-column:auto; } .footer-actions { width:100%; } .footer-actions button { flex:1; } }
+    /* Windows XP inspired presentation layer */
+    body { background:#3a6ea5; font-family:Tahoma, "Segoe UI", sans-serif; }
+    .app { max-width:1500px; background:#ece9d8; border:1px solid #003c74; box-shadow:0 0 0 1px #fff, 0 12px 35px rgba(0,0,0,.35); }
+    .sidebar { background:linear-gradient(180deg,#245edb 0,#3f8cf3 14%,#2b6ed1 100%); border-right:2px solid #fff; color:#fff; }
+    .brand { margin:-8px -4px 18px; padding:13px 12px; color:#fff; background:linear-gradient(180deg,#0a58d8,#0744a5); border:1px solid #003c74; border-radius:7px 7px 0 0; text-shadow:1px 1px #003c74; }
+    .brand-mark { background:linear-gradient(#54c85c,#159229); color:#fff; border:1px solid #fff; border-radius:5px; box-shadow:inset 1px 1px rgba(255,255,255,.6); }
+    .nav-label { color:#dceaff; font-weight:bold; text-shadow:1px 1px #124797; }
+    .nav a { color:#fff; border:1px solid transparent; text-shadow:1px 1px #124797; }
+    .nav a:hover,.nav a.active { color:#003399; background:linear-gradient(90deg,#fff,#d6e8ff); border-color:#fff; text-shadow:none; }
+    main { background:linear-gradient(135deg,#f5f3e9 0,#dfe9f4 100%); }
+    .topbar { padding:12px 16px; background:linear-gradient(180deg,#3c8cf3 0,#1764d5 12%,#0a4eae 100%); border:1px solid #003c74; border-radius:7px 7px 0 0; box-shadow:inset 1px 1px rgba(255,255,255,.65); }
+    h1 { color:#fff; font-size:22px; text-shadow:1px 1px #003c74; } .subtitle { color:#e7f1ff; }
+    .card { background:#f5f4ea; border:1px solid #7f9db9; border-radius:3px; box-shadow:inset 1px 1px #fff, 2px 2px 4px rgba(0,0,0,.15); }
+    .card-heading { margin:-22px -22px 20px; padding:8px 12px; color:#fff; background:linear-gradient(180deg,#2f83ed,#0a55c5); border-bottom:1px solid #003c74; font-size:15px; text-shadow:1px 1px #003c74; }
+    .section-icon { background:#fff; color:#0755bd; border:1px solid #003c74; }
+    input,select,textarea { border:1px solid #7f9db9; border-radius:0; box-shadow:inset 1px 1px 2px rgba(0,0,0,.16); font-family:Tahoma,sans-serif; }
+    input:focus,select:focus,textarea:focus { border-color:#003c74; box-shadow:0 0 0 1px #ffcc66,inset 1px 1px 2px rgba(0,0,0,.15); }
+    button { color:#111; background:linear-gradient(#fff,#ece9d8); border:1px solid #003c74; border-radius:3px; box-shadow:inset 1px 1px #fff,1px 1px #7f9db9; font-family:Tahoma,sans-serif; }
+    button:hover { background:linear-gradient(#fff7d6,#ffd27a); }
+    .primary { color:#fff; background:linear-gradient(#62d169,#159229); border-color:#09621a; text-shadow:1px 1px #075612; }
+    .primary:hover { background:linear-gradient(#7be57d,#21a434); }
+    .form-footer { background:#ece9d8; border-color:#7f9db9; border-radius:3px; box-shadow:inset 1px 1px #fff,2px 2px 4px rgba(0,0,0,.18); }
+    /* Compact desktop-application density */
+    main { padding:16px 20px; }
+    .topbar { margin-bottom:12px; padding:8px 10px; }
+    h1 { font-size:18px; } .subtitle { font-size:11px; }
+    form { max-width:1120px; grid-template-columns:1.05fr .95fr; gap:10px; }
+    .card { padding:13px; }
+    .card-heading { margin:-13px -13px 12px; padding:5px 8px; font-size:13px; }
+    .section-icon { width:20px; height:20px; font-size:10px; }
+    .field-grid { gap:8px 10px; }
+    .field { gap:3px; }
+    label,legend { font-size:11px; }
+    input,select,textarea { min-height:28px; height:28px; padding:3px 7px; font-size:12px; }
+    textarea { height:48px; min-height:48px; }
+    .radios { padding-top:3px; gap:14px; }
+    .radios input { height:13px; width:13px; }
+    .rating button { font-size:19px; }
+    button { padding:5px 11px; font-size:12px; }
+    .form-footer { padding:8px 10px; bottom:6px; }
+    .hint { font-size:11px; }
+    .field-grid { grid-template-columns:230px 230px; justify-content:start; }
+    .field { width:230px; }
+    .field.full { width:470px; max-width:100%; }
+    .field.full input,.field.full select,.field.full textarea { width:470px; max-width:100%; }
+    .radios,.rating { width:max-content; }
+    @media (max-width:1100px) { .field-grid { grid-template-columns:minmax(0,1fr); } .field,.field.full { width:100%; } .field.full { grid-column:auto; } input,select,textarea,.field.full input,.field.full select,.field.full textarea { width:100%; } }
+    /* Four compact fields per desktop row */
+    form { max-width:1040px; grid-template-columns:1fr; }
+    .card.primary-card { grid-row:auto; }
+    .field-grid { grid-template-columns:repeat(4,210px); gap:8px 12px; }
+    .field { width:210px; }
+    .field.full { grid-column:span 2; width:432px; }
+    .field.full input,.field.full select,.field.full textarea { width:432px; }
+    @media (max-width:1050px) { .field-grid { grid-template-columns:repeat(2,210px); } }
+    @media (max-width:560px) { .field-grid { grid-template-columns:1fr; } .field,.field.full { width:100%; grid-column:auto; } input,select,textarea,.field.full input,.field.full select,.field.full textarea { width:100%; } }
+    /* Browser-based XP desktop shell */
+    html,body { width:100%; height:100%; overflow:hidden; }
+    [hidden] { display:none !important; }
+    body { background:radial-gradient(ellipse at 52% 48%,#082c67 0%,#041f54 58%,#011238 100%); }
+    body:before { display:none; }
+    .login-screen { position:fixed; z-index:20000; inset:0; display:flex; align-items:center; justify-content:center; padding:20px; background:linear-gradient(135deg,rgba(2,34,20,.93),rgba(5,111,52,.82)),url('wallpaper-green.png') center/cover; transition:opacity .32s ease,visibility .32s; }
+    .login-screen.hidden { opacity:0; visibility:hidden; pointer-events:none; }
+    .login-panel { width:370px; padding:25px 28px 22px; background:rgba(255,255,255,.96); border:1px solid #d7e6dc; border-radius:8px; box-shadow:0 18px 55px rgba(0,0,0,.42); }
+    .login-logo { display:block; width:190px; height:auto; margin:0 auto 18px; }
+    .login-title { margin:0 0 4px; color:#123622; text-align:center; font:bold 19px Tahoma; } .login-subtitle { margin:0 0 20px; color:#627269; text-align:center; font-size:11px; }
+    .login-field { display:grid; gap:5px; margin-bottom:12px; } .login-field label { color:#263c31; font-size:11px; }
+    .login-field input { height:34px; padding:7px 9px; border:1px solid #9db2a5; border-radius:4px; font-size:12px; box-shadow:inset 1px 1px 2px rgba(0,0,0,.08); }
+    .login-field input:focus { border-color:#078634; box-shadow:0 0 0 2px rgba(7,134,52,.15); }
+    .login-options { display:flex; justify-content:space-between; align-items:center; margin:2px 0 16px; color:#526158; font-size:10px; } .login-options label { display:flex; align-items:center; gap:6px; } .login-options input { width:13px; height:13px; min-height:0; accent-color:#078634; }
+    .login-submit { width:100%; height:35px; color:#fff; border-color:#075c2a; border-radius:4px; background:linear-gradient(#48c56e,#078634); text-shadow:1px 1px #075c2a; font:bold 12px Tahoma; }
+    .login-submit:hover { background:linear-gradient(#62d582,#09953d); }
+    .login-error { min-height:17px; margin:9px 0 0; color:#b42318; text-align:center; font-size:10px; }
+    .desktop-status { display:none; }
+    .desktop-status img { display:block; width:100%; height:auto; }
+    .desktop-icons { display:none; }
+    .desktop-icon { position:absolute; width:90px; border:0; background:transparent; color:#fff; box-shadow:none; text-shadow:1px 1px 2px #003c74; padding:0; text-align:center; font:12px Tahoma,sans-serif; pointer-events:auto; touch-action:none; cursor:default; }
+    .desktop-icon:nth-child(1){left:24px;top:82px}.desktop-icon:nth-child(2){left:138px;top:82px}.desktop-icon:nth-child(3){left:24px;top:178px}.desktop-icon:nth-child(4){left:138px;top:178px}
+    .desktop-icon.dragging { opacity:.8; cursor:move; z-index:4; background:transparent; outline:none; }
+    .desktop-icon:hover { background:rgba(49,106,197,.45); outline:1px dotted #fff; }
+    .desktop-icon .ico { display:block; margin:0 auto 5px; width:54px; height:48px; font-size:38px; line-height:48px; filter:drop-shadow(2px 3px 1px rgba(0,0,0,.35)); }
+    .desktop-icon .ico svg { display:block; width:54px; height:48px; }
+    .app { position:fixed; z-index:5; top:8vh; right:4vw; width:min(1080px,76vw); height:82vh; min-height:0; margin:0; display:block; overflow:hidden; background:#d8e5f5; border:1px solid #003c74; border-radius:5px 5px 0 0; box-shadow:1px 1px 0 #fff inset,3px 5px 10px rgba(0,0,0,.35); }
+    .sidebar { display:none; }
+    main { height:100%; padding:0 7px 9px; overflow:auto; background:#dfe9f6; }
+    .topbar { position:sticky; z-index:10; top:0; height:27px; margin:0 -7px 6px; padding:3px 5px 3px 8px; border-radius:4px 4px 0 0; background:linear-gradient(180deg,#4b96f5 0,#1464d2 18%,#0751bd 72%,#2b7ae5 100%); }
+    .topbar h1 { font-size:12px; line-height:20px; } .topbar .subtitle { display:none; }
+    .topbar .actions { gap:3px; }
+    .topbar .actions button { width:22px; height:20px; padding:0; overflow:hidden; font-size:0; color:#fff; border-color:#fff; background:linear-gradient(#77aaf2,#226ed0); }
+    .topbar .actions button:first-child:after { content:"×"; font:bold 15px Tahoma; }
+    .topbar .actions .primary:after { content:"✓"; font:bold 12px Tahoma; }
+    form { max-width:none; grid-template-columns:1fr; gap:5px; }
+    .card { padding:10px 8px 7px; border:1px solid #7f9db9; background:#e5edf8; box-shadow:inset 1px 1px #fff; }
+    .card-heading { margin:-10px -8px 7px; padding:3px 6px; height:22px; color:#003c74; background:linear-gradient(#f7fbff,#c4daf3); border-bottom:1px solid #7f9db9; text-shadow:none; }
+    .section-icon { width:15px; height:15px; border:0; background:transparent; }
+    .field-grid { grid-template-columns:repeat(4,minmax(150px,1fr)); gap:5px 8px; }
+    .field,.field.full { width:auto; min-width:0; }
+    .field.full { grid-column:span 2; }
+    .field.full input,.field.full select,.field.full textarea { width:100%; }
+    label,legend { font-size:10px; }
+    input,select,textarea { width:100%; height:23px; min-height:23px; padding:2px 5px; font-size:11px; }
+    textarea { height:39px; min-height:39px; }
+    .form-footer { position:static; padding:4px 7px; margin-top:0; }
+    .taskbar { position:fixed; z-index:20; left:0; right:0; bottom:0; height:31px; display:flex; align-items:center; gap:5px; padding:2px 7px 2px 0; background:linear-gradient(#3e8cec,#0b56c4 48%,#0847a7 52%,#1c68d5); border-top:1px solid #8fc5ff; }
+    .start-button { height:28px; padding:0 13px 0 7px; border:1px solid #1f2e3c; border-radius:0 3px 3px 0; color:#071a2c; background:linear-gradient(#fff,#d8e0e7 48%,#aab6c0 52%,#eef3f7); font:bold 11px Tahoma; text-shadow:1px 1px #fff; box-shadow:inset 1px 1px #fff; }
+    .start-button:hover { background:linear-gradient(#fffde8,#f3d68e); }
+    .task-item { min-width:165px; height:25px; padding:4px 10px; color:#fff; background:linear-gradient(#4895ed,#1962bf); border:1px solid #0b3b82; box-shadow:inset 1px 1px rgba(255,255,255,.35); }
+    .task-item.active { background:linear-gradient(#164d9d,#0b377a); }
+    .task-item:hover { background:linear-gradient(#6aa9ef,#276fc5); border-color:#c5e3ff; }
+    .task-item.active:hover { background:linear-gradient(#255fa9,#0d3e83); }
+    .window-motion { transition:transform .38s cubic-bezier(.4,0,.55,1),opacity .38s ease; transform-origin:top left; pointer-events:none; }
+    .window-minimizing { transform:translate(var(--task-x),var(--task-y)) scale(.16,.06); opacity:.12; }
+    .tray { margin-left:auto; color:#fff; font-size:11px; padding:5px 10px; border-left:1px solid #2f8cf1; }
+    .start-menu { position:fixed; z-index:19; left:0; bottom:31px; width:298px; height:330px; padding:5px; display:grid; grid-template-columns:143px 1fr; grid-template-rows:20px 1fr; background:#3f4346; border:1px solid #1d262e; box-shadow:3px 3px 10px rgba(0,0,0,.45); transform:scaleY(.04); transform-origin:left bottom; opacity:0; visibility:hidden; transition:transform .34s cubic-bezier(.3,0,.2,1),opacity .22s ease,visibility 0s linear .34s; }
+    .start-menu.open { transform:scaleY(1); opacity:1; visibility:visible; transition:transform .34s cubic-bezier(.3,0,.2,1),opacity .22s ease; }
+    .start-menu h3 { grid-column:1/-1; margin:0; padding:0 17px; color:#fff; background:#3f4346; font:bold 11px Tahoma; line-height:20px; }
+    .start-left { display:flex; flex-direction:column; padding:5px 0; background:#fff; border:1px solid #232c34; }
+    .start-right { display:flex; flex-direction:column; padding:5px 0; color:#fff; background:#3f4346; }
+    .start-user { padding:2px 7px 7px; color:#a8d6ff; font:bold 10px Tahoma; }
+    .start-menu a { position:relative; display:block; padding:6px 9px; color:#111; text-decoration:none; font:10px Tahoma; }
+    .start-left a.has-submenu:after { content:"▶"; position:absolute; right:9px; color:#1872c7; font-size:9px; }
+    .start-right a { color:#fff; font-weight:bold; padding-left:27px; }
+    .start-menu a:hover { background:#316ac5; color:#fff; }
+    /* Left navigation adapted from the application menu. */
+    .start-menu { width:212px; height:calc(100vh - 31px); padding:0; display:block; overflow:auto; background:#3d86e8; border:0; border-right:1px solid #fff; box-shadow:2px 0 8px rgba(0,0,0,.18); transform:translateX(-100%); transform-origin:left center; }
+    .start-menu.open { transform:translateX(0); }
+    .start-menu h3 { display:none; }
+    .menu-brand { display:flex; align-items:center; gap:10px; height:66px; margin:0 8px 12px; padding:0 12px; color:#fff; background:linear-gradient(135deg,#1a65cf,#0e4fae); border:1px solid rgba(255,255,255,.38); border-radius:7px; box-shadow:inset 0 1px rgba(255,255,255,.18),0 2px 5px rgba(0,40,110,.25); font:700 16px/1 "Segoe UI",Tahoma,sans-serif; text-shadow:1px 1px rgba(0,34,100,.6); }
+    .menu-brand:before { content:""; display:block; flex:0 0 40px; width:40px; height:32px; background:url('VOX-Logo-transparent.png') center/contain no-repeat; }
+    .menu-section { display:block; margin:0 17px 8px; color:#e7f1ff; font:700 11px/1 "Segoe UI",Tahoma,sans-serif; letter-spacing:.35px; text-shadow:1px 1px rgba(0,47,120,.6); }
+    .menu-logo { display:block; width:136px; height:72px; margin:10px auto 12px; background:url('VOX-Logo-transparent.png') center/contain no-repeat; }
+    .start-left,.start-right { display:block; padding:14px 0 6px; color:#fff; background:transparent; border:0; }
+    .start-right { padding-top:0; }
+    .start-user { display:none; }
+    .start-menu a,.start-right a { display:flex; align-items:center; min-height:38px; margin:2px 8px; padding:7px 10px; color:#fff; font:14px/1.2 "Segoe UI",Tahoma,sans-serif; font-weight:400; text-shadow:1px 1px rgba(0,51,125,.62); transition:background .16s ease,color .16s ease,transform .16s ease,box-shadow .16s ease; }
+    .start-menu a:before { content:"○"; width:20px; margin-right:14px; color:#e7f1ff; font:17px/1 Arial,sans-serif; text-align:center; }
+    .start-left a:nth-child(1):before { content:"⌂"; }.start-left a:nth-child(2):before { content:"▯"; }.start-left a:nth-child(3):before { content:"▣"; }.start-left a:nth-child(4):before { content:"☷"; }
+    .start-left a:nth-child(5):before { content:"◌"; }.start-left a:nth-child(6):before { content:"◉"; }.start-left a:nth-child(7):before { content:"▰"; }.start-left a:nth-child(8):before { content:"☑"; }.start-left a:nth-child(9):before { content:"▤"; }.start-left a:nth-child(10):before { content:"◇"; }.start-left a:nth-child(11):before { content:"⚒"; }.start-left a:nth-child(12):before { content:"▣"; }.start-left a:nth-child(13):before { content:"▧"; }.start-left a:nth-child(14):before { content:"▥"; }.start-left a:nth-child(15):before { content:"⌁"; }
+    .start-right a:nth-child(1):before { content:"◌"; }.start-right a:nth-child(2):before { content:"⚙"; }.start-right a:nth-child(3):before { content:"⌘"; }.start-right a:nth-child(4):before { content:"↪"; }
+    .start-left a.has-submenu:after { display:none; }
+    .start-menu a:hover,.start-menu a.active { color:#0a4da5; background:linear-gradient(135deg,#f3f8ff,#dbeaff); border-radius:6px; text-shadow:none; font-weight:600; box-shadow:0 1px 2px rgba(0,52,124,.14); transform:translateX(2px); }
+    .start-menu a:hover:before,.start-menu a.active:before { color:#0a4da5; }
+    .start-left a.submenu-toggle:after { content:"›"; margin-left:auto; color:inherit; font:700 21px/1 Arial; transition:transform .2s ease; }
+    .start-left a.submenu-toggle.expanded:after { transform:rotate(90deg); }
+    .submenu { max-height:0; margin:0 8px; overflow:hidden; opacity:0; transition:max-height .25s ease,opacity .18s ease; }
+    .submenu.open { max-height:260px; opacity:1; }
+    .submenu a { min-height:31px; margin:1px 0; padding:5px 9px 5px 40px; font-size:12px; }
+    .submenu a:before { content:"○"; width:13px; margin-right:8px; font-size:12px; }
+    body:after { content:""; position:fixed; z-index:1; inset:0 0 31px; pointer-events:none; background:url('VOX-Logo-transparent.png') center/min(54vw,620px) auto no-repeat; opacity:.16; }
+    .wallpaper-picker { position:fixed; left:212px; bottom:31px; width:330px; padding:8px; display:none; grid-template-columns:repeat(3,1fr); gap:7px; background:#3f4346; border:1px solid #1d262e; box-shadow:3px 3px 10px rgba(0,0,0,.45); }
+    .wallpaper-picker.open { display:grid; }
+    .picker-label { grid-column:1/-1; padding:1px 2px; color:#fff; font:bold 10px Tahoma; }
+    .wallpaper-picker button { height:72px; padding:0; overflow:hidden; border:2px solid #dbe6ef; border-radius:2px; background-size:cover; background-position:center; box-shadow:none; }
+    .wallpaper-picker button:hover,.wallpaper-picker button.active { border-color:#ffd45f; outline:1px solid #fff; }
+    .wallpaper-picker span { align-self:end; padding:3px; color:#fff; background:rgba(0,0,0,.65); font:9px Tahoma; }
+    .wallpaper-picker .theme-swatch { height:42px; background-image:none; }
+    .theme-swatch[data-theme="gray"] { background:linear-gradient(#f2f2f2,#8f969d); }
+    .theme-swatch[data-theme="green"] { background:linear-gradient(#65d582,#078634); }
+    .theme-swatch[data-theme="blue"] { background:linear-gradient(#72b8fa,#176ac2); }
+    .aux-window { position:fixed; z-index:8; width:640px; height:430px; min-width:360px; min-height:240px; overflow:hidden; background:#e5f1e9; border:1px solid #075c2a; box-shadow:3px 5px 12px rgba(0,0,0,.38); }
+    .aux-window .aux-titlebar { display:flex; align-items:center; height:27px; padding:3px 4px 3px 8px; color:#fff; cursor:move; user-select:none; background:linear-gradient(#54ce76,#078634 72%,#2db65a); font:bold 11px Tahoma; }
+    .aux-titlebar .window-controls { margin-left:auto; }
+    .aux-content { height:calc(100% - 27px); padding:7px; overflow:auto; background:#edf7f0; }
+    .aux-toolbar { display:flex; gap:3px; align-items:center; height:27px; padding:2px 4px; margin:-7px -7px 7px; background:linear-gradient(#f8fbff,#c9dcf4); border-bottom:1px solid #7f9db9; }
+    .aux-toolbar button { padding:2px 6px; height:21px; font-size:10px; background:transparent; border:1px solid transparent; box-shadow:none; }
+    .aux-toolbar button:hover { background:#fff2bd; border-color:#dfa640; }
+    .patient-list-shell { height:calc(100% - 34px); display:flex; flex-direction:column; padding:5px; background:#eaf5ed; border:1px solid #67a97a; box-shadow:inset 0 0 0 2px #f7fcf8; }
+    .aux-window[data-window-id="listeler"] .aux-toolbar { background:linear-gradient(#fbfffc,#cde9d5); border-bottom-color:#78aa86; }
+    .aux-window[data-window-id="listeler"] .aux-toolbar button:hover { background:#e2f5e7; border-color:#63a978; }
+    .patient-list-caption { height:22px; display:flex; align-items:center; padding:0 7px; color:#075c2a; background:linear-gradient(#fbfffc,#cde9d5); border:1px solid #79b68a; font:bold 11px Tahoma; }
+    .patient-list-filters { display:grid; grid-template-columns:auto minmax(220px,1fr) auto 145px; gap:4px; align-items:center; height:31px; padding:3px 6px; margin:4px 0; background:linear-gradient(#fbfffc,#d8ecdd); border:1px solid #79ac87; }
+    .patient-list-filters label { display:contents; color:#164d29; font:bold 10px Tahoma; }
+    .patient-list-filters input,.patient-list-filters select { width:100%; height:21px; min-height:21px; padding:1px 4px; border:1px solid #7da28a; border-radius:0; background:#fff; font:10px Tahoma; }
+    .patient-grid-wrap { flex:1; min-height:0; overflow:auto; background:#fff; border:1px solid #79a988; }
+    .aux-grid { width:100%; border-collapse:collapse; table-layout:fixed; background:#fff; color:#000; font:10px Tahoma; }
+    .aux-grid th,.aux-grid td { height:22px; padding:2px 6px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; text-align:left; border-right:1px solid #c7d4e2; border-bottom:1px solid #dce4ed; }
+    .aux-grid th { height:23px; color:#183d25; background:linear-gradient(#fff,#d8eadc); border-bottom:1px solid #82a98d; font-weight:bold; }
+    .patient-table th { position:relative; padding-right:22px; overflow:visible; }
+    .column-menu-button { position:absolute; top:1px; right:4px; width:18px; height:19px; padding:0; color:#244f83; background:linear-gradient(#fff,#d7e2f0); border:1px solid #8ba2bd; border-radius:0; box-shadow:inset 1px 1px #fff; font:bold 9px Tahoma; }
+    .column-resizer { position:absolute; z-index:3; top:0; right:-3px; width:7px; height:100%; cursor:col-resize; touch-action:none; }
+    .column-resizer:hover,.column-resizer.dragging { background:rgba(22,129,58,.3); }
+    body.column-resizing,body.column-resizing * { cursor:col-resize !important; user-select:none !important; }
+    .column-menu-button:hover,.column-menu-button.open { background:linear-gradient(#fff8d7,#f2c66d); border-color:#b9892e; }
+    .column-context-menu { position:fixed; z-index:30000; width:155px; padding:2px; color:#111; background:#f2f2f2; border:1px solid #71869c; box-shadow:2px 3px 7px rgba(0,0,0,.35); font:10px Tahoma; }
+    .column-context-menu button { width:100%; height:25px; display:flex; align-items:center; gap:7px; padding:3px 7px; text-align:left; color:#111; background:transparent; border:0; border-radius:0; box-shadow:none; font:10px Tahoma; }
+    .column-context-menu button:hover { color:#fff; background:#316ac5; }
+    .column-context-menu .menu-separator { height:1px; margin:2px 3px; background:#b7b7b7; border-bottom:1px solid #fff; }
+    .column-context-menu .columns-trigger { justify-content:space-between; }
+    .column-context-menu .columns-panel { position:absolute; top:52px; left:151px; width:150px; max-height:280px; overflow:auto; padding:3px; background:#f2f2f2; border:1px solid #71869c; box-shadow:2px 3px 7px rgba(0,0,0,.35); }
+    .column-context-menu .columns-panel label { height:23px; display:flex; align-items:center; gap:6px; padding:2px 5px; color:#111; white-space:nowrap; font:10px Tahoma; }
+    .column-context-menu .columns-panel label:hover { color:#fff; background:#316ac5; }
+    .column-context-menu .columns-panel input { width:13px; height:13px; min-height:0; margin:0; accent-color:#316ac5; }
+    .aux-grid tbody tr { cursor:default; } .aux-grid tbody tr:hover { background:#eff8f1; } .aux-grid tbody tr.selected { color:#075c2a; background:#c9e8d1; outline:1px dotted #43845a; outline-offset:-1px; }
+    .status-badge { color:inherit; background:none; border:0; padding:0; font:inherit; }
+    .list-pager { display:flex; align-items:center; gap:3px; height:27px; padding:2px 5px; margin-top:4px; color:#173d24; background:linear-gradient(#f8fcf9,#cee7d5); border:1px solid #79a988; font:10px Tahoma; }
+    .list-pager button { width:20px; height:20px; padding:0; color:#16813a; background:transparent; border:0; box-shadow:none; font:10px Tahoma; } .list-pager button:hover { background:#e2f5e7; border:1px solid #63a978; }
+    .list-pager input { width:38px; height:20px; min-height:20px; padding:1px 3px; text-align:right; border:1px solid #9db3ca; border-radius:0; font:10px Tahoma; } .list-count { margin-left:auto; font-weight:bold; }
+    .aux-window.maximized { top:0 !important; left:0 !important; width:100vw !important; height:calc(100vh - 31px) !important; }
+    .desktop-icon.selected { background:rgba(49,106,197,.5); outline:1px dotted #fff; }
+    .classic-tool-button { display:inline-grid; place-items:center; width:20px; height:20px; min-width:20px; padding:0; color:#245d9c; background:linear-gradient(#fff,#dce8f6); border:1px solid #8ba8c7; border-radius:1px; box-shadow:inset 1px 1px #fff; font:bold 12px Tahoma; }
+    .classic-tool-button:hover { background:linear-gradient(#fffde9,#ffd985); border-color:#d29a32; }
+    .lookup-field { display:flex; width:100%; } .lookup-field input { flex:1; min-width:0; border-right:0; } .lookup-field .classic-tool-button { height:23px; }
+    .select-shell { position:relative; display:block; width:100%; }
+    .select-shell select { appearance:none; padding-right:23px; }
+    .select-arrow { position:absolute; pointer-events:none; top:1px; right:1px; bottom:1px; width:19px; display:grid; place-items:center; color:#244f83; background:linear-gradient(#fff,#d7e2f0); border-left:1px solid #8ba2bd; font:bold 10px Tahoma; }
+    .date-field { display:flex; width:100%; } .date-field input { flex:1; min-width:0; border-right:0; } .date-field .classic-tool-button { height:23px; }
+    .compact-calendar { position:fixed; z-index:9999; width:178px; padding:4px; color:#17283d; background:#fff; border:1px solid #6e8ead; box-shadow:2px 3px 8px rgba(0,0,0,.3); font:10px Tahoma,sans-serif; }
+    .calendar-head { display:grid; grid-template-columns:22px 1fr 22px; align-items:center; margin-bottom:3px; background:#dce9f8; border:1px solid #aac0d9; }
+    .calendar-head button { width:20px; height:20px; padding:0; border:0; box-shadow:none; background:transparent; color:#245d9c; }
+    .calendar-title { text-align:center; font-weight:bold; }
+    .calendar-grid { display:grid; grid-template-columns:repeat(7,1fr); gap:1px; }
+    .calendar-weekday { height:16px; display:grid; place-items:center; font-weight:bold; color:#34516f; }
+    .calendar-day { width:22px; height:20px; min-width:0; padding:0; border:1px solid transparent; border-radius:0; background:#fff; box-shadow:none; font:10px Tahoma; }
+    .calendar-day:hover { background:#fff1b8; border-color:#d9a73c; } .calendar-day.today { border-color:#3977b8; } .calendar-day.selected { color:#fff; background:#176ac2; }
+    .calendar-foot { display:flex; justify-content:space-between; padding-top:4px; margin-top:3px; border-top:1px solid #d7e0ea; }
+    .calendar-foot button { padding:2px 4px; border:0; box-shadow:none; background:transparent; color:#075bb5; font-size:10px; }
+    @media (max-width:900px) { .desktop-icons,.desktop-status { display:none; } .app { top:8px; left:8px; right:8px; width:auto; height:calc(100vh - 47px); } .field-grid { grid-template-columns:repeat(2,minmax(140px,1fr)); } }
+    /* Vox green window theme */
+    .app { border-color:#075c2a; background:#dcefe3; }
+    main { background:#e5f1e9; }
+    .topbar { background:linear-gradient(180deg,#54ce76 0,#21a64e 18%,#078634 72%,#2db65a 100%); border-color:#075c2a; }
+    .topbar .actions button { background:linear-gradient(#7be395,#169344); border-color:#d6ffe1; }
+    .card { background:#edf7f0; border-color:#70a985; }
+    .card-heading { color:#075c2a; background:linear-gradient(#fbfffc,#c6e7d1); border-bottom-color:#70a985; }
+    .section-icon { color:#078634; }
+    .form-footer { background:#dcebdd; border-color:#70a985; }
+    .start-menu { border-color:#fff; }
+    .start-menu h3 { background:linear-gradient(#45c86d,#078634); }
+    body.theme-gray .app,body.theme-gray .aux-window { border-color:#505860; background:#e7e9eb; }
+    body.theme-gray main,body.theme-gray .aux-content { background:#eef0f2; }
+    body.theme-gray .topbar,body.theme-gray .aux-titlebar { background:linear-gradient(#c8cdd1,#7b838a 65%,#a7adb2); border-color:#505860; }
+    body.theme-gray .card,body.theme-gray .patient-list-shell { background:#f1f2f3; border-color:#9ba1a6; }
+    body.theme-gray .card-heading,body.theme-gray .patient-list-caption,body.theme-gray .patient-list-filters { color:#30353a; background:linear-gradient(#fff,#d9dcdf); border-color:#a0a5aa; }
+    body.theme-gray .section-icon { color:#626a70; }
+    body.theme-gray .form-footer,body.theme-gray .list-pager { background:#e1e3e5; border-color:#9ba1a6; }
+    body.theme-blue .app,body.theme-blue .aux-window { border-color:#174f8a; background:#dce9f7; }
+    body.theme-blue main,body.theme-blue .aux-content { background:#eaf2fb; }
+    body.theme-blue .topbar,body.theme-blue .aux-titlebar { background:linear-gradient(#72b8fa,#176ac2 70%,#438fd8); border-color:#174f8a; }
+    body.theme-blue .card,body.theme-blue .patient-list-shell { background:#f0f6fc; border-color:#7fa8cf; }
+    body.theme-blue .card-heading,body.theme-blue .patient-list-caption,body.theme-blue .patient-list-filters { color:#174f8a; background:linear-gradient(#fff,#d2e4f6); border-color:#86abd0; }
+    body.theme-blue .section-icon { color:#176ac2; }
+    body.theme-blue .form-footer,body.theme-blue .list-pager { background:#dbe9f7; border-color:#7fa8cf; }
+    .window-controls { display:flex; gap:2px; margin-left:auto; }
+    .window-controls button { width:22px; height:20px; padding:0; color:#fff; border:1px solid #d8ffe2; border-radius:2px; background:linear-gradient(#69da88,#0b8437); font:bold 12px Tahoma; line-height:17px; }
+    .window-controls .window-close { background:linear-gradient(#ef8c75,#c8321d); border-color:#ffe1d8; }
+    .app.maximized { top:0 !important; left:0 !important; right:auto !important; width:100vw !important; height:calc(100vh - 31px) !important; border-radius:0; }
+    .app.maximized main { transform-origin:top left; max-height:none; }
+    .app.minimized { display:none; }
+    #window-titlebar { cursor:move; user-select:none; touch-action:none; }
+    #window-titlebar button { cursor:pointer; }
+    .window-resizer { display:none; }
+    .app.maximized .window-resizer { display:none; }
+    .app { touch-action:none; container-type:inline-size; max-width:100vw; max-height:calc(100vh - 31px); }
+    .app:not(.maximized) { height:auto; }
+    .app:not(.maximized) main { height:auto; max-height:calc(100vh - 31px); }
+    .app.frame-resizing,.app.frame-resizing * { user-select:none !important; }
+    @container (max-width:850px) { .field-grid { grid-template-columns:repeat(2,minmax(150px,1fr)); } }
+    @container (max-width:620px) { .field-grid { grid-template-columns:1fr; } .field.full { grid-column:auto; } }
+  </style>
+</head>
+<body>
+  <div class="login-screen" id="login-screen"><form class="login-panel" id="login-form"><img class="login-logo" src="VOX-Logo.jpg" alt="VOX İşitme Cihazları"><h1 class="login-title">Kullanıcı Girişi</h1><p class="login-subtitle">VOX yönetim sistemine erişmek için giriş yapın.</p><div class="login-field"><label for="login-user">Kullanıcı Adı</label><input id="login-user" name="username" autocomplete="username" autofocus></div><div class="login-field"><label for="login-password">Şifre</label><input id="login-password" name="password" type="password" autocomplete="current-password"></div><div class="login-options"><label><input type="checkbox" id="remember-user">Kullanıcı adını hatırla</label><span>Güvenli oturum</span></div><button class="login-submit" type="submit">Giriş Yap</button><p class="login-error" id="login-error" role="alert"></p></form></div>
+  <div class="desktop-status"><img src="VOX-Logo.jpg" alt="VOX İşitme Cihazları"></div>
+  <div class="desktop-icons"><button class="desktop-icon" data-open="patient" data-title="Yeni Hasta Kaydı"><span class="ico"><svg viewBox="0 0 54 48" aria-hidden="true"><path fill="#f4b629" stroke="#8a5a00" d="M3 10h19l4 5h25v28H3z"/><path fill="#ffd86a" stroke="#9d6b08" d="M3 16h48l-5 27H7z"/><circle cx="39" cy="31" r="10" fill="#fff" stroke="#137c3c"/><path stroke="#149447" stroke-width="4" d="M39 25v12M33 31h12"/></svg></span>Hasta Kartları</button><button class="desktop-icon" data-open="personeller" data-title="Personeller"><span class="ico"><svg viewBox="0 0 54 48" aria-hidden="true"><rect x="5" y="4" width="44" height="40" rx="3" fill="#2f9d49" stroke="#0b5720"/><path fill="#91d778" d="M9 9h36v30H9z"/><circle cx="21" cy="20" r="6" fill="#fff"/><path fill="#fff" d="M11 35c1-8 5-11 10-11s9 3 10 11z"/><circle cx="36" cy="19" r="5" fill="#eaffdf"/><path fill="#eaffdf" d="M29 34c1-7 3-10 7-10s7 3 8 10z"/></svg></span>Personeller</button><button class="desktop-icon" data-open="listeler" data-title="Hasta Listeleri"><span class="ico"><svg viewBox="0 0 54 48" aria-hidden="true"><rect x="8" y="3" width="38" height="42" rx="2" fill="#f5f1de" stroke="#5d6670"/><rect x="18" y="1" width="18" height="7" rx="2" fill="#7e8b98"/><path stroke="#3378bd" stroke-width="2" d="M18 15h21M18 23h21M18 31h21M18 39h15"/><path fill="#3aa14a" d="M11 12h5v5h-5zM11 20h5v5h-5zM11 28h5v5h-5zM11 36h5v5h-5z"/></svg></span>Listeler</button><button class="desktop-icon" data-open="evraklar" data-title="Evraklar"><span class="ico"><svg viewBox="0 0 54 48" aria-hidden="true"><path fill="#eaf3ff" stroke="#45698f" d="M9 3h25l11 11v31H9z"/><path fill="#b9d9f7" d="M34 3v12h11z"/><path stroke="#4e86ba" stroke-width="2" d="M15 20h24M15 27h24M15 34h19"/><circle cx="42" cy="37" r="9" fill="#f0b21f" stroke="#805600"/><path fill="#fff" d="M40 31h4v8h-4zM40 41h4v3h-4z"/></svg></span>Evraklar</button></div>
+  <div class="start-menu" id="start-menu"><h3>Menü</h3><div class="start-left"><a href="#">Ana Sayfa</a><a href="#">Hasta Kartları</a><a href="#">Takvim</a><a href="#">Görev Takip</a><a href="#">Listeler</a><a href="#">İşitme Cihazları</a><a href="#">Satışlar</a><a href="#">Sonuç Listesi</a><a href="#">SGK Listesi</a><a href="#">Stoklar</a><a href="#">Teknik Servis</a><a href="#">Ön Kasa</a><a href="#">Cari Kartlar</a><a href="#">Üniteler</a><a href="#">Saha Aksiyonları</a></div><div class="start-right"><a href="#" id="wallpaper-menu-button">Görünüm Ayarları</a><a href="#">Ayarlar</a><a href="#">Kurulum</a><a href="#" id="logout-button">Çıkış</a></div><div class="wallpaper-picker" id="wallpaper-picker"><div class="picker-label">Duvar Kâğıdı</div><button type="button" data-wallpaper="wallpaper-blue.png" style="background-image:url('wallpaper-blue.png')"><span>Mavi</span></button><button type="button" data-wallpaper="wallpaper-green.png" style="background-image:url('wallpaper-green.png')"><span>Yeşil</span></button><button type="button" data-wallpaper="wallpaper-purple.png" style="background-image:url('wallpaper-purple.png')"><span>Mor</span></button><div class="picker-label">Ekran Rengi</div><button type="button" class="theme-swatch" data-theme="gray"><span>Gri</span></button><button type="button" class="theme-swatch" data-theme="green"><span>Yeşil</span></button><button type="button" class="theme-swatch" data-theme="blue"><span>Mavi</span></button></div></div>
+  <div class="app" hidden>
+    <aside class="sidebar"><div class="brand"><span class="brand-mark">+</span> Klinik Paneli</div><nav class="nav"><div class="nav-label">YÖNETİM</div><a href="#">▦ Genel Bakış</a><a class="active" href="#">♙ Hastalar</a><a href="#">▣ Randevular</a><a href="#">▤ Raporlar</a></nav></aside>
+    <main>
+      <header class="topbar" id="window-titlebar"><div><h1>Yeni Hasta Kaydı</h1><p class="subtitle">Hasta bilgilerini girerek yeni bir kayıt oluşturun.</p></div><div class="window-controls"><button type="button" id="window-minimize" aria-label="Simge durumuna küçült">_</button><button type="button" id="window-maximize" aria-label="Tam ekran">□</button><button type="button" class="window-close" id="window-close" aria-label="Kapat">×</button></div></header>
+      <form id="patient-form" method="post" action="hasta-kaydet.php">
+        <section class="card primary-card"><h2 class="card-heading"><span class="section-icon">♙</span>Temel Bilgiler</h2><div class="field-grid">
+          <div class="field"><label for="ad_soyad">Ad Soyad <span class="required">*</span></label><input id="ad_soyad" name="ad_soyad" autocomplete="name" required></div>
+          <div class="field"><label for="tc_kimlik_no">T.C. Kimlik No</label><div class="lookup-field"><input id="tc_kimlik_no" name="tc_kimlik_no" inputmode="numeric" maxlength="11" placeholder="11 haneli T.C. Kimlik No"><button class="classic-tool-button" type="button" aria-label="Kimlik numarasıyla ara">⌕</button></div></div>
+          <div class="field"><label for="sube">Şube <span class="required">*</span></label><select id="sube" name="sube" required><option value="">Şube seçin</option><option>Merkez Şube</option></select></div>
+          <div class="field"><label for="kayit_tarihi">Kayıt Tarihi <span class="required">*</span></label><input id="kayit_tarihi" name="kayit_tarihi" type="text" inputmode="numeric" placeholder="gg.aa.yyyy" data-compact-date required></div>
+          <div class="field"><label for="dogum_tarihi">Doğum Tarihi</label><input id="dogum_tarihi" name="dogum_tarihi" type="text" inputmode="numeric" placeholder="gg.aa.yyyy" data-compact-date></div>
+          <div class="field"><label for="telefon1">Telefon 1</label><input id="telefon1" name="telefon1" type="tel" autocomplete="tel" placeholder="05xx xxx xx xx"></div>
+          <div class="field"><label for="yakinlik_derecesi">Yakınlık Derecesi</label><input id="yakinlik_derecesi" name="yakinlik_derecesi" placeholder="Kendisi, eşi, yakını..."></div>
+          <div class="field"><label for="telefon2">Telefon 2</label><input id="telefon2" name="telefon2" type="tel" placeholder="Telefon veya kişi bilgisi"></div>
+          <div class="field full"><label for="adres">Adres</label><textarea id="adres" name="adres" placeholder="Adres bilgilerini giriniz"></textarea></div>
+          <div class="field full"><label>Değerlendirme</label><div class="rating" role="radiogroup" aria-label="Değerlendirme"><button type="button" data-rate="1">☆</button><button type="button" data-rate="2">☆</button><button type="button" data-rate="3">☆</button><button type="button" data-rate="4">☆</button><button type="button" data-rate="5">☆</button><input type="hidden" name="degerlendirme" id="rating-value"></div></div>
+          <div class="field full"><label for="yorum">Yorum</label><input id="yorum" name="yorum" placeholder="Yorum giriniz"></div>
+          <fieldset class="field full"><legend>Hasta Durumu</legend><div class="radios"><label><input type="radio" name="hasta_durumu" value="aktif" checked>Aktif</label><label><input type="radio" name="hasta_durumu" value="vefat">Vefat</label></div></fieldset>
+        </div></section>
+        <section class="card"><h2 class="card-heading"><span class="section-icon">⌑</span>Hizmet Bilgileri</h2><div class="field-grid"><div class="field full"><label for="sosyal_guvence">Sosyal Güvence</label><select id="sosyal_guvence" name="sosyal_guvence"><option value="">Seçiniz</option><option>SGK</option><option>Özel Sigorta</option></select></div><div class="field full"><label for="rapor">Rapor</label><select id="rapor" name="rapor"><option value="">Seçiniz</option><option>Mevcut</option><option>Yok</option></select></div></div></section>
+        <section class="card"><h2 class="card-heading"><span class="section-icon">☷</span>Başvuru ve Açıklamalar</h2><div class="field-grid"><div class="field full"><label for="kaynak">Kaynak</label><select id="kaynak" name="kaynak"><option value="">Seçiniz</option><option>Telefon</option><option>Web Sitesi</option><option>Yönlendirme</option></select></div><div class="field full"><label for="basvuru_detayi">Başvuru Detayı</label><input id="basvuru_detayi" name="basvuru_detayi" placeholder="Başvuru detayı giriniz"></div><div class="field full"><label for="aciklama">Açıklama</label><textarea id="aciklama" name="aciklama" placeholder="Açıklama giriniz"></textarea></div></div></section>
+        <footer class="form-footer"><span class="hint">Zorunlu alanlar <span class="required">*</span> ile gösterilmiştir.</span><div class="footer-actions"><button class="primary" type="submit">💾 Kaydet (F2)</button></div></footer>
+      </form>
+    </main>
+    <div class="window-resizer" id="window-resizer" aria-hidden="true"></div>
+  </div>
+  <div class="taskbar"><button type="button" class="start-button" id="start-button">◉ Başlat</button><button type="button" class="task-item" id="patient-task" hidden>Yeni Hasta Kaydı</button><span class="tray" id="desktop-clock">00:00</span></div>
+  <script>
+    const loginScreen=document.getElementById('login-screen'),loginForm=document.getElementById('login-form'),loginError=document.getElementById('login-error'),loginUser=document.getElementById('login-user');
+    const rememberedUser=localStorage.getItem('voxRememberedUser');if(rememberedUser){loginUser.value=rememberedUser;document.getElementById('remember-user').checked=true;}if(sessionStorage.getItem('voxLoggedIn')==='1')loginScreen.classList.add('hidden');
+    loginForm.addEventListener('submit',event=>{event.preventDefault();const user=loginUser.value.trim(),password=document.getElementById('login-password').value;if(!user||!password){loginError.textContent='Kullanıcı adı ve şifre zorunludur.';return;}loginError.textContent='';if(document.getElementById('remember-user').checked)localStorage.setItem('voxRememberedUser',user);else localStorage.removeItem('voxRememberedUser');sessionStorage.setItem('voxLoggedIn','1');loginScreen.classList.add('hidden');});
+    const stars = document.querySelectorAll('[data-rate]');
+    stars.forEach(star => star.addEventListener('click', () => { const value = Number(star.dataset.rate); document.getElementById('rating-value').value = value; stars.forEach(item => { const on = Number(item.dataset.rate) <= value; item.textContent = on ? '★' : '☆'; item.classList.toggle('selected', on); }); }));
+    const startMenu=document.getElementById('start-menu'),startButton=document.getElementById('start-button');
+    startMenu.insertAdjacentHTML('afterbegin','<span class="menu-logo" aria-label="VOX İşitme Cihazları"></span>');
+    const submenuDefinitions={
+      'Hasta Kartları':['Yeni Hasta Kaydı'],'Takvim':['Randevu Takvimi','Günlük Görünüm'],'Görev Takip':['Bekleyen Görevler','Yeni Görev'],
+      'Listeler':['İşitme Cihazları','Satışlar','Sonuç Listesi','SGK Listesi'],'Stoklar':['Stok Kartları','Stok Hareketleri'],
+      'Teknik Servis':['Servis Kayıtları','İş Emirleri']
+    };
+    Object.entries(submenuDefinitions).forEach(([parentLabel,children])=>{
+      const parent=[...startMenu.querySelectorAll('.start-left > a')].find(link=>link.textContent.trim()===parentLabel);if(!parent)return;
+      const submenu=document.createElement('div');submenu.className='submenu';
+      children.forEach(label=>{let link=[...startMenu.querySelectorAll('.start-left > a')].find(item=>item.textContent.trim()===label);if(!link){link=document.createElement('a');link.href='#';link.textContent=label;}submenu.appendChild(link);});
+      parent.classList.add('submenu-toggle');parent.after(submenu);
+      parent.addEventListener('click',event=>{event.preventDefault();event.stopImmediatePropagation();const open=!submenu.classList.contains('open');submenu.classList.toggle('open',open);parent.classList.toggle('expanded',open);});
+    });
+    startMenu.querySelector('.start-left a:nth-child(2)').classList.add('active');
+    startButton.addEventListener('click', () => { if(!startMenu.classList.contains('open')) startMenu.classList.add('open'); });
+    startButton.addEventListener('dblclick', event => { event.preventDefault(); startMenu.classList.remove('open'); });
+    const wallpaperPicker=document.getElementById('wallpaper-picker'),wallpaperButton=document.getElementById('wallpaper-menu-button');
+    const applyWallpaper=file=>{const matte=file==='matte-green';document.body.style.backgroundColor='#011238';document.body.style.backgroundImage=matte?'radial-gradient(ellipse at 52% 48%,#082c67 0%,#041f54 58%,#011238 100%)':`url('${file}')`;document.body.style.backgroundSize='cover';document.body.style.backgroundPosition='center';localStorage.setItem('hastaDesktopWallpaper',file);document.querySelectorAll('[data-wallpaper]').forEach(button=>button.classList.toggle('active',button.dataset.wallpaper===file));};
+    wallpaperButton.addEventListener('click',event=>{event.preventDefault();event.stopPropagation();wallpaperPicker.classList.toggle('open');});
+    document.querySelectorAll('[data-wallpaper]').forEach(button=>button.addEventListener('click',()=>{applyWallpaper(button.dataset.wallpaper);wallpaperPicker.classList.remove('open');}));
+    applyWallpaper('matte-green');
+    const applyScreenTheme=theme=>{document.body.classList.remove('theme-gray','theme-green','theme-blue');document.body.classList.add('theme-'+theme);localStorage.setItem('voxScreenTheme',theme);document.querySelectorAll('[data-theme]').forEach(button=>button.classList.toggle('active',button.dataset.theme===theme));};
+    document.querySelectorAll('[data-theme]').forEach(button=>button.addEventListener('click',()=>{applyScreenTheme(button.dataset.theme);wallpaperPicker.classList.remove('open');}));
+    applyScreenTheme('blue');
+    document.getElementById('logout-button').addEventListener('click',event=>{event.preventDefault();sessionStorage.removeItem('voxLoggedIn');document.getElementById('start-menu').classList.remove('open');document.getElementById('login-password').value='';loginScreen.classList.remove('hidden');setTimeout(()=>loginUser.focus(),330);});
+    const updateClock = () => document.getElementById('desktop-clock').textContent = new Date().toLocaleTimeString('tr-TR',{hour:'2-digit',minute:'2-digit'});
+    updateClock(); setInterval(updateClock, 30000);
+    const appWindow = document.querySelector('.app');
+    appWindow.style.height = '';
+    const appMain = appWindow.querySelector('main');
+    const centerWindow = () => {
+      if (appWindow.hidden || appWindow.classList.contains('maximized') || appWindow.classList.contains('minimized')) return;
+      const rect=appWindow.getBoundingClientRect(), workHeight=window.innerHeight-31;
+      const width=Math.min(rect.width,window.innerWidth), height=Math.min(rect.height,workHeight);
+      const left=Math.max(0,(window.innerWidth-width)/2), top=Math.max(0,(workHeight-height)/2);
+      Object.assign(appWindow.style,{left:left+'px',top:top+'px',width:width+'px',height:height+'px',right:'auto'});
+    };
+    requestAnimationFrame(centerWindow);
+    let normalWindowSize = null;
+    let normalWindowStyle = null;
+    const applyMaximizedScale = () => {
+      if (!appWindow.classList.contains('maximized') || !normalWindowSize) return;
+      const workWidth=window.innerWidth, workHeight=window.innerHeight-31;
+      const scale=Math.max(1,Math.min(workWidth/normalWindowSize.width,workHeight/normalWindowSize.height));
+      appMain.style.transform=`scale(${scale})`;
+      appMain.style.width=(workWidth/scale)+'px'; appMain.style.height=(workHeight/scale)+'px';
+    };
+    const toggleMaximize = () => {
+      const maximizing=!appWindow.classList.contains('maximized');
+      if (maximizing) {
+        const rect=appWindow.getBoundingClientRect(); normalWindowSize={width:rect.width,height:rect.height};
+        normalWindowStyle={left:appWindow.style.left,top:appWindow.style.top,right:appWindow.style.right,width:appWindow.style.width,height:appWindow.style.height};
+        appWindow.classList.add('maximized');
+        Object.assign(appWindow.style,{left:'0px',top:'0px',right:'auto',width:window.innerWidth+'px',height:(window.innerHeight-31)+'px'});
+        requestAnimationFrame(applyMaximizedScale);
+      } else {
+        appWindow.classList.remove('maximized'); appMain.style.transform=''; appMain.style.width=''; appMain.style.height='';
+        if(normalWindowStyle) Object.assign(appWindow.style,normalWindowStyle);
+        requestAnimationFrame(centerWindow);
+      }
+      document.getElementById('window-maximize').textContent=maximizing?'❐':'□';
+    };
+    document.getElementById('window-maximize').addEventListener('click', toggleMaximize);
+    document.getElementById('window-titlebar').addEventListener('dblclick', event => { if (!event.target.closest('button')) toggleMaximize(); });
+    document.getElementById('window-minimize').addEventListener('click', () => minimizeDesktopWindow(appWindow,document.getElementById('patient-task')));
+    document.getElementById('window-close').addEventListener('click', () => appWindow.classList.add('minimized'));
+    document.getElementById('patient-task').addEventListener('click', () => toggleTaskWindow(appWindow,document.getElementById('patient-task')));
+    const titlebar = document.getElementById('window-titlebar');
+    let dragState = null;
+    titlebar.addEventListener('pointerdown', event => {
+      if (event.target.closest('button') || appWindow.classList.contains('maximized')) return;
+      const rect = appWindow.getBoundingClientRect();
+      dragState = { x:event.clientX, y:event.clientY, left:rect.left, top:rect.top };
+      titlebar.setPointerCapture(event.pointerId);
+    });
+    titlebar.addEventListener('pointermove', event => {
+      if (!dragState) return;
+      const maxLeft = Math.max(0, window.innerWidth - appWindow.offsetWidth);
+      const maxTop = Math.max(0, window.innerHeight - 31 - appWindow.offsetHeight);
+      const left = Math.min(maxLeft, Math.max(0, dragState.left + event.clientX - dragState.x));
+      const top = Math.min(maxTop, Math.max(0, dragState.top + event.clientY - dragState.y));
+      appWindow.style.left = left + 'px'; appWindow.style.top = top + 'px'; appWindow.style.right = 'auto';
+    });
+    const stopDragging = () => { dragState = null; };
+    titlebar.addEventListener('pointerup', stopDragging); titlebar.addEventListener('pointercancel', stopDragging);
+    const resizer = document.getElementById('window-resizer');
+    let resizeState = null;
+    resizer.addEventListener('pointerdown', event => {
+      if (appWindow.classList.contains('maximized')) return;
+      event.preventDefault(); document.querySelectorAll('.start-menu a.active').forEach(item=>item.classList.remove('active')); link.classList.add('active');
+      const rect = appWindow.getBoundingClientRect();
+      resizeState = { x:event.clientX, y:event.clientY, width:rect.width, height:rect.height, left:rect.left, top:rect.top };
+      resizer.setPointerCapture(event.pointerId);
+    });
+    resizer.addEventListener('pointermove', event => {
+      if (!resizeState) return;
+      const maxWidth = window.innerWidth - resizeState.left;
+      const maxHeight = window.innerHeight - 31 - resizeState.top;
+      const width = Math.min(maxWidth, Math.max(560, resizeState.width + event.clientX - resizeState.x));
+      const height = Math.min(maxHeight, Math.max(360, resizeState.height + event.clientY - resizeState.y));
+      appWindow.style.width = width + 'px'; appWindow.style.height = height + 'px'; appWindow.style.right = 'auto';
+    });
+    const stopResizing = () => { resizeState = null; };
+    resizer.addEventListener('pointerup', stopResizing); resizer.addEventListener('pointercancel', stopResizing);
+    const frameEdgeSize = 7;
+    let frameResizeState = null;
+    const detectFrameEdges = event => {
+      const rect = appWindow.getBoundingClientRect();
+      return {
+        left:event.clientX - rect.left <= frameEdgeSize,
+        right:rect.right - event.clientX <= frameEdgeSize,
+        top:event.clientY - rect.top <= frameEdgeSize,
+        bottom:rect.bottom - event.clientY <= frameEdgeSize
+      };
+    };
+    const edgeCursor = edges => {
+      if ((edges.left && edges.top) || (edges.right && edges.bottom)) return 'nwse-resize';
+      if ((edges.right && edges.top) || (edges.left && edges.bottom)) return 'nesw-resize';
+      if (edges.left || edges.right) return 'ew-resize';
+      if (edges.top || edges.bottom) return 'ns-resize';
+      return '';
+    };
+    const contentHeightLimit = () => Math.min(window.innerHeight - 31, Math.ceil(document.getElementById('window-titlebar').offsetHeight + document.getElementById('patient-form').scrollHeight + 14));
+    appWindow.addEventListener('pointerdown', event => {
+      if (appWindow.classList.contains('maximized')) return;
+      const edges = detectFrameEdges(event);
+      if (!edgeCursor(edges)) return;
+      event.preventDefault(); event.stopPropagation();
+      const rect = appWindow.getBoundingClientRect();
+      frameResizeState = { edges, x:event.clientX, y:event.clientY, left:rect.left, top:rect.top, width:rect.width, height:rect.height };
+      appWindow.classList.add('frame-resizing'); appWindow.setPointerCapture(event.pointerId);
+    }, true);
+    appWindow.addEventListener('pointermove', event => {
+      if (!frameResizeState) { if (!event.target.closest('input,select,textarea,button')) appWindow.style.cursor = edgeCursor(detectFrameEdges(event)); return; }
+      const state = frameResizeState, dx = event.clientX - state.x, dy = event.clientY - state.y;
+      let left = state.left, top = state.top, width = state.width, height = state.height;
+      if (state.edges.right) width = Math.min(window.innerWidth - state.left, Math.max(560, state.width + dx));
+      if (state.edges.bottom) height = Math.min(contentHeightLimit(), window.innerHeight - 31 - state.top, Math.max(360, state.height + dy));
+      if (state.edges.left) { const fixedRight = Math.min(window.innerWidth, state.left + state.width); left = Math.max(0, Math.min(fixedRight - 560, state.left + dx)); width = fixedRight - left; }
+      if (state.edges.top) { const fixedBottom = Math.min(window.innerHeight - 31, state.top + state.height); const wantedHeight=Math.min(contentHeightLimit(),Math.max(360,state.height-dy)); top=Math.max(0,fixedBottom-wantedHeight); height=fixedBottom-top; }
+      width=Math.min(width,window.innerWidth-left); height=Math.min(height,window.innerHeight-31-top);
+      appWindow.style.left=left+'px'; appWindow.style.top=top+'px'; appWindow.style.width=width+'px'; appWindow.style.height=height+'px'; appWindow.style.right='auto';
+    }, true);
+    const stopFrameResize = () => { const resized=!!frameResizeState; frameResizeState=null; appWindow.classList.remove('frame-resizing'); appWindow.style.cursor=''; if(resized) requestAnimationFrame(centerWindow); };
+    appWindow.addEventListener('pointerup', stopFrameResize, true); appWindow.addEventListener('pointercancel', stopFrameResize, true);
+    window.addEventListener('resize', () => {
+      if (appWindow.classList.contains('maximized')) { applyMaximizedScale(); return; }
+      const rect=appWindow.getBoundingClientRect();
+      const width=Math.min(rect.width,window.innerWidth), height=Math.min(rect.height,window.innerHeight-31);
+      const left=Math.max(0,Math.min(rect.left,window.innerWidth-width)), top=Math.max(0,Math.min(rect.top,window.innerHeight-31-height));
+      Object.assign(appWindow.style,{left:left+'px',top:top+'px',width:width+'px',height:height+'px',right:'auto'}); requestAnimationFrame(centerWindow);
+    });
+    let desktopZ=40;
+    const activateWindow = win => { desktopZ+=1; win.style.zIndex=desktopZ; document.querySelectorAll('.task-item').forEach(item=>item.classList.toggle('active',item.dataset.windowId===win.dataset.windowId)); };
+    const activateTopVisibleWindow=()=>{const visible=[appWindow,...document.querySelectorAll('.aux-window')].filter(win=>!win.hidden&&!win.classList.contains('minimized')&&document.body.contains(win));const top=visible.sort((a,b)=>(Number(a.style.zIndex)||0)-(Number(b.style.zIndex)||0)).pop();if(top)activateWindow(top);else document.querySelectorAll('.task-item').forEach(item=>item.classList.remove('active'));};
+    const minimizeDesktopWindow=(win,task)=>{if(win.classList.contains('window-motion'))return;const wr=win.getBoundingClientRect(),tr=task.getBoundingClientRect();win.dataset.restoreLeft=win.style.left;win.dataset.restoreTop=win.style.top;win.style.setProperty('--task-x',(tr.left-wr.left)+'px');win.style.setProperty('--task-y',(tr.top-wr.top)+'px');win.classList.add('window-motion');requestAnimationFrame(()=>win.classList.add('window-minimizing'));setTimeout(()=>{win.classList.add('minimized');win.hidden=true;win.classList.remove('window-motion','window-minimizing');win.style.removeProperty('--task-x');win.style.removeProperty('--task-y');task.classList.remove('active');activateTopVisibleWindow();},390);};
+    const restoreDesktopWindow=(win,task)=>{if(win.classList.contains('window-motion'))return;win.hidden=false;win.classList.remove('minimized');const wr=win.getBoundingClientRect(),tr=task.getBoundingClientRect();win.style.transition='none';win.style.transform=`translate(${tr.left-wr.left}px,${tr.top-wr.top}px) scale(.16,.06)`;win.style.opacity='.12';requestAnimationFrame(()=>requestAnimationFrame(()=>{win.style.transition='';win.classList.add('window-motion');win.style.transform='';win.style.opacity='';activateWindow(win);setTimeout(()=>win.classList.remove('window-motion'),390);}));};
+    const toggleTaskWindow=(win,task)=>{const hidden=win.hidden||win.classList.contains('minimized');if(hidden){restoreDesktopWindow(win,task);return;}if(task.classList.contains('active'))minimizeDesktopWindow(win,task);else activateWindow(win);};
+    appWindow.dataset.windowId='patient'; appWindow.addEventListener('pointerdown',()=>activateWindow(appWindow)); document.getElementById('patient-task').dataset.windowId='patient';
+    const setupPatientColumns=win=>{const table=win.querySelector('.patient-table'),headings=[...table.querySelectorAll('thead th')],tbody=table.tBodies[0],cols=[...table.querySelectorAll('colgroup col')];requestAnimationFrame(()=>{let total=0;headings.forEach((th,index)=>{const width=Math.round(th.getBoundingClientRect().width);if(cols[index])cols[index].style.width=width+'px';total+=width;});table.style.width=Math.max(table.parentElement.clientWidth,total)+'px';});headings.forEach((th,columnIndex)=>{const grip=document.createElement('span');grip.className='column-resizer';grip.title='Kolon genişliğini değiştir';th.appendChild(grip);let resize=null;grip.addEventListener('pointerdown',event=>{event.preventDefault();event.stopPropagation();resize={x:event.clientX,width:th.getBoundingClientRect().width,tableWidth:table.getBoundingClientRect().width};grip.setPointerCapture(event.pointerId);grip.classList.add('dragging');document.body.classList.add('column-resizing');});grip.addEventListener('pointermove',event=>{if(!resize)return;const newWidth=Math.max(55,resize.width+event.clientX-resize.x),difference=newWidth-resize.width;if(cols[columnIndex])cols[columnIndex].style.width=newWidth+'px';table.style.width=Math.max(table.parentElement.clientWidth,resize.tableWidth+difference)+'px';});const stopResize=()=>{resize=null;grip.classList.remove('dragging');document.body.classList.remove('column-resizing');};grip.addEventListener('pointerup',stopResize);grip.addEventListener('pointercancel',stopResize);const arrow=document.createElement('button');arrow.type='button';arrow.className='column-menu-button';arrow.textContent='▼';arrow.title=th.textContent+' seçenekleri';th.appendChild(arrow);arrow.addEventListener('click',event=>{event.stopPropagation();document.querySelectorAll('.column-context-menu').forEach(menu=>menu.remove());document.querySelectorAll('.column-menu-button.open').forEach(button=>button.classList.remove('open'));arrow.classList.add('open');const menu=document.createElement('div');menu.className='column-context-menu';const makeAction=(icon,text,direction)=>{const button=document.createElement('button');button.type='button';button.innerHTML=`<span>${icon}</span><span>${text}</span>`;button.addEventListener('click',()=>{const rows=[...tbody.rows];rows.sort((a,b)=>{const av=a.cells[columnIndex].textContent.trim(),bv=b.cells[columnIndex].textContent.trim();return av.localeCompare(bv,'tr',{numeric:true,sensitivity:'base'})*(direction==='asc'?1:-1);});rows.forEach(row=>tbody.appendChild(row));menu.remove();arrow.classList.remove('open');});return button;};menu.append(makeAction('A↧','Artan sırada sırala','asc'),makeAction('Z↥','Azalan sırada sırala','desc'));const separator=document.createElement('div');separator.className='menu-separator';menu.appendChild(separator);const columnsButton=document.createElement('button');columnsButton.type='button';columnsButton.className='columns-trigger';columnsButton.innerHTML='<span>▦ &nbsp; Kolonlar</span><span>▶</span>';const panel=document.createElement('div');panel.className='columns-panel';panel.hidden=true;headings.forEach((heading,index)=>{const label=document.createElement('label'),check=document.createElement('input');check.type='checkbox';check.checked=!heading.classList.contains('column-hidden');check.addEventListener('change',()=>{heading.classList.toggle('column-hidden',!check.checked);heading.style.display=check.checked?'':'none';[...table.rows].slice(1).forEach(row=>{if(row.cells[index])row.cells[index].style.display=check.checked?'':'none';});});label.append(check,document.createTextNode(heading.childNodes[0].textContent.trim()));panel.appendChild(label);});columnsButton.addEventListener('click',event=>{event.stopPropagation();panel.hidden=!panel.hidden;});menu.append(columnsButton,panel);document.body.appendChild(menu);const rect=arrow.getBoundingClientRect(),menuWidth=310;menu.style.left=Math.max(2,Math.min(innerWidth-menuWidth,rect.right-155))+'px';menu.style.top=Math.max(2,Math.min(innerHeight-310,rect.bottom))+'px';const close=event=>{if(!menu.contains(event.target)&&event.target!==arrow){menu.remove();arrow.classList.remove('open');document.removeEventListener('pointerdown',close);}};setTimeout(()=>document.addEventListener('pointerdown',close),0);});});};
+    const patientListMarkup=title=>`<div class="aux-titlebar"><span>${title}</span><div class="window-controls"><button type="button" data-act="min">_</button><button type="button" data-act="max">□</button><button type="button" class="window-close" data-act="close">×</button></div></div><div class="aux-content"><div class="aux-toolbar"><button data-list-action="refresh">🔄 Listele</button><button data-list-action="excel">▧ Excel'e Aktar</button></div><div class="patient-list-shell"><div class="patient-list-filters"><label>Hasta Ara:<input type="search" data-patient-search placeholder=""></label><label>Durum:<span class="select-shell"><select data-patient-status><option value="">Tümü</option><option value="aktif">Aktif</option><option value="pasif">Pasif</option></select><span class="select-arrow">▼</span></span></label></div><div class="patient-grid-wrap"><table class="aux-grid patient-table"><colgroup><col style="width:90px"><col style="width:190px"><col style="width:125px"><col style="width:125px"><col style="width:105px"><col style="width:75px"></colgroup><thead><tr><th>Hasta No</th><th>Ad Soyad</th><th>T.C. Kimlik No</th><th>Telefon</th><th>Kayıt Tarihi</th><th>Durum</th></tr></thead><tbody><tr data-search="h-1001 ayşe demir 0555 111 22 33" data-status="aktif"><td>H-1001</td><td>AYŞE DEMİR</td><td>*******4521</td><td>0555 111 22 33</td><td>12.08.2026</td><td><span class="status-badge active">Aktif</span></td></tr><tr data-search="h-1002 mehmet kaya 0532 444 10 20" data-status="aktif"><td>H-1002</td><td>MEHMET KAYA</td><td>*******7834</td><td>0532 444 10 20</td><td>11.08.2026</td><td><span class="status-badge active">Aktif</span></td></tr><tr data-search="h-1003 zeynep akın 0542 260 33 18" data-status="pasif"><td>H-1003</td><td>ZEYNEP AKIN</td><td>*******1962</td><td>0542 260 33 18</td><td>08.08.2026</td><td><span class="status-badge passive">Pasif</span></td></tr><tr data-search="h-1004 ali çetin 0507 890 42 16" data-status="aktif"><td>H-1004</td><td>ALİ ÇETİN</td><td>*******6240</td><td>0507 890 42 16</td><td>02.08.2026</td><td><span class="status-badge active">Aktif</span></td></tr></tbody></table></div><div class="list-pager"><button title="İlk sayfa">|◀</button><button title="Önceki sayfa">◀</button><span>Sayfa</span><input value="1" size="2"><span>/ 1</span><button title="Sonraki sayfa">▶</button><button title="Son sayfa">▶|</button><button data-list-action="refresh" title="Yenile">🔄</button><span class="list-count">Gösterilen 4</span></div></div></div>`;
+    const auxMarkup = (id,title) => id==='listeler'?patientListMarkup(title):`<div class="aux-titlebar"><span>${title}</span><div class="window-controls"><button type="button" data-act="min">_</button><button type="button" data-act="max">□</button><button type="button" class="window-close" data-act="close">×</button></div></div><div class="aux-content"><div class="aux-toolbar"><button>▣ Listele</button><button>⊕ Yeni</button><button>▱ Kopyala</button><button>▧ Excel</button></div><table class="aux-grid"><thead><tr><th>Kayıt No</th><th>Açıklama</th><th>Durum</th></tr></thead><tbody><tr><td colspan="3">Kayıtları görüntülemek için “Listele” düğmesini kullanın.</td></tr></tbody></table></div>`;
+    const openAuxWindow = (id,title) => {
+      let win=document.querySelector(`.aux-window[data-window-id="${id}"]`);
+      if(win){ win.hidden=false; activateWindow(win); return; }
+      win=document.createElement('section'); win.className='aux-window'; win.dataset.windowId=id; win.innerHTML=auxMarkup(id,title); document.body.appendChild(win);if(id==='listeler'){win.style.width='880px';win.style.height='480px';}
+      const offset=document.querySelectorAll('.aux-window').length*24; Object.assign(win.style,{left:(230+offset)+'px',top:(70+offset)+'px'}); activateWindow(win);
+      const task=document.createElement('button'); task.type='button'; task.className='task-item'; task.dataset.windowId=id; task.textContent=title; document.querySelector('.tray').before(task); task.addEventListener('click',()=>toggleTaskWindow(win,task));
+      let move=null; const bar=win.querySelector('.aux-titlebar');
+      bar.addEventListener('pointerdown',e=>{if(e.target.closest('button')||win.classList.contains('maximized'))return;const r=win.getBoundingClientRect();move={x:e.clientX,y:e.clientY,l:r.left,t:r.top};bar.setPointerCapture(e.pointerId);activateWindow(win);});
+      bar.addEventListener('pointermove',e=>{if(!move)return;win.style.left=Math.max(0,Math.min(innerWidth-win.offsetWidth,move.l+e.clientX-move.x))+'px';win.style.top=Math.max(0,Math.min(innerHeight-31-win.offsetHeight,move.t+e.clientY-move.y))+'px';});
+      bar.addEventListener('pointerup',()=>move=null); bar.addEventListener('dblclick',e=>{if(!e.target.closest('button'))win.classList.toggle('maximized');});
+      win.addEventListener('pointerdown',()=>activateWindow(win));
+      win.querySelector('[data-act="min"]').onclick=()=>minimizeDesktopWindow(win,task);
+      win.querySelector('[data-act="max"]').onclick=e=>{win.classList.toggle('maximized');e.currentTarget.textContent=win.classList.contains('maximized')?'❐':'□';};
+      win.querySelector('[data-act="close"]').onclick=()=>{task.remove();win.remove();};
+      if(id==='listeler'){const search=win.querySelector('[data-patient-search]'),status=win.querySelector('[data-patient-status]'),rows=[...win.querySelectorAll('.patient-table tbody tr')],count=win.querySelector('.list-count');const filterRows=()=>{const q=search.value.toLocaleLowerCase('tr-TR');let shown=0;rows.forEach(row=>{const visible=(!q||row.dataset.search.includes(q))&&(!status.value||row.dataset.status===status.value);row.hidden=!visible;if(visible)shown++;});count.textContent='Gösterilen '+shown;};search.addEventListener('input',filterRows);status.addEventListener('change',filterRows);rows.forEach(row=>row.addEventListener('click',()=>{rows.forEach(item=>item.classList.remove('selected'));row.classList.add('selected');}));win.querySelectorAll('[data-list-action="refresh"]').forEach(button=>button.addEventListener('click',()=>{search.value='';status.value='';filterRows();}));setupPatientColumns(win);}
+    };
+    const menuScreens={
+      'Ana Sayfa':['home','Ana Sayfa'],'Hasta Kartları':['patient','Yeni Hasta Kaydı'],'Takvim':['calendar','Takvim'],
+      'Yeni Hasta Kaydı':['patient','Yeni Hasta Kaydı'],'Randevu Takvimi':['calendar','Randevu Takvimi'],'Günlük Görünüm':['calendar','Günlük Görünüm'],
+      'Görev Takip':['tasks','Görev Takip'],'Listeler':['listeler','Hasta Listeleri'],'İşitme Cihazları':['devices','İşitme Cihazları'],
+      'Bekleyen Görevler':['tasks','Bekleyen Görevler'],'Yeni Görev':['tasks','Yeni Görev'],
+      'Satışlar':['sales','Satışlar'],'Sonuç Listesi':['results','Sonuç Listesi'],'SGK Listesi':['sgk','SGK Listesi'],
+      'Stoklar':['stock','Stoklar'],'Teknik Servis':['service','Teknik Servis'],'Ön Kasa':['cash','Ön Kasa'],
+      'Stok Kartları':['stock','Stok Kartları'],'Stok Hareketleri':['stock','Stok Hareketleri'],'Servis Kayıtları':['service','Servis Kayıtları'],'İş Emirleri':['service','İş Emirleri'],
+      'Cari Kartlar':['accounts','Cari Kartlar'],'Üniteler':['units','Üniteler'],'Saha Aksiyonları':['field','Saha Aksiyonları'],
+      'Ayarlar':['settings','Ayarlar'],'Kurulum':['setup','Kurulum']
+    };
+    document.querySelectorAll('.start-menu a').forEach(link=>link.addEventListener('click',event=>{
+      const screen=menuScreens[link.textContent.trim()]; if(!screen)return;
+      event.preventDefault();
+      if(screen[0]==='patient'){const task=document.getElementById('patient-task');appWindow.hidden=false;task.hidden=false;appWindow.classList.remove('minimized');requestAnimationFrame(centerWindow);activateWindow(appWindow);}
+      else openAuxWindow(screen[0],screen[1]);
+    }));
+    let savedIconPositions={};try{savedIconPositions=JSON.parse(localStorage.getItem('hastaDesktopIconPositions')||'{}');}catch(e){}
+    document.querySelectorAll('.desktop-icon').forEach(icon=>{const saved=savedIconPositions[icon.dataset.open];if(saved){icon.style.left=saved.left+'px';icon.style.top=saved.top+'px';}let iconDrag=null;icon.addEventListener('pointerdown',e=>{const r=icon.getBoundingClientRect();iconDrag={x:e.clientX,y:e.clientY,left:r.left,top:r.top,moved:false};icon.setPointerCapture(e.pointerId);});icon.addEventListener('pointermove',e=>{if(!iconDrag)return;const dx=e.clientX-iconDrag.x,dy=e.clientY-iconDrag.y;if(Math.abs(dx)+Math.abs(dy)>3){iconDrag.moved=true;icon.classList.add('dragging');}if(!iconDrag.moved)return;icon.style.left=Math.max(0,Math.min(innerWidth-icon.offsetWidth,iconDrag.left+dx))+'px';icon.style.top=Math.max(0,Math.min(innerHeight-31-icon.offsetHeight,iconDrag.top+dy))+'px';});icon.addEventListener('pointerup',()=>{if(iconDrag?.moved){icon.classList.remove('dragging');savedIconPositions[icon.dataset.open]={left:parseFloat(icon.style.left),top:parseFloat(icon.style.top)};localStorage.setItem('hastaDesktopIconPositions',JSON.stringify(savedIconPositions));}iconDrag=null;});icon.addEventListener('pointercancel',()=>{icon.classList.remove('dragging');iconDrag=null;});icon.addEventListener('click',()=>{document.querySelectorAll('.desktop-icon').forEach(i=>i.classList.remove('selected'));icon.classList.add('selected');});icon.addEventListener('dblclick',()=>{if(icon.dataset.open==='patient'){const task=document.getElementById('patient-task');appWindow.hidden=false;task.hidden=false;appWindow.classList.remove('minimized');requestAnimationFrame(centerWindow);activateWindow(appWindow);}else openAuxWindow(icon.dataset.open,icon.dataset.title);});});
+    document.querySelectorAll('.desktop-icon').forEach(icon=>{let pressPoint=null,wasDragged=false;icon.addEventListener('pointerdown',e=>{pressPoint={x:e.clientX,y:e.clientY};wasDragged=false;icon.classList.remove('selected');},true);icon.addEventListener('pointermove',e=>{if(pressPoint&&Math.abs(e.clientX-pressPoint.x)+Math.abs(e.clientY-pressPoint.y)>3)wasDragged=true;},true);icon.addEventListener('click',e=>{if(wasDragged){e.preventDefault();e.stopImmediatePropagation();icon.classList.remove('selected');wasDragged=false;}pressPoint=null;},true);});
+    document.querySelectorAll('select').forEach(select=>{if(select.parentElement.classList.contains('select-shell'))return;const shell=document.createElement('span');shell.className='select-shell';select.parentNode.insertBefore(shell,select);shell.appendChild(select);const arrow=document.createElement('span');arrow.className='select-arrow';arrow.textContent='▼';shell.appendChild(arrow);});
+    const calendar=document.createElement('div');calendar.className='compact-calendar';calendar.hidden=true;document.body.appendChild(calendar);let calendarInput=null,calendarDate=new Date();
+    const pad=n=>String(n).padStart(2,'0'),formatDate=d=>`${pad(d.getDate())}.${pad(d.getMonth()+1)}.${d.getFullYear()}`;
+    const renderCalendar=()=>{const y=calendarDate.getFullYear(),m=calendarDate.getMonth(),first=(new Date(y,m,1).getDay()+6)%7,last=new Date(y,m+1,0).getDate(),months=['Ocak','Şubat','Mart','Nisan','Mayıs','Haziran','Temmuz','Ağustos','Eylül','Ekim','Kasım','Aralık'],week=['Pt','Sa','Ça','Pe','Cu','Ct','Pa'];let days=week.map(d=>`<span class="calendar-weekday">${d}</span>`).join('');for(let i=0;i<first;i++)days+='<span></span>';for(let d=1;d<=last;d++){const value=new Date(y,m,d),today=formatDate(value)===formatDate(new Date()),selected=calendarInput&&calendarInput.value===formatDate(value);days+=`<button type="button" class="calendar-day${today?' today':''}${selected?' selected':''}" data-day="${d}">${d}</button>`;}calendar.innerHTML=`<div class="calendar-head"><button type="button" data-nav="-1">‹</button><div class="calendar-title">${months[m]} ${y}</div><button type="button" data-nav="1">›</button></div><div class="calendar-grid">${days}</div><div class="calendar-foot"><button type="button" data-clear>Temizle</button><button type="button" data-today>Bugün</button></div>`;};
+    const showCalendar=input=>{calendarInput=input;const parts=input.value.split('.');calendarDate=parts.length===3?new Date(Number(parts[2]),Number(parts[1])-1,Number(parts[0])):new Date();renderCalendar();calendar.hidden=false;const r=input.getBoundingClientRect();calendar.style.left=Math.max(4,Math.min(innerWidth-182,r.left))+'px';calendar.style.top=Math.max(4,Math.min(innerHeight-205,r.bottom+2))+'px';};
+    document.querySelectorAll('[data-compact-date]').forEach(input=>{const shell=document.createElement('div');shell.className='date-field';input.parentNode.insertBefore(shell,input);shell.appendChild(input);const button=document.createElement('button');button.type='button';button.className='classic-tool-button';button.textContent='▦';button.setAttribute('aria-label','Takvimi aç');shell.appendChild(button);button.onclick=()=>showCalendar(input);input.addEventListener('focus',()=>showCalendar(input));});
+    calendar.addEventListener('click',e=>{const nav=e.target.closest('[data-nav]'),day=e.target.closest('[data-day]');if(nav){calendarDate.setMonth(calendarDate.getMonth()+Number(nav.dataset.nav));renderCalendar();}if(day){calendarInput.value=formatDate(new Date(calendarDate.getFullYear(),calendarDate.getMonth(),Number(day.dataset.day)));calendar.hidden=true;}if(e.target.closest('[data-today]')){calendarInput.value=formatDate(new Date());calendar.hidden=true;}if(e.target.closest('[data-clear]')){calendarInput.value='';calendar.hidden=true;}});
+    document.addEventListener('pointerdown',e=>{if(!calendar.hidden&&!e.target.closest('.compact-calendar,.date-field'))calendar.hidden=true;});
+    document.addEventListener('keydown',e=>{if(e.key==='F2'){e.preventDefault();document.getElementById('patient-form').requestSubmit();}if(e.key==='F3'){e.preventDefault();document.getElementById('patient-form').reset();}});
+  </script>
+</body>
+</html>
