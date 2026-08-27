@@ -11,7 +11,7 @@ use App\Models\User;
 
 class AuthController extends Controller
 {
-    public function store(Request $request): JsonResponse
+    public function store(Request $request)
     {
         if (! config('spa.login_required')) {
             $user = User::query()->orderBy('id')->first()
@@ -23,7 +23,11 @@ class AuthController extends Controller
             Auth::login($user);
             $request->session()->regenerate();
 
-            return response()->json(['user' => $user->only(['id', 'name', 'email'])]);
+            if ($request->expectsJson()) {
+                return response()->json(['user' => $user->only(['id', 'name', 'email'])]);
+            }
+
+            return redirect()->to(url('/'));
         }
 
         $credentials = $request->validate([
@@ -37,7 +41,11 @@ class AuthController extends Controller
 
         $request->session()->regenerate();
 
-        return response()->json(['user' => $request->user()->only(['id', 'name', 'email'])]);
+        if ($request->expectsJson()) {
+            return response()->json(['user' => $request->user()->only(['id', 'name', 'email'])]);
+        }
+
+        return redirect()->to(url('/'));
     }
 
     public function destroy(Request $request): JsonResponse
