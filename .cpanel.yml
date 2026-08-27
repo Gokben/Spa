@@ -1,6 +1,15 @@
 ---
 deployment:
   tasks:
-    - export DEPLOYPATH=/home/krpsoftc/public_html/spa/
-    - /bin/mkdir -p $DEPLOYPATH
-    - /bin/cp -R index.html $DEPLOYPATH
+    # Laravel kaynaklari web kokunun disinda tutulur. Sunucudaki .env dosyasi korunur.
+    - /bin/mkdir -p /home/krpsoftc/spa-app /home/krpsoftc/spa-backups/pre-laravel-20260827 /home/krpsoftc/public_html/spa
+    - /bin/cp -a /home/krpsoftc/public_html/spa/. /home/krpsoftc/spa-backups/pre-laravel-20260827/
+    - /bin/cp -R app bootstrap config database resources routes storage tests /home/krpsoftc/spa-app/
+    - /bin/cp artisan composer.json composer.lock package.json phpunit.xml vite.config.js /home/krpsoftc/spa-app/
+    - /opt/cpanel/ea-php84/root/usr/bin/php /opt/cpanel/composer/bin/composer install --working-dir=/home/krpsoftc/spa-app --no-dev --prefer-dist --optimize-autoloader --no-interaction
+    - /bin/test ! -f /home/krpsoftc/public_html/spa/index.html || /bin/mv /home/krpsoftc/public_html/spa/index.html /home/krpsoftc/spa-backups/pre-laravel-20260827/legacy-index.html
+    - /bin/cp -R public/. /home/krpsoftc/public_html/spa/
+    - /bin/cp deploy/public/index.php /home/krpsoftc/public_html/spa/index.php
+    - /bin/chmod -R ug+rwX /home/krpsoftc/spa-app/storage /home/krpsoftc/spa-app/bootstrap/cache
+    - /opt/cpanel/ea-php84/root/usr/bin/php /home/krpsoftc/spa-app/artisan migrate --force
+    - /opt/cpanel/ea-php84/root/usr/bin/php /home/krpsoftc/spa-app/artisan optimize
