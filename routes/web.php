@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\MemberController;
+use App\Http\Middleware\SpaAuthenticate;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -11,6 +12,6 @@ Route::get('/', function () {
 Route::post('/login', [AuthController::class, 'store'])->middleware('guest')->name('login');
 Route::post('/logout', [AuthController::class, 'destroy'])->middleware('auth');
 
-Route::middleware('auth')->prefix('api')->group(function () {
+Route::middleware(SpaAuthenticate::class)->prefix('api')->group(function () {
     Route::apiResource('members', MemberController::class)->only(['index', 'show', 'store', 'update']);
 });

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 use App\Models\User;
@@ -24,7 +25,7 @@ class AuthController extends Controller
             $request->session()->regenerate();
 
             if ($request->expectsJson()) {
-                return response()->json(['user' => $user->only(['id', 'name', 'email'])]);
+                return response()->json($this->loginPayload($user));
             }
 
             return redirect()->to(url('/'));
@@ -42,7 +43,7 @@ class AuthController extends Controller
         $request->session()->regenerate();
 
         if ($request->expectsJson()) {
-            return response()->json(['user' => $request->user()->only(['id', 'name', 'email'])]);
+            return response()->json($this->loginPayload($request->user()));
         }
 
         return redirect()->to(url('/'));
@@ -58,5 +59,16 @@ class AuthController extends Controller
             'message' => 'Oturum kapatıldı.',
             'csrfToken' => $request->session()->token(),
         ]);
+    }
+
+    private function loginPayload(User $user): array
+    {
+        return [
+            'user' => $user->only(['id', 'name', 'email']),
+            'accessToken' => Crypt::encryptString(json_encode([
+                'user_id' => $user->id,
+                'expires_at' => now()->addHours(8)->timestamp,
+            ], JSON_THROW_ON_ERROR)),
+        ];
     }
 }

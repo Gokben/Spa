@@ -22,8 +22,11 @@ class AuthFlowTest extends TestCase
         config(['spa.login_required' => false]);
         $this->withoutMiddleware(ValidateCsrfToken::class);
 
-        $this->postJson('/login', [])->assertOk();
+        $response = $this->postJson('/login', [])->assertOk()->assertJsonStructure(['user', 'accessToken']);
         $this->assertAuthenticated();
         $this->assertDatabaseHas('users', ['email' => 'spa@localhost.invalid']);
+
+        $this->app['auth']->forgetGuards();
+        $this->withToken($response->json('accessToken'))->getJson('/api/members')->assertOk();
     }
 }
