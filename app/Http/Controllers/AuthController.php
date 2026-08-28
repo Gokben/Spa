@@ -65,6 +65,7 @@ class AuthController extends Controller
     {
         return [
             'user' => $user->only(['id', 'name', 'email']),
+            'csrfToken' => csrf_token(),
             'accessToken' => Crypt::encryptString(json_encode([
                 'user_id' => $user->id,
                 'expires_at' => now()->addHours(8)->timestamp,

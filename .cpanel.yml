@@ -10,6 +10,7 @@ deployment:
     - /bin/test ! -f /home/krpsoftc/public_html/spa/index.html || /bin/mv /home/krpsoftc/public_html/spa/index.html /home/krpsoftc/spa-backups/pre-laravel-20260827/legacy-index.html
     - /bin/cp -R public/. /home/krpsoftc/public_html/spa/
     - /bin/cp deploy/public/index.php /home/krpsoftc/public_html/spa/index.php
+    - /bin/test -e /home/krpsoftc/public_html/spa/storage || /bin/ln -s /home/krpsoftc/spa-app/storage/app/public /home/krpsoftc/public_html/spa/storage
     - /bin/chmod -R ug+rwX /home/krpsoftc/spa-app/storage /home/krpsoftc/spa-app/bootstrap/cache
     - /opt/cpanel/ea-php84/root/usr/bin/php /home/krpsoftc/spa-app/artisan migrate --force
     - /opt/cpanel/ea-php84/root/usr/bin/php /home/krpsoftc/spa-app/artisan optimize
