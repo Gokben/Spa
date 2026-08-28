@@ -22,7 +22,7 @@ class EmployeeScheduleController extends Controller
 
         return response()->json(['data' => [
             'week_start' => $start->toDateString(),
-            'employees' => Employee::query()->where('status', 'aktif')->orderBy('first_name')->orderBy('last_name')->get(),
+            'employees' => Employee::query()->with('workGroup')->where('status', 'aktif')->orderBy('first_name')->orderBy('last_name')->get(),
             'work_shifts' => WorkShift::query()->orderBy('sort_order')->get(),
             'business_hours' => BusinessHour::query()->orderBy('day_of_week')->get(),
             'assignments' => EmployeeSchedule::query()
@@ -40,6 +40,8 @@ class EmployeeScheduleController extends Controller
             'assignments.*.work_date' => ['required', 'date_format:Y-m-d'],
             'assignments.*.work_shift_id' => ['nullable', 'integer', 'exists:work_shifts,id'],
             'assignments.*.status' => ['nullable', Rule::in(['off', 'izin', 'raporlu'])],
+            'employee_ids' => ['nullable', 'array'],
+            'employee_ids.*' => ['integer', Rule::exists('employees', 'id')->where('status', 'aktif')],
         ]);
 
         $start = CarbonImmutable::parse($validated['week_start'])->startOfWeek();
@@ -65,8 +67,13 @@ class EmployeeScheduleController extends Controller
             }
         }
 
-        DB::transaction(function () use ($validated, $start, $end): void {
-            EmployeeSchedule::query()->whereBetween('work_date', [$start->toDateString(), $end->toDateString()])->delete();
+        $employeeIds = $validated['employee_ids'] ?? collect($validated['assignments'])->pluck('employee_id')->unique()->values()->all();
+
+        DB::transaction(function () use ($validated, $start, $end, $employeeIds): void {
+            EmployeeSchedule::query()
+                ->whereBetween('work_date', [$start->toDateString(), $end->toDateString()])
+                ->whereIn('employee_id', $employeeIds)
+                ->delete();
             foreach ($validated['assignments'] as $assignment) {
                 if (empty($assignment['work_shift_id']) && empty($assignment['status'])) {
                     continue;

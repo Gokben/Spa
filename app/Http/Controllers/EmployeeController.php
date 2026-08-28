@@ -12,24 +12,24 @@ class EmployeeController extends Controller
 {
     public function index(): JsonResponse
     {
-        return response()->json(['data' => Employee::query()->orderBy('first_name')->orderBy('last_name')->get()]);
+        return response()->json(['data' => Employee::query()->with(['occupation', 'workGroup'])->orderBy('first_name')->orderBy('last_name')->get()]);
     }
 
     public function show(Employee $employee): JsonResponse
     {
-        return response()->json(['data' => $employee]);
+        return response()->json(['data' => $employee->load(['occupation', 'workGroup'])]);
     }
 
     public function store(Request $request): JsonResponse
     {
-        return response()->json(['data' => Employee::create($this->validated($request))], 201);
+        return response()->json(['data' => Employee::create($this->validated($request))->load(['occupation', 'workGroup'])], 201);
     }
 
     public function update(Request $request, Employee $employee): JsonResponse
     {
         $employee->update($this->validated($request, $employee));
 
-        return response()->json(['data' => $employee->refresh()]);
+        return response()->json(['data' => $employee->refresh()->load(['occupation', 'workGroup'])]);
     }
 
     public function uploadPhoto(Request $request, Employee $employee): JsonResponse
@@ -53,6 +53,8 @@ class EmployeeController extends Controller
             'last_name' => ['required', 'string', 'max:100'],
             'registry_no' => ['nullable', 'string', 'max:50', Rule::unique('employees')->ignore($employee?->id)],
             'personnel_no' => ['nullable', 'string', 'max:50', Rule::unique('employees')->ignore($employee?->id)],
+            'occupation_id' => ['nullable', 'integer', 'exists:occupations,id'],
+            'work_group_id' => ['nullable', 'integer', 'exists:work_groups,id'],
             'hire_date' => ['nullable', 'date'],
             'termination_date' => ['nullable', 'date', 'after_or_equal:hire_date'],
             'birth_date' => ['nullable', 'date', 'before_or_equal:today'],
