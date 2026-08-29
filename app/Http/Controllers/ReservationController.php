@@ -21,7 +21,12 @@ class ReservationController extends Controller
         return response()->json(['data' => [
             'month' => $month,
             'reservations' => Reservation::query()->with(['member', 'employee'])->whereDate('reservation_date', '>=', $start)->whereDate('reservation_date', '<', $end)->orderBy('reservation_date')->orderBy('start_time')->get(),
-            'members' => Member::query()->where('status', 'aktif')->orderBy('name')->get(['id', 'member_no', 'name', 'phone']),
+            'members' => Member::query()->where('status', 'aktif')->orderBy('full_name')->get(['id', 'member_no', 'full_name', 'phone'])->map(fn (Member $member) => [
+                'id' => $member->id,
+                'member_no' => $member->member_no,
+                'name' => $member->full_name,
+                'phone' => $member->phone,
+            ]),
             'employees' => Employee::query()->with('occupation')->where('status', 'aktif')->orderBy('first_name')->orderBy('last_name')->get(['id', 'first_name', 'last_name', 'occupation_id']),
         ]]);
     }
@@ -66,7 +71,7 @@ class ReservationController extends Controller
         ]);
         if (!empty($data['member_id'])) {
             $member = Member::find($data['member_id']);
-            $data['guest_name'] = $member->name;
+            $data['guest_name'] = $member->full_name;
             $data['phone'] = $member->phone;
         }
 
