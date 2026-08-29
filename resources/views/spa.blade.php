@@ -136,7 +136,7 @@
     .window-motion { transition:transform .38s cubic-bezier(.4,0,.55,1),opacity .38s ease; transform-origin:top left; pointer-events:none; }
     .window-minimizing { transform:translate(var(--task-x),var(--task-y)) scale(.16,.06); opacity:.12; }
     .tray { margin-left:auto; color:#fff; font-size:11px; padding:5px 10px; border-left:1px solid #2f8cf1; }
-    .start-menu { position:fixed; z-index:19; left:0; bottom:31px; width:298px; height:330px; padding:5px; display:grid; grid-template-columns:143px 1fr; grid-template-rows:20px 1fr; background:#3f4346; border:1px solid #1d262e; box-shadow:3px 3px 10px rgba(0,0,0,.45); transform:scaleY(.04); transform-origin:left bottom; opacity:0; visibility:hidden; transition:transform .34s cubic-bezier(.3,0,.2,1),opacity .22s ease,visibility 0s linear .34s; }
+    .start-menu { position:fixed; z-index:19990; left:0; bottom:31px; width:298px; height:330px; padding:5px; display:grid; grid-template-columns:143px 1fr; grid-template-rows:20px 1fr; background:#3f4346; border:1px solid #1d262e; box-shadow:3px 3px 10px rgba(0,0,0,.45); transform:scaleY(.04); transform-origin:left bottom; opacity:0; visibility:hidden; transition:transform .34s cubic-bezier(.3,0,.2,1),opacity .22s ease,visibility 0s linear .34s; }
     .start-menu.open { transform:scaleY(1); opacity:1; visibility:visible; transition:transform .34s cubic-bezier(.3,0,.2,1),opacity .22s ease; }
     .start-menu h3 { grid-column:1/-1; margin:0; padding:0 17px; color:#fff; background:#3f4346; font:bold 11px Tahoma; line-height:20px; }
     .start-left { display:flex; flex-direction:column; padding:5px 0; background:#fff; border:1px solid #232c34; }
