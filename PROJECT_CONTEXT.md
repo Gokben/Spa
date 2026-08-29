@@ -247,7 +247,7 @@ Git Version Control içindeki otomatik dağıtım ekranı geçmişte “Yükleni
 - Canlıda test personeli yoktur.
 - Vox ERP stok modülü yerelde ve canlıda çalışmaktadır; giriş/çıkış miktar hesabı doğrulanmıştır.
 - Vox ERP Ön Kasa modülü yerelde ve canlıda çalışmaktadır; gelir, gider, bakiye ve gün sonu fark hesabı doğrulanmıştır.
-- Vox ERP rezervasyon modülü yerelde ve canlıda çalışmaktadır; kayıt ve personel saat çakışması doğrulanmıştır. Günlük, haftalık ve aylık takvim görünümleri yerelde tamamlanmış olup canlı dağıtım sırasındadır.
+- Vox ERP rezervasyon modülü yerelde ve canlıda çalışmaktadır; kayıt ve personel saat çakışması doğrulanmıştır. Günlük, haftalık ve aylık takvim, dikey saat çizelgesi, sağ tıkla yeni kayıt ve otomatik tam ekran davranışları canlıda doğrulanmıştır.
 
 ## Yeni bir Codex görevi başlatırken
 
