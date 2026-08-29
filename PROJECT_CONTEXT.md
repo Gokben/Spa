@@ -105,7 +105,8 @@ Vox ERP randevu modülü SPA'ya uyarlanarak Rezervasyon menüsüne bağlanmışt
 - Haftalık görünüm pazartesiden pazara yedi günlük planı gösterir.
 - Aylık görünümde rezervasyonlar gün ve başlangıç saatiyle gösterilir.
 - Her görünümde önceki/sonraki dönem ve Bugün düğmeleri bulunur; hafta veya gün ay sınırını geçtiğinde API gerekli tarih aralığını birlikte getirir.
-- Günlük çizelgedeki boş saate sağ tıklanınca seçilen tarih ve yarım saatlik zaman aralığı otomatik dolu yeni rezervasyon kartı açılır. Haftalık ve aylık gün alanlarında sağ tık seçilen tarihle kartı açar.
+- Günlük çizelgedeki boş saate veya haftalık/aylık gün alanına sağ tıklanınca Yeni, Düzenle ve Sil seçenekli bağlam menüsü açılır. Boş alanda yalnızca Yeni aktiftir; mevcut rezervasyonda Düzenle ve Sil de etkinleşir. Kullanıcının seçimi olmadan işlem yapılmaz; Sil ayrıca onay ister. Günlük çizelgeden Yeni seçildiğinde tarih ve yarım saatlik zaman aralığı otomatik doldurulur.
+- Rezervasyon penceresi varsayılan olarak Günlük görünümle açılır; saatler 08:00–22:00 arasında sol tarafta dikey eksende gösterilir.
 - Rezervasyon penceresi ilk açılışta otomatik olarak tam ekran olur.
 - Rezervasyon üye kaydına ve aktif personele bağlanabilir; üye seçilmeden misafir kaydı da açılabilir.
 - Hizmet, tarih, başlangıç/bitiş saati, personel, durum, telefon ve not bilgileri tutulur.
