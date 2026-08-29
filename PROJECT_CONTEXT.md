@@ -92,6 +92,21 @@ Vox ERP Ön Kasa modülü Laravel yapısına uyarlanarak Ön Kasa menüsüne ba�
 - Gelir ve gider kategorileri ayrı tanımlanır; kullanılan kategoriler silinemez, pasifleştirilebilir.
 - Gün sonu kaydı beklenen bakiye, sayılan bakiye ve farkı saklar; aynı tarih yeniden kaydedildiğinde kayıt güncellenir.
 
+## Rezervasyon
+
+Vox ERP randevu modülü SPA'ya uyarlanarak Rezervasyon menüsüne bağlanmıştır. Pencerede üç sekme vardır:
+
+1. Takvim
+2. Yeni Rezervasyon
+3. Rezervasyon Listesi
+
+- Aylık takvimde rezervasyonlar gün ve başlangıç saatiyle gösterilir.
+- Rezervasyon üye kaydına ve aktif personele bağlanabilir; üye seçilmeden misafir kaydı da açılabilir.
+- Hizmet, tarih, başlangıç/bitiş saati, personel, durum, telefon ve not bilgileri tutulur.
+- Durumlar Planlandı, Onaylandı, Tamamlandı, İptal ve Gelmedi seçenekleridir.
+- Aynı personelin çakışan saatlerde iki aktif rezervasyonuna sunucu tarafında izin verilmez.
+- Takvim günündeki artı düğmesi seçilen tarihle yeni rezervasyon formunu açar.
+
 ## Kurulum
 
 Kurulum penceresinde dört sekme bulunur:
@@ -159,6 +174,7 @@ Başlıca uygulama tabloları:
 - `cash_categories`
 - `cash_transactions`
 - `cash_closings`
+- `reservations`
 
 `employees` tablosunda nullable `occupation_id` ve `work_group_id` alanları vardır. Her ikisi de ilgili tanım silindiğinde `NULL` olacak dış anahtarlarla bağlıdır.
 
@@ -178,6 +194,7 @@ Başlıca uygulama tabloları:
 - `/api/cash/transactions`
 - `/api/cash/categories`
 - `/api/cash/closing`
+- `/api/reservations`
 
 API erişimi `SpaAuthenticate` middleware katmanından geçer.
 
@@ -194,6 +211,7 @@ Projeye özgü migration sırası:
 - `2026_08_28_050000_create_occupations_and_work_groups`
 - `2026_08_29_000000_create_stock_module_tables`
 - `2026_08_29_010000_create_cash_module_tables`
+- `2026_08_29_020000_create_reservations_table`
 
 ## Yerel test durumu
 
@@ -223,6 +241,7 @@ Git Version Control içindeki otomatik dağıtım ekranı geçmişte “Yükleni
 - Canlıda test personeli yoktur.
 - Vox ERP stok modülü yerelde tamamlanmış ve giriş/çıkış miktar hesabı tarayıcıda doğrulanmıştır; henüz canlıya alınmamıştır.
 - Vox ERP Ön Kasa modülü yerelde tamamlanmış; gelir, gider, bakiye ve gün sonu fark hesabı tarayıcıda doğrulanmıştır. Henüz canlıya alınmamıştır.
+- Vox ERP rezervasyon modülü yerelde tamamlanmış; aylık takvim, kayıt ve personel saat çakışması tarayıcıda doğrulanmıştır. Canlı dağıtım beklemektedir.
 
 ## Yeni bir Codex görevi başlatırken
 
