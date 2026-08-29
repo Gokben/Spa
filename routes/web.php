@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\BusinessHourController;
+use App\Http\Controllers\CashController;
 use App\Http\Controllers\EmployeeController;
 use App\Http\Controllers\EmployeeScheduleController;
 use App\Http\Controllers\MemberController;
@@ -33,4 +34,13 @@ Route::middleware(SpaAuthenticate::class)->prefix('api')->group(function () {
     Route::apiResource('stock-items', StockController::class)->only(['index', 'show', 'store', 'update', 'destroy']);
     Route::get('stock-movements', [StockController::class, 'movements']);
     Route::post('stock-movements', [StockController::class, 'storeMovement']);
+    Route::get('cash', [CashController::class, 'index']);
+    Route::put('cash/opening', [CashController::class, 'saveOpening']);
+    Route::post('cash/transactions', [CashController::class, 'storeTransaction']);
+    Route::put('cash/transactions/{cashTransaction}', [CashController::class, 'updateTransaction']);
+    Route::delete('cash/transactions/{cashTransaction}', [CashController::class, 'destroyTransaction']);
+    Route::post('cash/categories', [CashController::class, 'storeCategory']);
+    Route::put('cash/categories/{cashCategory}', [CashController::class, 'updateCategory']);
+    Route::delete('cash/categories/{cashCategory}', [CashController::class, 'destroyCategory']);
+    Route::put('cash/closing', [CashController::class, 'saveClosing']);
 });

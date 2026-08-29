@@ -77,6 +77,21 @@ Vox ERP stok modülü Laravel yapısına uyarlanarak Stok menüsüne bağlanmı�
 - Mevcut miktardan fazla stok çıkışı sunucu tarafında engellenir.
 - Stok kartı silindiğinde ona bağlı hareketler de silinir.
 
+## Ön Kasa
+
+Vox ERP Ön Kasa modülü Laravel yapısına uyarlanarak Ön Kasa menüsüne bağlanmıştır. Pencerede dört sekme vardır:
+
+1. Günlük İşlemler
+2. Yeni İşlem
+3. Gün Sonu
+4. Kategoriler
+
+- Devreden kasa, toplam gelir, toplam gider ve mevcut bakiye özetleri gösterilir.
+- Gelir ve gider kayıtlarında tarih, açıklama, tutar, ödeme türü, kategori ve belge/fatura numarası tutulur.
+- Ödeme türleri Nakit, Kredi Kartı, Havale/EFT ve Oda Hesabı seçenekleridir.
+- Gelir ve gider kategorileri ayrı tanımlanır; kullanılan kategoriler silinemez, pasifleştirilebilir.
+- Gün sonu kaydı beklenen bakiye, sayılan bakiye ve farkı saklar; aynı tarih yeniden kaydedildiğinde kayıt güncellenir.
+
 ## Kurulum
 
 Kurulum penceresinde dört sekme bulunur:
@@ -140,6 +155,10 @@ Başlıca uygulama tabloları:
 - `work_groups`
 - `stock_items`
 - `stock_movements`
+- `cash_settings`
+- `cash_categories`
+- `cash_transactions`
+- `cash_closings`
 
 `employees` tablosunda nullable `occupation_id` ve `work_group_id` alanları vardır. Her ikisi de ilgili tanım silindiğinde `NULL` olacak dış anahtarlarla bağlıdır.
 
@@ -155,6 +174,10 @@ Başlıca uygulama tabloları:
 - `/api/employee-schedules`
 - `/api/stock-items`
 - `/api/stock-movements`
+- `/api/cash`
+- `/api/cash/transactions`
+- `/api/cash/categories`
+- `/api/cash/closing`
 
 API erişimi `SpaAuthenticate` middleware katmanından geçer.
 
@@ -170,6 +193,7 @@ Projeye özgü migration sırası:
 - `2026_08_28_040000_create_business_hours_table`
 - `2026_08_28_050000_create_occupations_and_work_groups`
 - `2026_08_29_000000_create_stock_module_tables`
+- `2026_08_29_010000_create_cash_module_tables`
 
 ## Yerel test durumu
 
@@ -198,6 +222,7 @@ Git Version Control içindeki otomatik dağıtım ekranı geçmişte “Yükleni
 - Canlıda çalışma grubu kaydı henüz kullanıcı tarafından tanımlanmadıysa çalışma programı seçiminde yalnızca “Grupsuz Personel” görünür.
 - Canlıda test personeli yoktur.
 - Vox ERP stok modülü yerelde tamamlanmış ve giriş/çıkış miktar hesabı tarayıcıda doğrulanmıştır; henüz canlıya alınmamıştır.
+- Vox ERP Ön Kasa modülü yerelde tamamlanmış; gelir, gider, bakiye ve gün sonu fark hesabı tarayıcıda doğrulanmıştır. Henüz canlıya alınmamıştır.
 
 ## Yeni bir Codex görevi başlatırken
 
