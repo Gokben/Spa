@@ -13,7 +13,7 @@ Sofitel Spa operasyonlarını tek arayüzden yönetmek için masaüstü uygulama
 - Canlı uygulama: `https://krpsoft.com.tr/spa/`
 - GitHub: `https://github.com/Gokben/Spa.git`
 - Aktif geliştirme dalı: `codex/add-agustos-index`
-- Bu hafıza oluşturulurken son Git commit: `f1b770e`
+- Bu görev öncesindeki son Git commit: `e138ab4`
 - Canlı Laravel uygulama klasörü: `/home/krpsoftc/spa-app`
 
 Kimlik bilgileri, cPanel oturum adresleri ve `.env` sırları bu dosyada tutulmaz.
@@ -100,7 +100,11 @@ Vox ERP randevu modülü SPA'ya uyarlanarak Rezervasyon menüsüne bağlanmışt
 2. Yeni Rezervasyon
 3. Rezervasyon Listesi
 
-- Aylık takvimde rezervasyonlar gün ve başlangıç saatiyle gösterilir.
+- Takvim, Günlük, Haftalık ve Aylık görünüm seçeneklerine sahiptir.
+- Günlük görünüm seçilen günün rezervasyonlarını saat, misafir, hizmet, personel ve durum bilgileriyle listeler.
+- Haftalık görünüm pazartesiden pazara yedi günlük planı gösterir.
+- Aylık görünümde rezervasyonlar gün ve başlangıç saatiyle gösterilir.
+- Her görünümde önceki/sonraki dönem ve Bugün düğmeleri bulunur; hafta veya gün ay sınırını geçtiğinde API gerekli tarih aralığını birlikte getirir.
 - Rezervasyon üye kaydına ve aktif personele bağlanabilir; üye seçilmeden misafir kaydı da açılabilir.
 - Hizmet, tarih, başlangıç/bitiş saati, personel, durum, telefon ve not bilgileri tutulur.
 - Durumlar Planlandı, Onaylandı, Tamamlandı, İptal ve Gelmedi seçenekleridir.
@@ -239,9 +243,9 @@ Git Version Control içindeki otomatik dağıtım ekranı geçmişte “Yükleni
 - Canlıda meslek ve çalışma grubu altyapısı hazırdır.
 - Canlıda çalışma grubu kaydı henüz kullanıcı tarafından tanımlanmadıysa çalışma programı seçiminde yalnızca “Grupsuz Personel” görünür.
 - Canlıda test personeli yoktur.
-- Vox ERP stok modülü yerelde tamamlanmış ve giriş/çıkış miktar hesabı tarayıcıda doğrulanmıştır; henüz canlıya alınmamıştır.
-- Vox ERP Ön Kasa modülü yerelde tamamlanmış; gelir, gider, bakiye ve gün sonu fark hesabı tarayıcıda doğrulanmıştır. Henüz canlıya alınmamıştır.
-- Vox ERP rezervasyon modülü yerelde tamamlanmış; aylık takvim, kayıt ve personel saat çakışması tarayıcıda doğrulanmıştır. Canlı dağıtım beklemektedir.
+- Vox ERP stok modülü yerelde ve canlıda çalışmaktadır; giriş/çıkış miktar hesabı doğrulanmıştır.
+- Vox ERP Ön Kasa modülü yerelde ve canlıda çalışmaktadır; gelir, gider, bakiye ve gün sonu fark hesabı doğrulanmıştır.
+- Vox ERP rezervasyon modülü yerelde ve canlıda çalışmaktadır; kayıt ve personel saat çakışması doğrulanmıştır. Günlük, haftalık ve aylık takvim görünümleri yerelde tamamlanmış olup canlı dağıtım sırasındadır.
 
 ## Yeni bir Codex görevi başlatırken
 

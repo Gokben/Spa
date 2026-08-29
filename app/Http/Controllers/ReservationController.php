@@ -14,12 +14,19 @@ class ReservationController extends Controller
 {
     public function index(Request $request): JsonResponse
     {
-        $month = $request->validate(['month' => ['nullable', 'date_format:Y-m']])['month'] ?? now()->format('Y-m');
-        $start = $month . '-01';
-        $end = date('Y-m-d', strtotime($start . ' +1 month'));
+        $filters = $request->validate([
+            'month' => ['nullable', 'date_format:Y-m'],
+            'start' => ['nullable', 'required_with:end', 'date_format:Y-m-d'],
+            'end' => ['nullable', 'required_with:start', 'date_format:Y-m-d', 'after:start'],
+        ]);
+        $month = $filters['month'] ?? now()->format('Y-m');
+        $start = $filters['start'] ?? $month . '-01';
+        $end = $filters['end'] ?? date('Y-m-d', strtotime($start . ' +1 month'));
 
         return response()->json(['data' => [
-            'month' => $month,
+            'month' => substr($start, 0, 7),
+            'start' => $start,
+            'end' => $end,
             'reservations' => Reservation::query()->with(['member', 'employee'])->whereDate('reservation_date', '>=', $start)->whereDate('reservation_date', '<', $end)->orderBy('reservation_date')->orderBy('start_time')->get(),
             'members' => Member::query()->where('status', 'aktif')->orderBy('full_name')->get(['id', 'member_no', 'full_name', 'phone'])->map(fn (Member $member) => [
                 'id' => $member->id,
