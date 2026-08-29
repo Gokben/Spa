@@ -6,6 +6,7 @@ use App\Http\Controllers\EmployeeController;
 use App\Http\Controllers\EmployeeScheduleController;
 use App\Http\Controllers\MemberController;
 use App\Http\Controllers\OccupationController;
+use App\Http\Controllers\StockController;
 use App\Http\Controllers\WorkShiftController;
 use App\Http\Controllers\WorkGroupController;
 use App\Http\Middleware\SpaAuthenticate;
@@ -29,4 +30,7 @@ Route::middleware(SpaAuthenticate::class)->prefix('api')->group(function () {
     Route::post('employees/{employee}/photo', [EmployeeController::class, 'uploadPhoto']);
     Route::get('employee-schedules', [EmployeeScheduleController::class, 'index']);
     Route::put('employee-schedules', [EmployeeScheduleController::class, 'update']);
+    Route::apiResource('stock-items', StockController::class)->only(['index', 'show', 'store', 'update', 'destroy']);
+    Route::get('stock-movements', [StockController::class, 'movements']);
+    Route::post('stock-movements', [StockController::class, 'storeMovement']);
 });

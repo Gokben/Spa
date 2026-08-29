@@ -62,6 +62,21 @@ Giriş ekranı korunmuştur. Şimdilik kullanıcı adı ve parola zorunluluğu o
 
 Yerelde alan testi için beş örnek personel vardır. Bu kişiler canlıya gönderilmemiştir ve açık talep olmadan gönderilmemelidir.
 
+## Stok
+
+Vox ERP stok modülü Laravel yapısına uyarlanarak Stok menüsüne bağlanmıştır. Stok penceresinde dört ana sekme vardır:
+
+1. Stok Listesi
+2. Stok Kartı
+3. Stok Giriş
+4. Stok Çıkış
+
+- Stok kartlarında kod, ad, kategori, marka, birim, minimum stok, alış/satış fiyatı, KDV, açıklama ve durum tutulur.
+- Liste arama ve kategori filtresi içerir; minimum seviyeye düşen kayıtlar kritik stok olarak işaretlenir.
+- Giriş ve çıkış hareketlerinde tarih, miktar, belge/fatura numarası ve açıklama tutulur.
+- Mevcut miktardan fazla stok çıkışı sunucu tarafında engellenir.
+- Stok kartı silindiğinde ona bağlı hareketler de silinir.
+
 ## Kurulum
 
 Kurulum penceresinde dört sekme bulunur:
@@ -123,6 +138,8 @@ Başlıca uygulama tabloları:
 - `employee_schedules`
 - `occupations`
 - `work_groups`
+- `stock_items`
+- `stock_movements`
 
 `employees` tablosunda nullable `occupation_id` ve `work_group_id` alanları vardır. Her ikisi de ilgili tanım silindiğinde `NULL` olacak dış anahtarlarla bağlıdır.
 
@@ -136,6 +153,8 @@ Başlıca uygulama tabloları:
 - `/api/occupations`
 - `/api/work-groups`
 - `/api/employee-schedules`
+- `/api/stock-items`
+- `/api/stock-movements`
 
 API erişimi `SpaAuthenticate` middleware katmanından geçer.
 
@@ -150,6 +169,7 @@ Projeye özgü migration sırası:
 - `2026_08_28_030000_add_contact_fields_to_employees_table`
 - `2026_08_28_040000_create_business_hours_table`
 - `2026_08_28_050000_create_occupations_and_work_groups`
+- `2026_08_29_000000_create_stock_module_tables`
 
 ## Yerel test durumu
 
@@ -177,6 +197,7 @@ Git Version Control içindeki otomatik dağıtım ekranı geçmişte “Yükleni
 - Canlıda meslek ve çalışma grubu altyapısı hazırdır.
 - Canlıda çalışma grubu kaydı henüz kullanıcı tarafından tanımlanmadıysa çalışma programı seçiminde yalnızca “Grupsuz Personel” görünür.
 - Canlıda test personeli yoktur.
+- Vox ERP stok modülü yerelde tamamlanmış ve giriş/çıkış miktar hesabı tarayıcıda doğrulanmıştır; henüz canlıya alınmamıştır.
 
 ## Yeni bir Codex görevi başlatırken
 
