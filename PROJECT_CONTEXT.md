@@ -101,10 +101,12 @@ Vox ERP randevu modülü SPA'ya uyarlanarak Rezervasyon menüsüne bağlanmışt
 3. Rezervasyon Listesi
 
 - Takvim, Günlük, Haftalık ve Aylık görünüm seçeneklerine sahiptir.
-- Günlük görünüm seçilen günün rezervasyonlarını saat, misafir, hizmet, personel ve durum bilgileriyle listeler.
+- Günlük görünüm rezervasyonları 08:00–22:00 saat çizelgesi üzerinde süreleri oranında gösterir; çakışan rezervasyonlar yan yana yerleşir.
 - Haftalık görünüm pazartesiden pazara yedi günlük planı gösterir.
 - Aylık görünümde rezervasyonlar gün ve başlangıç saatiyle gösterilir.
 - Her görünümde önceki/sonraki dönem ve Bugün düğmeleri bulunur; hafta veya gün ay sınırını geçtiğinde API gerekli tarih aralığını birlikte getirir.
+- Günlük çizelgedeki boş saate sağ tıklanınca seçilen tarih ve yarım saatlik zaman aralığı otomatik dolu yeni rezervasyon kartı açılır. Haftalık ve aylık gün alanlarında sağ tık seçilen tarihle kartı açar.
+- Rezervasyon penceresi ilk açılışta otomatik olarak tam ekran olur.
 - Rezervasyon üye kaydına ve aktif personele bağlanabilir; üye seçilmeden misafir kaydı da açılabilir.
 - Hizmet, tarih, başlangıç/bitiş saati, personel, durum, telefon ve not bilgileri tutulur.
 - Durumlar Planlandı, Onaylandı, Tamamlandı, İptal ve Gelmedi seçenekleridir.
