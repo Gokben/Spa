@@ -1,6 +1,6 @@
 # Sofitel Spa Yazılımı — Proje Hafızası
 
-Son güncelleme: 28 Ağustos 2026
+Son güncelleme: 29 Ağustos 2026
 
 ## Projenin amacı
 
@@ -47,6 +47,7 @@ Giriş ekranı korunmuştur. Şimdilik kullanıcı adı ve parola zorunluluğu o
 - Üye listesi API'den gelir.
 - Bir üyeye tıklanınca üye kartı açılır.
 - Kartta kişisel bilgiler, üyelik bilgileri ve ödeme bilgileri bulunur.
+- Üye kartı üst bölümde geniş renkli “Bilgiler”, “Üyelik” ve “Muhasebe” sekmelerine ayrılmıştır.
 - Görünüm Vox/Windows tarzındadır.
 
 ## Personel
@@ -182,4 +183,3 @@ Git Version Control içindeki otomatik dağıtım ekranı geçmişte “Yükleni
 Şu komut yeterlidir:
 
 > `E:\kirpi\spa-web\AGENTS.md` ve `E:\kirpi\spa-web\PROJECT_CONTEXT.md` dosyalarını tamamen oku, mevcut git durumunu kontrol et ve SPA projesine kaldığımız yerden devam et.
-
