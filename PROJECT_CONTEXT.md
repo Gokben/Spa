@@ -1,6 +1,6 @@
 # Sofitel Spa Yazılımı — Proje Hafızası
 
-Son güncelleme: 29 Ağustos 2026
+Son güncelleme: 31 Ağustos 2026
 
 ## Projenin amacı
 
@@ -252,15 +252,12 @@ Git Version Control içindeki otomatik dağıtım ekranı geçmişte “Yükleni
 - Vox ERP stok modülü yerelde ve canlıda çalışmaktadır; giriş/çıkış miktar hesabı doğrulanmıştır.
 - Vox ERP Ön Kasa modülü yerelde ve canlıda çalışmaktadır; gelir, gider, bakiye ve gün sonu fark hesabı doğrulanmıştır.
 - Vox ERP rezervasyon modülü yerelde ve canlıda çalışmaktadır; kayıt ve personel saat çakışması doğrulanmıştır. Günlük, haftalık ve aylık takvim, dikey saat çizelgesi, sağ tıkla yeni kayıt ve otomatik tam ekran davranışları canlıda doğrulanmıştır.
-- Terapist bazlı isim sütunları ve sağ tıklanan terapistin yeni rezervasyon formuna otomatik aktarılması yerelde doğrulanmıştır; henüz canlıya alınmamıştır.
-- Başlat düğmesinin açık menüyü ikinci tıklamada kapatma davranışı yerelde düzeltilmiştir; henüz canlıya alınmamıştır.
-- Boş terapist saat aralığına çift tıklayarak yeni rezervasyon açma davranışı yerelde doğrulanmıştır; henüz canlıya alınmamıştır.
-- Rezervasyon penceresindeki geniş üçlü sekme şeridi yerelde kaldırılmıştır; henüz canlıya alınmamıştır.
-- Rezervasyon araç çubuğundaki Yenile düğmesi yerelde kaldırılmıştır; henüz canlıya alınmamıştır.
-- Türkçe, hizmet ve misafir seçimli yeni rezervasyon giriş düzeni yerelde hazırlanmıştır; henüz canlıya alınmamıştır.
-- Rezervasyon araç çubuğundaki Günlük, Haftalık ve Aylık düğmeleri yerelde kaldırılmıştır; henüz canlıya alınmamıştır.
-- Sol Başlat menüsü açıldığında tam ekran çalışma penceresi menü genişliği kadar sağa kayar ve daralır; menü kapanınca eski tam ekran konumuna döner. Değişiklik yereldedir ve henüz canlıya alınmamıştır.
-- Günlük rezervasyon çizelgesindeki saat etiketleri 11 piksel, kalın ve mavi olarak gösterilir. Değişiklik yereldedir ve henüz canlıya alınmamıştır.
+- Terapist bazlı isim sütunları, sağ tıklanan veya çift tıklanan terapist ve saatin forma otomatik aktarılması canlıda çalışmaktadır.
+- Başlat düğmesinin menüyü açıp kapatma davranışı ve açık menü yanında tam ekran pencerenin sağa kayarak daralması canlıda doğrulanmıştır.
+- Rezervasyon penceresindeki geniş üçlü sekme şeridi, Yenile düğmesi ve Günlük / Haftalık / Aylık görünüm düğmeleri canlıda kaldırılmıştır; takvim günlük görünümde açılır.
+- Türkçe Genel / Detay sekmeli, hizmet şablonu ve üye/misafir seçimli rezervasyon giriş düzeni canlıda doğrulanmıştır.
+- Günlük rezervasyon çizelgesinde dönüşümlü saat blokları ile 11 piksel, kalın ve mavi saat etiketleri canlıda görünmektedir.
+- 31 Ağustos 2026 dağıtımında yalnızca `app/Http/Controllers/ReservationController.php` ve `resources/views/spa.blade.php` güncellenmiş, migration uygulanmamış ve canlı MySQL verileri değiştirilmemiştir.
 
 ## Yeni bir Codex görevi başlatırken
 
