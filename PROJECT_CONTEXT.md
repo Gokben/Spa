@@ -120,12 +120,13 @@ Vox ERP randevu modülü SPA'ya uyarlanarak Rezervasyon menüsüne bağlanmışt
 
 ## Kurulum
 
-Kurulum penceresinde dört sekme bulunur:
+Kurulum penceresinde beş sekme bulunur:
 
 1. Mesai Tanımları
 2. Çalışma Saatleri
 3. Meslekler
 4. Çalışma Grupları
+5. Kategoriler
 
 ### Mesai Tanımları
 
@@ -154,6 +155,14 @@ Ekleme, düzenleme ve silme desteklenir. Canlıda tanımlı başlangıç kayıtl
 - Çalışma grubu ekleme, düzenleme ve silme desteklenir.
 - Bir çalışma grubu silindiğinde personel kaydı silinmez; personelin grup alanı boşalır.
 
+### Kategoriler
+
+- Kategori ekleme, düzenleme ve silme desteklenir.
+- Başlangıç örneği olarak `Masaj` kategorisi eklenir.
+- Kurulumda tanımlanan kategoriler Stok Kartındaki çoklu kategori seçim alanına otomatik gelir.
+- Bir stok kartına sıfır, bir veya birden fazla kategori bağlanabilir.
+- Eski stok kartlarındaki tek metin kategori değerleri migration sırasında kategori tanımına ve stok ilişkisine dönüştürülür.
+
 ## Çalışma Programı
 
 - Haftalık takvim görünümündedir.
@@ -179,6 +188,8 @@ Başlıca uygulama tabloları:
 - `employee_schedules`
 - `occupations`
 - `work_groups`
+- `categories`
+- `category_stock_item`
 - `stock_items`
 - `stock_movements`
 - `cash_settings`
@@ -198,6 +209,7 @@ Başlıca uygulama tabloları:
 - `/api/business-hours`
 - `/api/occupations`
 - `/api/work-groups`
+- `/api/categories`
 - `/api/employee-schedules`
 - `/api/stock-items`
 - `/api/stock-movements`
@@ -223,6 +235,7 @@ Projeye özgü migration sırası:
 - `2026_08_29_000000_create_stock_module_tables`
 - `2026_08_29_010000_create_cash_module_tables`
 - `2026_08_29_020000_create_reservations_table`
+- `2026_08_31_000000_create_categories_table`
 
 ## Yerel test durumu
 
@@ -260,6 +273,7 @@ Git Version Control içindeki otomatik dağıtım ekranı geçmişte “Yükleni
 - Günlük rezervasyon çizelgesinde dönüşümlü saat blokları ile 11 piksel, kalın ve mavi saat etiketleri canlıda görünmektedir.
 - Ayrı pencere şeklindeki yeşil-altın rezervasyon giriş ekranı ve X ile günlük takvime dönüş davranışı yerelde ve canlıda doğrulanmıştır.
 - 31 Ağustos 2026 tarihli `0287d9f` dağıtımında yalnızca `resources/views/spa.blade.php` güncellenmiş; migration çalıştırılmamış, `.env`, canlı MySQL verileri ve test kayıtları değiştirilmemiştir.
+- Kurulumdaki Kategoriler sekmesi, örnek `Masaj` kaydı ve Stok Kartındaki çoklu kategori seçimi yerelde tamamlanmıştır; henüz canlıya alınmamıştır.
 - 31 Ağustos 2026 dağıtımında yalnızca `app/Http/Controllers/ReservationController.php` ve `resources/views/spa.blade.php` güncellenmiş, migration uygulanmamış ve canlı MySQL verileri değiştirilmemiştir.
 
 ## Yeni bir Codex görevi başlatırken

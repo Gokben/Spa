@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\BusinessHourController;
+use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\CashController;
 use App\Http\Controllers\EmployeeController;
 use App\Http\Controllers\EmployeeScheduleController;
@@ -28,6 +29,7 @@ Route::middleware(SpaAuthenticate::class)->prefix('api')->group(function () {
     Route::put('business-hours', [BusinessHourController::class, 'update']);
     Route::apiResource('occupations', OccupationController::class)->only(['index', 'store', 'update', 'destroy']);
     Route::apiResource('work-groups', WorkGroupController::class)->only(['index', 'store', 'update', 'destroy']);
+    Route::apiResource('categories', CategoryController::class)->only(['index', 'store', 'update', 'destroy']);
     Route::apiResource('employees', EmployeeController::class)->only(['index', 'show', 'store', 'update']);
     Route::post('employees/{employee}/photo', [EmployeeController::class, 'uploadPhoto']);
     Route::get('employee-schedules', [EmployeeScheduleController::class, 'index']);

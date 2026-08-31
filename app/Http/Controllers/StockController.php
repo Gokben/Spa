@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Category;
 use App\Models\StockItem;
 use App\Models\StockMovement;
 use Illuminate\Http\JsonResponse;
@@ -15,6 +16,7 @@ class StockController extends Controller
     public function index(): JsonResponse
     {
         $items = StockItem::query()
+            ->with('categories')
             ->withSum(['movements as entry_quantity' => fn ($query) => $query->where('type', 'giris')], 'quantity')
             ->withSum(['movements as exit_quantity' => fn ($query) => $query->where('type', 'cikis')], 'quantity')
             ->orderBy('name')
@@ -26,19 +28,31 @@ class StockController extends Controller
 
     public function show(StockItem $stockItem): JsonResponse
     {
-        return response()->json(['data' => $stockItem]);
+        return response()->json(['data' => $stockItem->load('categories')]);
     }
 
     public function store(Request $request): JsonResponse
     {
-        return response()->json(['data' => StockItem::create($this->itemData($request))], 201);
+        $item = DB::transaction(function () use ($request): StockItem {
+            [$data, $categoryIds] = $this->itemData($request);
+            $item = StockItem::create($data);
+            $item->categories()->sync($categoryIds);
+
+            return $item->load('categories');
+        });
+
+        return response()->json(['data' => $item], 201);
     }
 
     public function update(Request $request, StockItem $stockItem): JsonResponse
     {
-        $stockItem->update($this->itemData($request, $stockItem));
+        DB::transaction(function () use ($request, $stockItem): void {
+            [$data, $categoryIds] = $this->itemData($request, $stockItem);
+            $stockItem->update($data);
+            $stockItem->categories()->sync($categoryIds);
+        });
 
-        return response()->json(['data' => $stockItem->refresh()]);
+        return response()->json(['data' => $stockItem->refresh()->load('categories')]);
     }
 
     public function destroy(StockItem $stockItem): JsonResponse
@@ -86,10 +100,11 @@ class StockController extends Controller
 
     private function itemData(Request $request, ?StockItem $stockItem = null): array
     {
-        return $request->validate([
+        $data = $request->validate([
             'code' => ['required', 'string', 'max:80', Rule::unique('stock_items')->ignore($stockItem?->id)],
             'name' => ['required', 'string', 'max:190'],
-            'category' => ['nullable', 'string', 'max:120'],
+            'category_ids' => ['nullable', 'array'],
+            'category_ids.*' => ['integer', 'distinct', 'exists:categories,id'],
             'brand' => ['nullable', 'string', 'max:120'],
             'unit' => ['required', Rule::in(['Adet', 'Kutu', 'Paket', 'Şişe', 'Tüp', 'Kilogram', 'Litre'])],
             'minimum_quantity' => ['required', 'numeric', 'min:0'],
@@ -99,5 +114,13 @@ class StockController extends Controller
             'description' => ['nullable', 'string', 'max:2000'],
             'status' => ['required', Rule::in(['aktif', 'pasif'])],
         ]);
+
+        $categoryIds = array_values($data['category_ids'] ?? []);
+        unset($data['category_ids']);
+        $data['category'] = $categoryIds
+            ? Category::query()->whereIn('id', $categoryIds)->orderBy('name')->value('name')
+            : null;
+
+        return [$data, $categoryIds];
     }
 }
