@@ -429,11 +429,11 @@
     .reservation-therapist-head small { display:block; margin-top:2px; color:#f0d98f; text-transform:none; font:9px Tahoma; }
     .reservation-no-therapist { display:grid; min-height:220px; place-items:center; padding:20px; color:#765f27; background:#fffaf0; text-align:center; font:bold 11px Tahoma; }
     .reservation-time-axis,.reservation-time-canvas { position:relative; height:100%; }
-    .reservation-time-axis { position:sticky; left:0; z-index:3; color:#604510; border-right:1px solid #c9ad67; background:#f6ead0; font:9px Tahoma; }
+    .reservation-time-axis { position:sticky; left:0; z-index:3; color:#604510; border-right:1px solid #c9ad67; background:repeating-linear-gradient(to bottom,#f8edd7 0,#f8edd7 50px,#ecdfc2 50px,#ecdfc2 100px); font:9px Tahoma; }
     .reservation-time-label { position:absolute; right:7px; transform:translateY(-50%); }
     .reservation-time-label:first-child { top:7px !important; transform:none; font-weight:bold; }.reservation-time-label:last-child { top:calc(100% - 7px) !important; transform:translateY(-100%); font-weight:bold; }
-    .reservation-time-canvas { min-width:190px; border-right:1px solid #9a947f; }
-    .reservation-time-line { position:absolute; right:0; left:0; border-top:1px solid #dfd2ad; }.reservation-time-line.half{border-top:1px dotted #eee3c7}
+    .reservation-time-canvas { min-width:190px; border-right:1px solid #9a947f; background:repeating-linear-gradient(to bottom,#fffdf8 0,#fffdf8 50px,#edf4ef 50px,#edf4ef 100px); }
+    .reservation-time-line { position:absolute; right:0; left:0; border-top:1px solid #cdbb8d; }.reservation-time-line.half{border-top:1px dotted rgba(157,145,111,.42)}
     .reservation-day-event { position:absolute; z-index:2; min-height:24px; padding:5px 7px; overflow:hidden; color:#fff; border:1px solid #174e40; border-left:5px solid #d8b95d; border-radius:2px; background:#2e7460; box-shadow:0 1px 2px rgba(0,0,0,.2); text-align:left; font:9px Tahoma; cursor:pointer; }.reservation-day-event.confirmed{background:#176a8b}.reservation-day-event.completed{background:#6e7c49}.reservation-day-event.cancelled{background:#9a8f79;text-decoration:line-through}.reservation-day-event.no_show{background:#a5483f}.reservation-day-event strong,.reservation-day-event span{display:block;overflow:hidden;white-space:nowrap;text-overflow:ellipsis}.reservation-day-event strong{margin-bottom:2px;color:#fff}
     .reservation-empty { position:absolute; top:45%; right:0; left:0; color:#76694e; text-align:center; font:11px Tahoma; }
     .reservation-context-menu { position:fixed; z-index:30010; width:145px; padding:3px; color:#111; border:1px solid #71869c; background:#f2f2f2; box-shadow:2px 3px 8px rgba(0,0,0,.38); font:10px Tahoma; }

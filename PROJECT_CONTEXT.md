@@ -99,7 +99,7 @@ Vox ERP Ön Kasa modülü Laravel yapısına uyarlanarak Ön Kasa menüsüne ba�
 Vox ERP randevu modülü SPA'ya uyarlanarak Rezervasyon menüsüne bağlanmıştır. Üstteki Takvim / Yeni Rezervasyon / Rezervasyon Listesi sekme şeridi kaldırılmıştır; pencere doğrudan rezervasyon takvimini gösterir. Yeni düğmesi ve çizelge etkileşimleri kayıt formunu açar; Günlük, Haftalık veya Aylık düğmeleri takvime döner. Araç çubuğundaki Yenile düğmesi görünmez; takvim ilk açılışta, görünüm değişiminde ve kayıt işlemleri sonrasında otomatik yenilenir.
 
 - Takvim, Günlük, Haftalık ve Aylık görünüm seçeneklerine sahiptir.
-- Günlük görünüm rezervasyonları 08:00–22:00 saat çizelgesi üzerinde süreleri oranında gösterir; çakışan rezervasyonlar yan yana yerleşir.
+- Günlük görünüm rezervasyonları 08:00–22:00 saat çizelgesi üzerinde süreleri oranında gösterir; çakışan rezervasyonlar yan yana yerleşir. Ardışık saat blokları, geçişleri kolay izlemek için dönüşümlü açık tonlarla ayrılır.
 - Günlük görünümde mesleği Terapist olan aktif personeller ad-soyad başlıklı ayrı sütunlarda gösterilir; rezervasyon kartı bağlı olduğu terapistin sütununa yerleşir.
 - Terapist sütunundaki boş saate sağ tıklayıp Yeni seçildiğinde tarih, yarım saatlik zaman aralığı ve terapist otomatik olarak forma aktarılır.
 - Terapist sütunundaki boş saat aralığına çift tıklanınca yeni rezervasyon formu doğrudan açılır; tarih, yarım saatlik zaman aralığı ve terapist otomatik doldurulur.
