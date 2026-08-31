@@ -13,7 +13,7 @@ Sofitel Spa operasyonlarını tek arayüzden yönetmek için masaüstü uygulama
 - Canlı uygulama: `https://krpsoft.com.tr/spa/`
 - GitHub: `https://github.com/Gokben/Spa.git`
 - Aktif geliştirme dalı: `codex/add-agustos-index`
-- Bu görev öncesindeki son Git commit: `4031217`
+- Son arayüz geliştirme commit'i: `7a4a06e`
 - Canlı Laravel uygulama klasörü: `/home/krpsoftc/spa-app`
 
 Kimlik bilgileri, cPanel oturum adresleri ve `.env` sırları bu dosyada tutulmaz.
@@ -276,8 +276,9 @@ Git Version Control içindeki otomatik dağıtım ekranı geçmişte “Yükleni
 - Ayrı pencere şeklindeki yeşil-altın rezervasyon giriş ekranı ve X ile günlük takvime dönüş davranışı yerelde ve canlıda doğrulanmıştır.
 - 31 Ağustos 2026 tarihli `0287d9f` dağıtımında yalnızca `resources/views/spa.blade.php` güncellenmiş; migration çalıştırılmamış, `.env`, canlı MySQL verileri ve test kayıtları değiştirilmemiştir.
 - Kurulumdaki Kategoriler sekmesi, örnek `Masaj` kaydı ve Stok Kartındaki çoklu kategori seçimi yerelde ve canlıda doğrulanmıştır.
-- Stok Kartındaki çoklu kategori seçenekleri yan yana kutular yerine, tek alana tıklanınca dikey açılan seçim listesine dönüştürülmüştür. Seçilen kategori adları alan üzerinde özetlenir; bu arayüz değişikliği şimdilik yalnızca yereldedir.
-- Rezervasyonların terapistler arasında sürükle-bırakla taşınması ve günlük çizelgedeki yeşil bilgi şeridinin kaldırılması yerelde doğrulanmıştır; henüz canlıya alınmamıştır.
+- Stok Kartındaki çoklu kategori seçenekleri yan yana kutular yerine, tek alana tıklanınca dikey açılan seçim listesine dönüştürülmüştür. Seçilen kategori adları alan üzerinde özetlenir; davranış yerelde ve canlıda doğrulanmıştır.
+- Rezervasyonların terapistler arasında sürükle-bırakla taşınması ve günlük çizelgedeki yeşil bilgi şeridinin kaldırılması yerelde ve canlıda doğrulanmıştır.
+- 31 Ağustos 2026 tarihli `7a4a06e` dağıtımında yalnızca `resources/views/spa.blade.php` güncellenmiş; migration çalıştırılmamış, `.env`, canlı MySQL verileri ve test kayıtları değiştirilmemiştir.
 - 31 Ağustos 2026 dağıtımında yalnızca `app/Http/Controllers/ReservationController.php` ve `resources/views/spa.blade.php` güncellenmiş, migration uygulanmamış ve canlı MySQL verileri değiştirilmemiştir.
 
 ## Yeni bir Codex görevi başlatırken
