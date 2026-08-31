@@ -115,6 +115,7 @@ Vox ERP randevu modülü SPA'ya uyarlanarak Rezervasyon menüsüne bağlanmışt
 - Aynı personelin çakışan saatlerde iki aktif rezervasyonuna sunucu tarafında izin verilmez.
 - Takvim günündeki artı düğmesi seçilen tarihle yeni rezervasyon formunu açar.
 - Rezervasyon giriş formu Türkçe Genel / Detay düzenindedir. Genel bölümde tarih-saat-terapist özeti, aranabilir hizmet şablonları, seçilen hizmet özeti, ek hizmet alanı ve üye/misafir seçimi; Detay bölümünde telefon, durum ve not bulunur.
+- Rezervasyon girişi takvimin üzerinde ayrı bir pencere olarak açılır. Pencere Sofitel yeşil-altın renk standardını kullanır; sağ üstteki X formu kaydetmeden kapatır ve günlük rezervasyon takvimine geri döner.
 - Hizmet şablonu seçimi hizmet adını doldurur ve bitiş saatini şablon süresine göre hesaplar. Üye satırı seçimi ad-soyad ve telefonu mevcut rezervasyon alanlarına aktarır.
 
 ## Kurulum
@@ -257,6 +258,7 @@ Git Version Control içindeki otomatik dağıtım ekranı geçmişte “Yükleni
 - Rezervasyon penceresindeki geniş üçlü sekme şeridi, Yenile düğmesi ve Günlük / Haftalık / Aylık görünüm düğmeleri canlıda kaldırılmıştır; takvim günlük görünümde açılır.
 - Türkçe Genel / Detay sekmeli, hizmet şablonu ve üye/misafir seçimli rezervasyon giriş düzeni canlıda doğrulanmıştır.
 - Günlük rezervasyon çizelgesinde dönüşümlü saat blokları ile 11 piksel, kalın ve mavi saat etiketleri canlıda görünmektedir.
+- Ayrı pencere şeklindeki yeşil-altın rezervasyon giriş ekranı ve X ile takvime dönüş davranışı yalnızca yerelde tamamlanmıştır; henüz canlıya alınmamıştır.
 - 31 Ağustos 2026 dağıtımında yalnızca `app/Http/Controllers/ReservationController.php` ve `resources/views/spa.blade.php` güncellenmiş, migration uygulanmamış ve canlı MySQL verileri değiştirilmemiştir.
 
 ## Yeni bir Codex görevi başlatırken
