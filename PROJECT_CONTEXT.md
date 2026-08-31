@@ -13,7 +13,7 @@ Sofitel Spa operasyonlarını tek arayüzden yönetmek için masaüstü uygulama
 - Canlı uygulama: `https://krpsoft.com.tr/spa/`
 - GitHub: `https://github.com/Gokben/Spa.git`
 - Aktif geliştirme dalı: `codex/add-agustos-index`
-- Bu görev öncesindeki son Git commit: `4967a4c`
+- Bu görev öncesindeki son Git commit: `4031217`
 - Canlı Laravel uygulama klasörü: `/home/krpsoftc/spa-app`
 
 Kimlik bilgileri, cPanel oturum adresleri ve `.env` sırları bu dosyada tutulmaz.
@@ -103,6 +103,8 @@ Vox ERP randevu modülü SPA'ya uyarlanarak Rezervasyon menüsüne bağlanmışt
 - Günlük görünümde mesleği Terapist olan aktif personeller ad-soyad başlıklı ayrı sütunlarda gösterilir; rezervasyon kartı bağlı olduğu terapistin sütununa yerleşir.
 - Terapist sütunundaki boş saate sağ tıklayıp Yeni seçildiğinde tarih, yarım saatlik zaman aralığı ve terapist otomatik olarak forma aktarılır.
 - Terapist sütunundaki boş saat aralığına çift tıklanınca yeni rezervasyon formu doğrudan açılır; tarih, yarım saatlik zaman aralığı ve terapist otomatik doldurulur.
+- Günlük çizelgedeki mevcut rezervasyon kartları terapist sütunları arasında sürüklenip bırakılabilir. Taşıma sırasında tarih ve saat korunur, yalnızca terapist değişir; hedef terapistte saat çakışması varsa sunucu değişikliği reddeder ve kart eski yerinde kalır.
+- Günlük çizelgenin üstündeki rezervasyon/terapist sayısını ve artı düğmesini gösteren yeşil bilgi şeridi kaldırılmıştır.
 - Haftalık görünüm pazartesiden pazara yedi günlük planı gösterir.
 - Aylık görünümde rezervasyonlar gün ve başlangıç saatiyle gösterilir.
 - Her görünümde önceki/sonraki dönem ve Bugün düğmeleri bulunur; hafta veya gün ay sınırını geçtiğinde API gerekli tarih aralığını birlikte getirir.
@@ -275,6 +277,7 @@ Git Version Control içindeki otomatik dağıtım ekranı geçmişte “Yükleni
 - 31 Ağustos 2026 tarihli `0287d9f` dağıtımında yalnızca `resources/views/spa.blade.php` güncellenmiş; migration çalıştırılmamış, `.env`, canlı MySQL verileri ve test kayıtları değiştirilmemiştir.
 - Kurulumdaki Kategoriler sekmesi, örnek `Masaj` kaydı ve Stok Kartındaki çoklu kategori seçimi yerelde ve canlıda doğrulanmıştır.
 - Stok Kartındaki çoklu kategori seçenekleri yan yana kutular yerine, tek alana tıklanınca dikey açılan seçim listesine dönüştürülmüştür. Seçilen kategori adları alan üzerinde özetlenir; bu arayüz değişikliği şimdilik yalnızca yereldedir.
+- Rezervasyonların terapistler arasında sürükle-bırakla taşınması ve günlük çizelgedeki yeşil bilgi şeridinin kaldırılması yerelde doğrulanmıştır; henüz canlıya alınmamıştır.
 - 31 Ağustos 2026 dağıtımında yalnızca `app/Http/Controllers/ReservationController.php` ve `resources/views/spa.blade.php` güncellenmiş, migration uygulanmamış ve canlı MySQL verileri değiştirilmemiştir.
 
 ## Yeni bir Codex görevi başlatırken
