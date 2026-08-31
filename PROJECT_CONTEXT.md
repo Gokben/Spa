@@ -60,7 +60,7 @@ Giriş ekranı korunmuştur. Şimdilik kullanıcı adı ve parola zorunluluğu o
 - Gereksiz eski sekmeler kaldırılmış, Kişisel Bilgileri, İletişim Bilgileri ve Belgeler bırakılmıştır.
 - Personel API'si meslek ve çalışma grubu ilişkilerini döndürür.
 
-Yerelde alan testi için beş örnek personel vardır. Bu kişiler canlıya gönderilmemiştir ve açık talep olmadan gönderilmemelidir.
+Yerelde alan testi için beş örnek personel vardır. İsim bazlı rezervasyon görünümünü test etmek için aktif üç örnek personelin mesleği Terapist olarak atanmıştır. Bu kişiler canlıya gönderilmemiştir ve açık talep olmadan gönderilmemelidir.
 
 ## Stok
 
@@ -102,6 +102,8 @@ Vox ERP randevu modülü SPA'ya uyarlanarak Rezervasyon menüsüne bağlanmışt
 
 - Takvim, Günlük, Haftalık ve Aylık görünüm seçeneklerine sahiptir.
 - Günlük görünüm rezervasyonları 08:00–22:00 saat çizelgesi üzerinde süreleri oranında gösterir; çakışan rezervasyonlar yan yana yerleşir.
+- Günlük görünümde mesleği Terapist olan aktif personeller ad-soyad başlıklı ayrı sütunlarda gösterilir; rezervasyon kartı bağlı olduğu terapistin sütununa yerleşir.
+- Terapist sütunundaki boş saate sağ tıklayıp Yeni seçildiğinde tarih, yarım saatlik zaman aralığı ve terapist otomatik olarak forma aktarılır.
 - Haftalık görünüm pazartesiden pazara yedi günlük planı gösterir.
 - Aylık görünümde rezervasyonlar gün ve başlangıç saatiyle gösterilir.
 - Her görünümde önceki/sonraki dönem ve Bugün düğmeleri bulunur; hafta veya gün ay sınırını geçtiğinde API gerekli tarih aralığını birlikte getirir.
@@ -249,6 +251,7 @@ Git Version Control içindeki otomatik dağıtım ekranı geçmişte “Yükleni
 - Vox ERP stok modülü yerelde ve canlıda çalışmaktadır; giriş/çıkış miktar hesabı doğrulanmıştır.
 - Vox ERP Ön Kasa modülü yerelde ve canlıda çalışmaktadır; gelir, gider, bakiye ve gün sonu fark hesabı doğrulanmıştır.
 - Vox ERP rezervasyon modülü yerelde ve canlıda çalışmaktadır; kayıt ve personel saat çakışması doğrulanmıştır. Günlük, haftalık ve aylık takvim, dikey saat çizelgesi, sağ tıkla yeni kayıt ve otomatik tam ekran davranışları canlıda doğrulanmıştır.
+- Terapist bazlı isim sütunları ve sağ tıklanan terapistin yeni rezervasyon formuna otomatik aktarılması yerelde doğrulanmıştır; henüz canlıya alınmamıştır.
 
 ## Yeni bir Codex görevi başlatırken
 
