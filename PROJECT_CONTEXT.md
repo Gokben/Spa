@@ -96,7 +96,7 @@ Vox ERP Ön Kasa modülü Laravel yapısına uyarlanarak Ön Kasa menüsüne ba�
 
 ## Rezervasyon
 
-Vox ERP randevu modülü SPA'ya uyarlanarak Rezervasyon menüsüne bağlanmıştır. Üstteki Takvim / Yeni Rezervasyon / Rezervasyon Listesi sekme şeridi kaldırılmıştır; pencere doğrudan rezervasyon takvimini gösterir. Yeni düğmesi ve çizelge etkileşimleri kayıt formunu açar; Günlük, Haftalık veya Aylık düğmeleri takvime döner.
+Vox ERP randevu modülü SPA'ya uyarlanarak Rezervasyon menüsüne bağlanmıştır. Üstteki Takvim / Yeni Rezervasyon / Rezervasyon Listesi sekme şeridi kaldırılmıştır; pencere doğrudan rezervasyon takvimini gösterir. Yeni düğmesi ve çizelge etkileşimleri kayıt formunu açar; Günlük, Haftalık veya Aylık düğmeleri takvime döner. Araç çubuğundaki Yenile düğmesi görünmez; takvim ilk açılışta, görünüm değişiminde ve kayıt işlemleri sonrasında otomatik yenilenir.
 
 - Takvim, Günlük, Haftalık ve Aylık görünüm seçeneklerine sahiptir.
 - Günlük görünüm rezervasyonları 08:00–22:00 saat çizelgesi üzerinde süreleri oranında gösterir; çakışan rezervasyonlar yan yana yerleşir.
@@ -114,6 +114,8 @@ Vox ERP randevu modülü SPA'ya uyarlanarak Rezervasyon menüsüne bağlanmışt
 - Durumlar Planlandı, Onaylandı, Tamamlandı, İptal ve Gelmedi seçenekleridir.
 - Aynı personelin çakışan saatlerde iki aktif rezervasyonuna sunucu tarafında izin verilmez.
 - Takvim günündeki artı düğmesi seçilen tarihle yeni rezervasyon formunu açar.
+- Rezervasyon giriş formu Türkçe Genel / Detay düzenindedir. Genel bölümde tarih-saat-terapist özeti, aranabilir hizmet şablonları, seçilen hizmet özeti, ek hizmet alanı ve üye/misafir seçimi; Detay bölümünde telefon, durum ve not bulunur.
+- Hizmet şablonu seçimi hizmet adını doldurur ve bitiş saatini şablon süresine göre hesaplar. Üye satırı seçimi ad-soyad ve telefonu mevcut rezervasyon alanlarına aktarır.
 
 ## Kurulum
 
@@ -254,6 +256,8 @@ Git Version Control içindeki otomatik dağıtım ekranı geçmişte “Yükleni
 - Başlat düğmesinin açık menüyü ikinci tıklamada kapatma davranışı yerelde düzeltilmiştir; henüz canlıya alınmamıştır.
 - Boş terapist saat aralığına çift tıklayarak yeni rezervasyon açma davranışı yerelde doğrulanmıştır; henüz canlıya alınmamıştır.
 - Rezervasyon penceresindeki geniş üçlü sekme şeridi yerelde kaldırılmıştır; henüz canlıya alınmamıştır.
+- Rezervasyon araç çubuğundaki Yenile düğmesi yerelde kaldırılmıştır; henüz canlıya alınmamıştır.
+- Türkçe, hizmet ve misafir seçimli yeni rezervasyon giriş düzeni yerelde hazırlanmıştır; henüz canlıya alınmamıştır.
 
 ## Yeni bir Codex görevi başlatırken
 
