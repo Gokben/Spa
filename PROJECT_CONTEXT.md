@@ -42,6 +42,8 @@ Kimlik bilgileri, cPanel oturum adresleri ve `.env` sırları bu dosyada tutulma
 
 Giriş ekranı korunmuştur. Şimdilik kullanıcı adı ve parola zorunluluğu olmadan “Başlat” düğmesiyle uygulamaya geçilir. Bu geçici davranış kullanıcı tarafından özellikle istenmiştir.
 
+Masaüstü görev çubuğundaki Başlat düğmesi menüyü açıp kapatır; bir ekran seçildiğinde menü otomatik kapanır.
+
 ## Üyeler
 
 - Üye listesi API'den gelir.
@@ -252,6 +254,7 @@ Git Version Control içindeki otomatik dağıtım ekranı geçmişte “Yükleni
 - Vox ERP Ön Kasa modülü yerelde ve canlıda çalışmaktadır; gelir, gider, bakiye ve gün sonu fark hesabı doğrulanmıştır.
 - Vox ERP rezervasyon modülü yerelde ve canlıda çalışmaktadır; kayıt ve personel saat çakışması doğrulanmıştır. Günlük, haftalık ve aylık takvim, dikey saat çizelgesi, sağ tıkla yeni kayıt ve otomatik tam ekran davranışları canlıda doğrulanmıştır.
 - Terapist bazlı isim sütunları ve sağ tıklanan terapistin yeni rezervasyon formuna otomatik aktarılması yerelde doğrulanmıştır; henüz canlıya alınmamıştır.
+- Başlat düğmesinin açık menüyü ikinci tıklamada kapatma davranışı yerelde düzeltilmiştir; henüz canlıya alınmamıştır.
 
 ## Yeni bir Codex görevi başlatırken
 
