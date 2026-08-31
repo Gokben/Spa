@@ -96,9 +96,9 @@ Vox ERP Ön Kasa modülü Laravel yapısına uyarlanarak Ön Kasa menüsüne ba�
 
 ## Rezervasyon
 
-Vox ERP randevu modülü SPA'ya uyarlanarak Rezervasyon menüsüne bağlanmıştır. Üstteki Takvim / Yeni Rezervasyon / Rezervasyon Listesi sekme şeridi kaldırılmıştır; pencere doğrudan rezervasyon takvimini gösterir. Yeni düğmesi ve çizelge etkileşimleri kayıt formunu açar; Günlük, Haftalık veya Aylık düğmeleri takvime döner. Araç çubuğundaki Yenile düğmesi görünmez; takvim ilk açılışta, görünüm değişiminde ve kayıt işlemleri sonrasında otomatik yenilenir.
+Vox ERP randevu modülü SPA'ya uyarlanarak Rezervasyon menüsüne bağlanmıştır. Üstteki Takvim / Yeni Rezervasyon / Rezervasyon Listesi sekme şeridi kaldırılmıştır; pencere doğrudan rezervasyon takvimini gösterir. Yeni düğmesi ve çizelge etkileşimleri kayıt formunu açar. Araç çubuğundaki görünüm ve Yenile düğmeleri görünmez; günlük takvim ilk açılışta ve kayıt işlemleri sonrasında otomatik yenilenir.
 
-- Takvim, Günlük, Haftalık ve Aylık görünüm seçeneklerine sahiptir.
+- Rezervasyon takvimi doğrudan günlük görünümde açılır; Günlük, Haftalık ve Aylık görünüm düğmeleri araç çubuğundan kaldırılmıştır.
 - Günlük görünüm rezervasyonları 08:00–22:00 saat çizelgesi üzerinde süreleri oranında gösterir; çakışan rezervasyonlar yan yana yerleşir. Ardışık saat blokları, geçişleri kolay izlemek için dönüşümlü açık tonlarla ayrılır.
 - Günlük görünümde mesleği Terapist olan aktif personeller ad-soyad başlıklı ayrı sütunlarda gösterilir; rezervasyon kartı bağlı olduğu terapistin sütununa yerleşir.
 - Terapist sütunundaki boş saate sağ tıklayıp Yeni seçildiğinde tarih, yarım saatlik zaman aralığı ve terapist otomatik olarak forma aktarılır.
@@ -258,6 +258,8 @@ Git Version Control içindeki otomatik dağıtım ekranı geçmişte “Yükleni
 - Rezervasyon penceresindeki geniş üçlü sekme şeridi yerelde kaldırılmıştır; henüz canlıya alınmamıştır.
 - Rezervasyon araç çubuğundaki Yenile düğmesi yerelde kaldırılmıştır; henüz canlıya alınmamıştır.
 - Türkçe, hizmet ve misafir seçimli yeni rezervasyon giriş düzeni yerelde hazırlanmıştır; henüz canlıya alınmamıştır.
+- Rezervasyon araç çubuğundaki Günlük, Haftalık ve Aylık düğmeleri yerelde kaldırılmıştır; henüz canlıya alınmamıştır.
+- Sol Başlat menüsü açıldığında tam ekran çalışma penceresi menü genişliği kadar sağa kayar ve daralır; menü kapanınca eski tam ekran konumuna döner. Değişiklik yereldedir ve henüz canlıya alınmamıştır.
 
 ## Yeni bir Codex görevi başlatırken
 
