@@ -429,7 +429,7 @@
     .reservation-therapist-head small { display:block; margin-top:2px; color:#f0d98f; text-transform:none; font:9px Tahoma; }
     .reservation-no-therapist { display:grid; min-height:220px; place-items:center; padding:20px; color:#765f27; background:#fffaf0; text-align:center; font:bold 11px Tahoma; }
     .reservation-time-axis,.reservation-time-canvas { position:relative; height:100%; }
-    .reservation-time-axis { position:sticky; left:0; z-index:3; color:#604510; border-right:1px solid #c9ad67; background:repeating-linear-gradient(to bottom,#f8edd7 0,#f8edd7 50px,#ecdfc2 50px,#ecdfc2 100px); font:9px Tahoma; }
+    .reservation-time-axis { position:sticky; left:0; z-index:3; color:#175b9a; border-right:1px solid #c9ad67; background:repeating-linear-gradient(to bottom,#f8edd7 0,#f8edd7 50px,#ecdfc2 50px,#ecdfc2 100px); font:bold 11px Tahoma; }
     .reservation-time-label { position:absolute; right:7px; transform:translateY(-50%); }
     .reservation-time-label:first-child { top:7px !important; transform:none; font-weight:bold; }.reservation-time-label:last-child { top:calc(100% - 7px) !important; transform:translateY(-100%); font-weight:bold; }
     .reservation-time-canvas { min-width:190px; border-right:1px solid #9a947f; background:repeating-linear-gradient(to bottom,#fffdf8 0,#fffdf8 50px,#edf4ef 50px,#edf4ef 100px); }

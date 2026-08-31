@@ -260,6 +260,7 @@ Git Version Control içindeki otomatik dağıtım ekranı geçmişte “Yükleni
 - Türkçe, hizmet ve misafir seçimli yeni rezervasyon giriş düzeni yerelde hazırlanmıştır; henüz canlıya alınmamıştır.
 - Rezervasyon araç çubuğundaki Günlük, Haftalık ve Aylık düğmeleri yerelde kaldırılmıştır; henüz canlıya alınmamıştır.
 - Sol Başlat menüsü açıldığında tam ekran çalışma penceresi menü genişliği kadar sağa kayar ve daralır; menü kapanınca eski tam ekran konumuna döner. Değişiklik yereldedir ve henüz canlıya alınmamıştır.
+- Günlük rezervasyon çizelgesindeki saat etiketleri 11 piksel, kalın ve mavi olarak gösterilir. Değişiklik yereldedir ve henüz canlıya alınmamıştır.
 
 ## Yeni bir Codex görevi başlatırken
 
