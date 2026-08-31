@@ -258,7 +258,8 @@ Git Version Control içindeki otomatik dağıtım ekranı geçmişte “Yükleni
 - Rezervasyon penceresindeki geniş üçlü sekme şeridi, Yenile düğmesi ve Günlük / Haftalık / Aylık görünüm düğmeleri canlıda kaldırılmıştır; takvim günlük görünümde açılır.
 - Türkçe Genel / Detay sekmeli, hizmet şablonu ve üye/misafir seçimli rezervasyon giriş düzeni canlıda doğrulanmıştır.
 - Günlük rezervasyon çizelgesinde dönüşümlü saat blokları ile 11 piksel, kalın ve mavi saat etiketleri canlıda görünmektedir.
-- Ayrı pencere şeklindeki yeşil-altın rezervasyon giriş ekranı ve X ile takvime dönüş davranışı yalnızca yerelde tamamlanmıştır; henüz canlıya alınmamıştır.
+- Ayrı pencere şeklindeki yeşil-altın rezervasyon giriş ekranı ve X ile günlük takvime dönüş davranışı yerelde ve canlıda doğrulanmıştır.
+- 31 Ağustos 2026 tarihli `0287d9f` dağıtımında yalnızca `resources/views/spa.blade.php` güncellenmiş; migration çalıştırılmamış, `.env`, canlı MySQL verileri ve test kayıtları değiştirilmemiştir.
 - 31 Ağustos 2026 dağıtımında yalnızca `app/Http/Controllers/ReservationController.php` ve `resources/views/spa.blade.php` güncellenmiş, migration uygulanmamış ve canlı MySQL verileri değiştirilmemiştir.
 
 ## Yeni bir Codex görevi başlatırken
