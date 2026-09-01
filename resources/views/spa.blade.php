@@ -1038,7 +1038,12 @@
     const auxMarkup = (id,title) => id==='listeler'?patientListMarkup(title):id==='staff'?employeeListMarkup(title):id==='shifts'?scheduleMarkup(title):id==='setup'?setupMarkup(title):id==='stock'?stockMarkup(title):id==='cash'?cashMarkup(title):id==='calendar'?reservationMarkup(title):id==='packages'?packagesMarkup(title):id.startsWith('employee-')?employeeCardMarkup(title,employeeCardPayloads[id]):id.startsWith('member-')?memberCardMarkup(title,memberCardPayloads[id]):`<div class="aux-titlebar"><span>${title}</span><div class="window-controls"><button type="button" data-act="min">_</button><button type="button" data-act="max">□</button><button type="button" class="window-close" data-act="close">×</button></div></div><div class="aux-content"><div class="aux-toolbar"><button>▣ Listele</button><button>⊕ Yeni</button><button>▱ Kopyala</button><button>▧ Excel</button></div><table class="aux-grid"><thead><tr><th>Kayıt No</th><th>Açıklama</th><th>Durum</th></tr></thead><tbody><tr><td colspan="3">Kayıtları görüntülemek için “Listele” düğmesini kullanın.</td></tr></tbody></table></div>`;
     const openAuxWindow = (id,title) => {
       let win=document.querySelector(`.aux-window[data-window-id="${id}"]`);
-      if(win){ win.hidden=false; activateWindow(win); return; }
+      if(win){
+        win.hidden=false;
+        if(id==='stock')win.querySelector('[data-stock-tab="list"]')?.click();
+        activateWindow(win);
+        return;
+      }
       win=document.createElement('section'); win.className='aux-window'; win.dataset.windowId=id; win.innerHTML=auxMarkup(id,title); document.body.appendChild(win);if(id==='listeler'||id==='staff'){win.style.width='900px';win.style.height='500px';}if(id==='stock'||id==='cash'||id==='calendar'){win.style.width='1080px';win.style.height='620px';}if(id==='packages'){win.style.width='900px';win.style.height='520px';}if(id==='shifts'){win.style.width='1120px';win.style.height='590px';}if(id==='setup'){win.style.width='840px';win.style.height='520px';}if(id.startsWith('member-')){win.style.width='900px';win.style.height='530px';}if(id.startsWith('employee-')){win.style.width='960px';win.style.height='620px';}
       const offset=document.querySelectorAll('.aux-window').length*24; Object.assign(win.style,{left:(230+offset)+'px',top:(70+offset)+'px'});if(id==='packages'){win.style.left='20px';win.style.top='50px';win.style.width=Math.max(760,Math.min(980,innerWidth-40))+'px';}activateWindow(win);
       const task=document.createElement('button'); task.type='button'; task.className='task-item'; task.dataset.windowId=id; task.textContent=title; document.querySelector('.tray').before(task); task.addEventListener('click',()=>toggleTaskWindow(win,task));
