@@ -10,6 +10,7 @@ use App\Http\Controllers\MemberController;
 use App\Http\Controllers\OccupationController;
 use App\Http\Controllers\ReservationController;
 use App\Http\Controllers\SpaPackageController;
+use App\Http\Controllers\SmsController;
 use App\Http\Controllers\StockController;
 use App\Http\Controllers\WorkShiftController;
 use App\Http\Controllers\WorkGroupController;
@@ -51,4 +52,7 @@ Route::middleware(SpaAuthenticate::class)->prefix('api')->group(function () {
     Route::put('cash/closing', [CashController::class, 'saveClosing']);
     Route::apiResource('reservations', ReservationController::class)->only(['index', 'store', 'update', 'destroy']);
     Route::apiResource('packages', SpaPackageController::class)->only(['index', 'store', 'update', 'destroy']);
+    Route::get('sms', [SmsController::class, 'index']);
+    Route::put('sms/settings', [SmsController::class, 'updateSettings']);
+    Route::post('sms/send', [SmsController::class, 'send']);
 });

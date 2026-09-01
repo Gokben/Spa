@@ -130,13 +130,14 @@ Vox ERP randevu modülü SPA'ya uyarlanarak Rezervasyon menüsüne bağlanmışt
 
 ## Kurulum
 
-Kurulum penceresinde beş sekme bulunur:
+Kurulum penceresinde altı sekme bulunur:
 
 1. Mesai Tanımları
 2. Çalışma Saatleri
 3. Meslekler
 4. Çalışma Grupları
 5. Kategoriler
+6. SMS Ayarları
 
 ### Mesai Tanımları
 
@@ -173,6 +174,15 @@ Ekleme, düzenleme ve silme desteklenir. Canlıda tanımlı başlangıç kayıtl
 - Bir stok kartına sıfır, bir veya birden fazla kategori bağlanabilir.
 - Eski stok kartlarındaki tek metin kategori değerleri migration sırasında kategori tanımına ve stok ilişkisine dönüştürülür.
 
+### SMS Ayarları
+
+- SMS sağlayıcısı Verimor'dur ve JSON API adresi `https://sms.verimor.com.tr/v2/send.json` olarak yapılandırılmıştır.
+- API kullanıcı adı, şifre, gönderici başlığı ve etkinlik durumu Kurulum ekranından yönetilir.
+- API şifresi Laravel encrypted cast ile veritabanında şifreli tutulur ve API yanıtında/ekranda geri gösterilmez.
+- SMS Gönder düğmesi gerçek gönderimden önce açık onay ister. Türkiye mobil numaraları `905XXXXXXXXX` biçimine dönüştürülür.
+- Kampanya kimliği, hedef numara, mesaj, durum ve sağlayıcı yanıtı `sms_messages` tablosunda kaydedilir.
+- Ticari ileti seçilirse Verimor'a İYS bireysel alıcı bilgisi gönderilir; varsayılan test/rezervasyon bildirimi ticari değildir.
+
 ## Çalışma Programı
 
 - Haftalık takvim görünümündedir.
@@ -207,6 +217,8 @@ Başlıca uygulama tabloları:
 - `cash_transactions`
 - `cash_closings`
 - `reservations`
+- `sms_settings`
+- `sms_messages`
 
 `employees` tablosunda nullable `occupation_id` ve `work_group_id` alanları vardır. Her ikisi de ilgili tanım silindiğinde `NULL` olacak dış anahtarlarla bağlıdır.
 
@@ -228,6 +240,9 @@ Başlıca uygulama tabloları:
 - `/api/cash/categories`
 - `/api/cash/closing`
 - `/api/reservations`
+- `/api/sms`
+- `/api/sms/settings`
+- `/api/sms/send`
 
 API erişimi `SpaAuthenticate` middleware katmanından geçer.
 
@@ -246,6 +261,7 @@ Projeye özgü migration sırası:
 - `2026_08_29_010000_create_cash_module_tables`
 - `2026_08_29_020000_create_reservations_table`
 - `2026_08_31_000000_create_categories_table`
+- `2026_09_01_020000_create_sms_module_tables`
 
 ## Yerel test durumu
 

@@ -35,4 +35,8 @@ return [
         ],
     ],
 
+    'verimor' => [
+        'endpoint' => env('VERIMOR_SMS_ENDPOINT', 'https://sms.verimor.com.tr/v2/send.json'),
+    ],
+
 ];
