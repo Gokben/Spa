@@ -183,6 +183,7 @@ Ekleme, düzenleme ve silme desteklenir. Canlıda tanımlı başlangıç kayıtl
 - Sağlayıcıdan gelen `401/403`, istek limiti ve bağlantı hataları ayrı kullanıcı mesajlarıyla gösterilir; yanlış API bilgisi artık bağlantı sorunu olarak raporlanmaz.
 - Kampanya kimliği, hedef numara, mesaj, durum ve sağlayıcı yanıtı `sms_messages` tablosunda kaydedilir.
 - Ticari ileti seçilirse Verimor'a İYS bireysel alıcı bilgisi gönderilir; varsayılan test/rezervasyon bildirimi ticari değildir.
+- Canlı Verimor API erişimi etkinleştirilmiş, izinli DNS olarak `krpsoft.com.tr` tanımlanmış ve API bilgileri canlı uygulamada şifreli olarak kaydedilmiştir. 1 Eylül 2026 testinde kimlik doğrulaması başarılı olmuş; ancak hesapta onaylı SMS başlığı bulunmadığı için sağlayıcı `INVALID_SOURCE_ADDRESS` yanıtı vermiş, kampanya oluşmamış ve SMS teslim edilmemiştir. Yeni test, Verimor'da bir gönderici başlığı onaylandıktan sonra yapılmalıdır.
 
 ## Çalışma Programı
 
@@ -315,6 +316,7 @@ Git Version Control içindeki otomatik dağıtım ekranı geçmişte “Yükleni
 - 1 Eylül 2026 tarihli `142ce22` dağıtımında tarayıcı sekme başlığı `Yeni Hasta Kaydı` yerine `Spa` olarak değiştirilmiş ve canlıda doğrulanmıştır.
 - 1 Eylül 2026 tarihli `bb3860e` dağıtımında Verimor SMS entegrasyonu canlıya alınmıştır. `sms_settings` ve `sms_messages` tabloları canlı MySQL veritabanında oluşturulmuş, migration kaydı eklenmiş ve Kurulum > SMS Ayarları ekranı devre dışı/boş hesap durumunda doğrulanmıştır. Gerçek SMS gönderilmemiş; `.env` ile mevcut canlı veriler korunmuştur.
 - Verimor SMS hata yönetimi, sağlayıcının `401/403` kimlik doğrulama yanıtlarını gerçek bağlantı hatalarından ayıracak şekilde düzeltilmiştir.
+- Verimor API erişimi ve canlı uygulama kimlik bilgileri doğrulanmıştır. Test SMS'i hesapta onaylı gönderici başlığı bulunmaması nedeniyle `INVALID_SOURCE_ADDRESS` ile reddedilmiştir; teslimat veya kampanya oluşmamıştır.
 
 ## Yeni bir Codex görevi başlatırken
 
