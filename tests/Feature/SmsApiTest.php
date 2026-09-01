@@ -93,4 +93,31 @@ class SmsApiTest extends TestCase
 
         Http::assertNothingSent();
     }
+
+    public function test_invalid_verimor_credentials_return_a_clear_message(): void
+    {
+        $this->actingAs(User::factory()->create());
+        SmsSetting::create([
+            'provider' => 'verimor',
+            'username' => 'spa@example.com',
+            'password' => 'wrong-api-password',
+            'active' => true,
+        ]);
+        Http::fake([
+            'sms.verimor.com.tr/*' => Http::response('Unauthorized', 401),
+        ]);
+
+        $this->postJson('/api/sms/send', [
+            'destination' => '0532 123 45 67',
+            'message' => 'Test',
+        ])->assertUnprocessable()
+            ->assertJsonPath('message', 'Verimor API kullanıcı adı veya API şifresi hatalı. OİM > SMS Ayarları > API bölümündeki bilgileri kontrol edin.')
+            ->assertJsonPath('data.status', 'failed')
+            ->assertJsonPath('data.provider_response.status_code', 401);
+
+        $this->assertDatabaseHas('sms_messages', [
+            'destination' => '905321234567',
+            'status' => 'failed',
+        ]);
+    }
 }

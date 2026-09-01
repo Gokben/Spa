@@ -83,10 +83,37 @@ class SmsController extends Controller
         } catch (ValidationException $exception) {
             $record->delete();
             throw $exception;
-        } catch (ConnectionException|RequestException $exception) {
-            $record->update(['status' => 'failed', 'provider_response' => ['error' => $exception->getMessage()]]);
+        } catch (ConnectionException $exception) {
+            $record->update(['status' => 'failed', 'provider_response' => [
+                'error' => $exception->getMessage(),
+                'type' => 'connection',
+            ]]);
 
-            return response()->json(['message' => 'Verimor SMS servisine ulaşılamadı.', 'data' => $record->fresh()], 502);
+            return response()->json([
+                'message' => 'Verimor SMS servisine bağlanılamadı. Ağ veya SSL bağlantısını kontrol edin.',
+                'data' => $record->fresh(),
+            ], 502);
+        } catch (RequestException $exception) {
+            $status = $exception->response?->status();
+            $providerBody = $exception->response?->body();
+            $message = match ($status) {
+                401, 403 => 'Verimor API kullanıcı adı veya API şifresi hatalı. OİM > SMS Ayarları > API bölümündeki bilgileri kontrol edin.',
+                429 => 'Verimor SMS istek limiti aşıldı. Lütfen kısa süre sonra tekrar deneyin.',
+                400, 422 => 'Verimor SMS gönderimini reddetti. API ayarlarını ve gönderici başlığını kontrol edin.',
+                default => $status && $status >= 500
+                    ? 'Verimor SMS servisi geçici olarak yanıt veremiyor.'
+                    : 'Verimor SMS isteği başarısız oldu'.($status ? " (HTTP {$status})." : '.'),
+            };
+            $record->update(['status' => 'failed', 'provider_response' => [
+                'error' => $exception->getMessage(),
+                'status_code' => $status,
+                'body' => $providerBody ? substr($providerBody, 0, 2000) : null,
+            ]]);
+
+            return response()->json([
+                'message' => $message,
+                'data' => $record->fresh(),
+            ], in_array($status, [400, 401, 403, 422], true) ? 422 : ($status === 429 ? 429 : 502));
         } catch (Throwable $exception) {
             report($exception);
             $record->update(['status' => 'failed', 'provider_response' => ['error' => $exception->getMessage()]]);

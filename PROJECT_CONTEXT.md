@@ -180,6 +180,7 @@ Ekleme, düzenleme ve silme desteklenir. Canlıda tanımlı başlangıç kayıtl
 - API kullanıcı adı, şifre, gönderici başlığı ve etkinlik durumu Kurulum ekranından yönetilir.
 - API şifresi Laravel encrypted cast ile veritabanında şifreli tutulur ve API yanıtında/ekranda geri gösterilmez.
 - SMS Gönder düğmesi gerçek gönderimden önce açık onay ister. Türkiye mobil numaraları `905XXXXXXXXX` biçimine dönüştürülür.
+- Sağlayıcıdan gelen `401/403`, istek limiti ve bağlantı hataları ayrı kullanıcı mesajlarıyla gösterilir; yanlış API bilgisi artık bağlantı sorunu olarak raporlanmaz.
 - Kampanya kimliği, hedef numara, mesaj, durum ve sağlayıcı yanıtı `sms_messages` tablosunda kaydedilir.
 - Ticari ileti seçilirse Verimor'a İYS bireysel alıcı bilgisi gönderilir; varsayılan test/rezervasyon bildirimi ticari değildir.
 
@@ -313,6 +314,7 @@ Git Version Control içindeki otomatik dağıtım ekranı geçmişte “Yükleni
 - 1 Eylül 2026 tarihli `dd1c76e` dağıtımında Stok Çıkış sekmesi liste-merkezli akışa geçirilmiştir. Stok Çıkış Listesi, Yeni Çıkış formu ve listeye dönüş canlıda doğrulanmış; mevcut canlı veriler ve `.env` değiştirilmemiştir.
 - 1 Eylül 2026 tarihli `142ce22` dağıtımında tarayıcı sekme başlığı `Yeni Hasta Kaydı` yerine `Spa` olarak değiştirilmiş ve canlıda doğrulanmıştır.
 - 1 Eylül 2026 tarihli `bb3860e` dağıtımında Verimor SMS entegrasyonu canlıya alınmıştır. `sms_settings` ve `sms_messages` tabloları canlı MySQL veritabanında oluşturulmuş, migration kaydı eklenmiş ve Kurulum > SMS Ayarları ekranı devre dışı/boş hesap durumunda doğrulanmıştır. Gerçek SMS gönderilmemiş; `.env` ile mevcut canlı veriler korunmuştur.
+- Verimor SMS hata yönetimi, sağlayıcının `401/403` kimlik doğrulama yanıtlarını gerçek bağlantı hatalarından ayıracak şekilde düzeltilmiştir.
 
 ## Yeni bir Codex görevi başlatırken
 
