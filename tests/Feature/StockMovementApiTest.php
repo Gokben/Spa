@@ -67,4 +67,41 @@ class StockMovementApiTest extends TestCase
             ->assertUnprocessable()
             ->assertJsonValidationErrors('quantity');
     }
+
+    public function test_stock_exit_can_be_created_updated_and_deleted(): void
+    {
+        $this->actingAs(User::factory()->create());
+        $item = StockItem::create([
+            'code' => 'TEST-003',
+            'name' => 'Çıkış Testi',
+            'unit' => 'Adet',
+            'minimum_quantity' => 0,
+            'purchase_price' => 0,
+            'sale_price' => 0,
+            'vat_rate' => 20,
+            'status' => 'aktif',
+        ]);
+        $item->movements()->create(['type' => 'giris', 'quantity' => 10, 'movement_date' => '2026-09-01']);
+
+        $movementId = $this->postJson('/api/stock-movements', [
+            'stock_item_id' => $item->id,
+            'type' => 'cikis',
+            'quantity' => 4,
+            'movement_date' => '2026-09-01',
+            'document_no' => 'C-001',
+            'description' => 'İlk çıkış',
+        ])->assertCreated()->json('data.id');
+
+        $this->putJson("/api/stock-movements/{$movementId}", [
+            'stock_item_id' => $item->id,
+            'type' => 'cikis',
+            'quantity' => 6,
+            'movement_date' => '2026-09-02',
+            'document_no' => 'C-002',
+            'description' => 'Güncel çıkış',
+        ])->assertOk()->assertJsonPath('data.quantity', '6.00');
+
+        $this->deleteJson("/api/stock-movements/{$movementId}")->assertNoContent();
+        $this->assertDatabaseMissing('stock_movements', ['id' => $movementId]);
+    }
 }
