@@ -96,7 +96,7 @@ Vox ERP Ön Kasa modülü Laravel yapısına uyarlanarak Ön Kasa menüsüne ba�
 
 ## Rezervasyon
 
-Vox ERP randevu modülü SPA'ya uyarlanarak Rezervasyon menüsüne bağlanmıştır. Üstteki Takvim / Yeni Rezervasyon / Rezervasyon Listesi sekme şeridi kaldırılmıştır; pencere doğrudan rezervasyon takvimini gösterir. Yeni düğmesi ve çizelge etkileşimleri kayıt formunu açar. Araç çubuğundaki görünüm ve Yenile düğmeleri görünmez; günlük takvim ilk açılışta ve kayıt işlemleri sonrasında otomatik yenilenir.
+Vox ERP randevu modülü SPA'ya uyarlanarak Rezervasyon menüsüne bağlanmıştır. Üstteki Takvim / Yeni Rezervasyon / Rezervasyon Listesi sekme şeridi kaldırılmıştır; pencere doğrudan rezervasyon takvimini gösterir. Çizelge etkileşimleri kayıt formunu açar. Araç çubuğundaki görünüm ve Yenile düğmeleri görünmez; günlük takvim ilk açılışta ve kayıt işlemleri sonrasında otomatik yenilenir.
 
 - Rezervasyon takvimi doğrudan günlük görünümde açılır; Günlük, Haftalık ve Aylık görünüm düğmeleri araç çubuğundan kaldırılmıştır.
 - Günlük görünüm rezervasyonları 08:00–22:00 saat çizelgesi üzerinde süreleri oranında gösterir; çakışan rezervasyonlar yan yana yerleşir. Ardışık saat blokları, geçişleri kolay izlemek için dönüşümlü açık tonlarla ayrılır.
@@ -104,7 +104,7 @@ Vox ERP randevu modülü SPA'ya uyarlanarak Rezervasyon menüsüne bağlanmışt
 - Günlük görünümde mesleği Terapist olan aktif personeller ad-soyad başlıklı ayrı sütunlarda gösterilir; rezervasyon kartı bağlı olduğu terapistin sütununa yerleşir.
 - Terapist sütunundaki boş saate sağ tıklayıp Yeni seçildiğinde tarih, yarım saatlik zaman aralığı ve terapist otomatik olarak forma aktarılır.
 - Terapist sütunundaki boş saat aralığına çift tıklanınca yeni rezervasyon formu doğrudan açılır; tarih, yarım saatlik zaman aralığı ve terapist otomatik doldurulur.
-- Günlük çizelgedeki mevcut rezervasyon kartları terapist sütunları arasında sürüklenip bırakılabilir. Taşıma sırasında tarih ve saat korunur, yalnızca terapist değişir; hedef terapistte saat çakışması varsa sunucu değişikliği reddeder ve kart eski yerinde kalır.
+- Günlük çizelgedeki mevcut rezervasyon kartları terapist sütunları arasında ve saat ekseninde sürüklenip bırakılabilir. Bırakılan saat yarım saatlik aralığa yuvarlanır, rezervasyonun toplam süresi korunur; hedef terapistte saat çakışması varsa sunucu değişikliği reddeder ve kart eski yerinde kalır. Saat bazlı taşıma yerelde hazırlanmıştır ve henüz canlıya alınmamıştır.
 - Günlük çizelgenin üstündeki rezervasyon/terapist sayısını ve artı düğmesini gösteren yeşil bilgi şeridi kaldırılmıştır.
 - Haftalık görünüm pazartesiden pazara yedi günlük planı gösterir.
 - Aylık görünümde rezervasyonlar gün ve başlangıç saatiyle gösterilir.
