@@ -74,7 +74,42 @@ class StockController extends Controller
 
     public function storeMovement(Request $request): JsonResponse
     {
-        $data = $request->validate([
+        $data = $this->movementData($request);
+
+        $movement = DB::transaction(function () use ($data) {
+            $this->ensureMovementBalance($data);
+
+            return StockMovement::create($data);
+        });
+
+        return response()->json(['data' => $movement->load('stockItem')], 201);
+    }
+
+    public function updateMovement(Request $request, StockMovement $stockMovement): JsonResponse
+    {
+        $data = $this->movementData($request);
+
+        DB::transaction(function () use ($data, $stockMovement): void {
+            $this->ensureMovementBalance($data, $stockMovement);
+            $stockMovement->update($data);
+        });
+
+        return response()->json(['data' => $stockMovement->refresh()->load('stockItem')]);
+    }
+
+    public function destroyMovement(StockMovement $stockMovement): JsonResponse
+    {
+        DB::transaction(function () use ($stockMovement): void {
+            $this->ensureMovementBalance(null, $stockMovement);
+            $stockMovement->delete();
+        });
+
+        return response()->json([], 204);
+    }
+
+    private function movementData(Request $request): array
+    {
+        return $request->validate([
             'stock_item_id' => ['required', 'integer', 'exists:stock_items,id'],
             'type' => ['required', Rule::in(['giris', 'cikis'])],
             'quantity' => ['required', 'numeric', 'gt:0'],
@@ -82,20 +117,30 @@ class StockController extends Controller
             'document_no' => ['nullable', 'string', 'max:100'],
             'description' => ['nullable', 'string', 'max:2000'],
         ]);
+    }
 
-        $movement = DB::transaction(function () use ($data) {
-            $item = StockItem::query()->lockForUpdate()->findOrFail($data['stock_item_id']);
-            if ($data['type'] === 'cikis') {
-                $balance = (float) $item->movements()->selectRaw("COALESCE(SUM(CASE WHEN type = 'giris' THEN quantity ELSE -quantity END), 0) AS balance")->value('balance');
-                if ((float) $data['quantity'] > $balance) {
-                    throw ValidationException::withMessages(['quantity' => "Mevcut stok {$balance} {$item->unit}; bu miktardan fazla çıkış yapılamaz."]);
-                }
+    private function ensureMovementBalance(?array $data, ?StockMovement $movement = null): void
+    {
+        $itemIds = array_values(array_unique(array_filter([
+            $data['stock_item_id'] ?? null,
+            $movement?->stock_item_id,
+        ])));
+        $items = StockItem::query()->whereKey($itemIds)->orderBy('id')->lockForUpdate()->get()->keyBy('id');
+
+        foreach ($itemIds as $itemId) {
+            $item = $items->get($itemId);
+            $query = $item->movements();
+            if ($movement) $query->whereKeyNot($movement->id);
+            $balance = (float) $query->selectRaw("COALESCE(SUM(CASE WHEN type = 'giris' THEN quantity ELSE -quantity END), 0) AS balance")->value('balance');
+            if ($data && (int) $data['stock_item_id'] === (int) $itemId) {
+                $balance += $data['type'] === 'giris' ? (float) $data['quantity'] : -(float) $data['quantity'];
             }
-
-            return StockMovement::create($data);
-        });
-
-        return response()->json(['data' => $movement->load('stockItem')], 201);
+            if ($balance < 0) {
+                throw ValidationException::withMessages([
+                    'quantity' => "Bu işlem {$item->name} stok miktarını negatife düşüreceği için tamamlanamaz.",
+                ]);
+            }
+        }
     }
 
     private function itemData(Request $request, ?StockItem $stockItem = null): array

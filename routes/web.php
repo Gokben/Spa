@@ -38,6 +38,8 @@ Route::middleware(SpaAuthenticate::class)->prefix('api')->group(function () {
     Route::apiResource('stock-items', StockController::class)->only(['index', 'show', 'store', 'update', 'destroy']);
     Route::get('stock-movements', [StockController::class, 'movements']);
     Route::post('stock-movements', [StockController::class, 'storeMovement']);
+    Route::put('stock-movements/{stockMovement}', [StockController::class, 'updateMovement']);
+    Route::delete('stock-movements/{stockMovement}', [StockController::class, 'destroyMovement']);
     Route::get('cash', [CashController::class, 'index']);
     Route::put('cash/opening', [CashController::class, 'saveOpening']);
     Route::post('cash/transactions', [CashController::class, 'storeTransaction']);

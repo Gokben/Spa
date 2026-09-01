@@ -77,6 +77,7 @@ Vox ERP stok modülü Laravel yapısına uyarlanarak Stok menüsüne bağlanmı�
 - Liste arama ve kategori filtresi içerir; minimum seviyeye düşen kayıtlar kritik stok olarak işaretlenir.
 - Stok menüsü her açıldığında önce Stok Listesi gösterilir; kullanıcı listedeki `Yeni Kart` düğmesiyle boş stok kartını açar.
 - `Stok Kartı` sekmesi boş form yerine önce ayrı Stok Kartı Listesini açar. Kullanıcı bu listeden yeni kart oluşturabilir, mevcut kartı düzenleyebilir/silebilir ve formdan kart listesine geri dönebilir.
+- `Stok Giriş` sekmesi de önce Stok Giriş Listesini açar. Kullanıcı listeden yeni giriş oluşturabilir, mevcut girişi düzenleyebilir/silebilir ve formdan giriş listesine geri dönebilir; stok bakiyesini negatife düşürecek değişiklik veya silme işlemleri sunucuda engellenir.
 - Stok araç çubuğunda ayrıca `Yenile` düğmesi gösterilmez; veriler pencere açılışında ve kayıt işlemlerinden sonra otomatik yüklenir.
 - Giriş ve çıkış hareketlerinde tarih, miktar, belge/fatura numarası ve açıklama tutulur.
 - Mevcut miktardan fazla stok çıkışı sunucu tarafında engellenir.
