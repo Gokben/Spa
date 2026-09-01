@@ -108,7 +108,7 @@ Vox ERP randevu modülü SPA'ya uyarlanarak Rezervasyon menüsüne bağlanmışt
 - Günlük görünümde mesleği Terapist olan aktif personeller ad-soyad başlıklı ayrı sütunlarda gösterilir; rezervasyon kartı bağlı olduğu terapistin sütununa yerleşir.
 - Terapist sütunundaki boş saate sağ tıklayıp Yeni seçildiğinde tarih, yarım saatlik zaman aralığı ve terapist otomatik olarak forma aktarılır.
 - Terapist sütunundaki boş saat aralığına çift tıklanınca yeni rezervasyon formu doğrudan açılır; tarih, yarım saatlik zaman aralığı ve terapist otomatik doldurulur.
-- Günlük çizelgedeki mevcut rezervasyon kartları terapist sütunları arasında ve saat ekseninde sürüklenip bırakılabilir. Bırakılan saat yarım saatlik aralığa yuvarlanır, rezervasyonun toplam süresi korunur; hedef terapistte saat çakışması varsa sunucu değişikliği reddeder ve kart eski yerinde kalır. Saat bazlı taşıma yerelde hazırlanmıştır ve henüz canlıya alınmamıştır.
+- Günlük çizelgedeki mevcut rezervasyon kartları terapist sütunları arasında ve saat ekseninde sürüklenip bırakılabilir. Bırakılan saat yarım saatlik aralığa yuvarlanır, rezervasyonun toplam süresi korunur; hedef terapistte saat çakışması varsa sunucu değişikliği reddeder ve kart eski yerinde kalır. Saat bazlı taşıma yerelde ve canlıda doğrulanmıştır.
 - Günlük çizelgenin üstündeki rezervasyon/terapist sayısını ve artı düğmesini gösteren yeşil bilgi şeridi kaldırılmıştır.
 - Haftalık görünüm pazartesiden pazara yedi günlük planı gösterir.
 - Aylık görünümde rezervasyonlar gün ve başlangıç saatiyle gösterilir.
@@ -121,7 +121,7 @@ Vox ERP randevu modülü SPA'ya uyarlanarak Rezervasyon menüsüne bağlanmışt
 - Durumlar Planlandı, Onaylandı, Tamamlandı, İptal ve Gelmedi seçenekleridir.
 - Aynı personelin çakışan saatlerde iki aktif rezervasyonuna sunucu tarafında izin verilmez.
 - Rezervasyon kartları mouse-over durumunda maviye döner ve beyaz metin korunur. Yanında açılan koyu bilgi kartında mevcut hizmet, tarih, saat, terapist, misafir, üye, telefon, üyelik, doğum tarihi, durum ve not bilgileri gösterilir.
-- Sol menüde `Paketler`, kullanıcı isteğiyle `Kurulum` öğesinin hemen altında yer alır. Açılan Vox tarzı paket penceresinde Klasik Rahatlama, Geleneksel Hamam, Çiftlere Özel Romantik, Arındırıcı Güzellik ve Gelin / Bekarlığa Veda paketleri; süreleri, içerikleri ve uygun misafir profilleriyle gösterilir. Paketler Laravel API ve `spa_packages` tablosunda saklanır; kullanıcı yeni paket ekleyebilir, mevcut paketi düzenleyebilir ve onay vererek silebilir. İşlem sütununda yazılımın yeşil-altın standardına uygun yeşil kalem ve kırmızı çöp kutusu SVG ikonları kullanılır. Bu CRUD ekranı yerelde hazırlanmıştır ve henüz canlıya alınmamıştır.
+- Sol menüde `Paketler`, kullanıcı isteğiyle `Kurulum` öğesinin hemen altında yer alır. Açılan Vox tarzı paket penceresinde Klasik Rahatlama, Geleneksel Hamam, Çiftlere Özel Romantik, Arındırıcı Güzellik ve Gelin / Bekarlığa Veda paketleri; süreleri, içerikleri ve uygun misafir profilleriyle gösterilir. Paketler Laravel API ve `spa_packages` tablosunda saklanır; kullanıcı yeni paket ekleyebilir, mevcut paketi düzenleyebilir ve onay vererek silebilir. İşlem sütununda yazılımın yeşil-altın standardına uygun yeşil kalem ve kırmızı çöp kutusu SVG ikonları kullanılır. Bu CRUD ekranı yerelde ve canlıda doğrulanmıştır.
 - Takvim günündeki artı düğmesi seçilen tarihle yeni rezervasyon formunu açar.
 - Rezervasyon giriş formu Türkçe Genel / Detay düzenindedir. Genel bölümde tarih-saat-terapist özeti, aranabilir hizmet şablonları, seçilen hizmet özeti, ek hizmet alanı ve üye/misafir seçimi; Detay bölümünde telefon, durum ve not bulunur.
 - Rezervasyon girişi takvimin üzerinde ayrı bir pencere olarak açılır. Pencere Sofitel yeşil-altın renk standardını kullanır; sağ üstteki X formu kaydetmeden kapatır ve günlük rezervasyon takvimine geri döner.
@@ -284,7 +284,7 @@ Git Version Control içindeki otomatik dağıtım ekranı geçmişte “Yükleni
 - 31 Ağustos 2026 tarihli `0287d9f` dağıtımında yalnızca `resources/views/spa.blade.php` güncellenmiş; migration çalıştırılmamış, `.env`, canlı MySQL verileri ve test kayıtları değiştirilmemiştir.
 - Kurulumdaki Kategoriler sekmesi, örnek `Masaj` kaydı ve Stok Kartındaki çoklu kategori seçimi yerelde ve canlıda doğrulanmıştır.
 - Stok Kartındaki çoklu kategori seçenekleri yan yana kutular yerine, tek alana tıklanınca dikey açılan seçim listesine dönüştürülmüştür. Seçilen kategori adları alan üzerinde özetlenir; davranış yerelde ve canlıda doğrulanmıştır.
-- Stok Kartındaki açılır kategori listesinin seçenek satırları tüm liste genişliğini kullanacak ve onay kutusuyla birlikte en sol kenardan başlayacak şekilde yerelde hizalanmıştır; henüz canlıya alınmamıştır.
+- Stok Kartındaki açılır kategori listesinin seçenek satırları tüm liste genişliğini kullanacak ve onay kutusuyla birlikte en sol kenardan başlayacak şekilde yerelde ve canlıda hizalanmıştır.
 - Rezervasyonların terapistler arasında sürükle-bırakla taşınması ve günlük çizelgedeki yeşil bilgi şeridinin kaldırılması yerelde ve canlıda doğrulanmıştır.
 - 31 Ağustos 2026 tarihli `7a4a06e` dağıtımında yalnızca `resources/views/spa.blade.php` güncellenmiş; migration çalıştırılmamış, `.env`, canlı MySQL verileri ve test kayıtları değiştirilmemiştir.
 - Günlük rezervasyon kartlarının saat çizgilerine sabit dakika/piksel hesabıyla tam oturması yerelde ve canlıda doğrulanmıştır.
@@ -292,6 +292,7 @@ Git Version Control içindeki otomatik dağıtım ekranı geçmişte “Yükleni
 - Rezervasyon tarih başlığındaki `Bugün` düğmesi ve araç çubuğundaki `Yeni` düğmesi yerelde ve canlıda kaldırılmıştır. Yeni rezervasyon açma işlemi sağ tık ve boş saat aralığına çift tıklama üzerinden çalışmaya devam eder.
 - 1 Eylül 2026 tarihli `5ab43fc` dağıtımında yalnızca `resources/views/spa.blade.php` güncellenmiş; migration çalıştırılmamış, `.env`, canlı MySQL verileri ve rezervasyon kayıtları değiştirilmemiştir.
 - 31 Ağustos 2026 dağıtımında yalnızca `app/Http/Controllers/ReservationController.php` ve `resources/views/spa.blade.php` güncellenmiş, migration uygulanmamış ve canlı MySQL verileri değiştirilmemiştir.
+- 1 Eylül 2026 tarihli `e8017fa` dağıtımında canlıya alınmamış rezervasyon, paketler ve stok liste akışları birlikte aktarılmıştır. `spa_packages` tablosu ve 5 varsayılan paket canlı MySQL'e eklenmiş; Stok Giriş Listesi, Yeni Giriş, düzenleme/silme rotaları ve negatif stok koruması canlıda doğrulanmıştır. Canlı veri kayıtları ve `.env` değiştirilmemiştir.
 
 ## Yeni bir Codex görevi başlatırken
 
