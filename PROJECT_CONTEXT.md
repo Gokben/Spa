@@ -294,6 +294,7 @@ Git Version Control içindeki otomatik dağıtım ekranı geçmişte “Yükleni
 - 1 Eylül 2026 tarihli `5ab43fc` dağıtımında yalnızca `resources/views/spa.blade.php` güncellenmiş; migration çalıştırılmamış, `.env`, canlı MySQL verileri ve rezervasyon kayıtları değiştirilmemiştir.
 - 31 Ağustos 2026 dağıtımında yalnızca `app/Http/Controllers/ReservationController.php` ve `resources/views/spa.blade.php` güncellenmiş, migration uygulanmamış ve canlı MySQL verileri değiştirilmemiştir.
 - 1 Eylül 2026 tarihli `e8017fa` dağıtımında canlıya alınmamış rezervasyon, paketler ve stok liste akışları birlikte aktarılmıştır. `spa_packages` tablosu ve 5 varsayılan paket canlı MySQL'e eklenmiş; Stok Giriş Listesi, Yeni Giriş, düzenleme/silme rotaları ve negatif stok koruması canlıda doğrulanmıştır. Canlı veri kayıtları ve `.env` değiştirilmemiştir.
+- 1 Eylül 2026 tarihli `dd1c76e` dağıtımında Stok Çıkış sekmesi liste-merkezli akışa geçirilmiştir. Stok Çıkış Listesi, Yeni Çıkış formu ve listeye dönüş canlıda doğrulanmış; mevcut canlı veriler ve `.env` değiştirilmemiştir.
 
 ## Yeni bir Codex görevi başlatırken
 
