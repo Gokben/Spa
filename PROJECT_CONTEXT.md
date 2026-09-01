@@ -116,6 +116,7 @@ Vox ERP randevu modülü SPA'ya uyarlanarak Rezervasyon menüsüne bağlanmışt
 - Hizmet, tarih, başlangıç/bitiş saati, personel, durum, telefon ve not bilgileri tutulur.
 - Durumlar Planlandı, Onaylandı, Tamamlandı, İptal ve Gelmedi seçenekleridir.
 - Aynı personelin çakışan saatlerde iki aktif rezervasyonuna sunucu tarafında izin verilmez.
+- Sol menüde `Paketler`, kullanıcı isteğiyle `Kurulum` öğesinin hemen altında yer alır. Açılan Vox tarzı paket penceresinde Klasik Rahatlama, Geleneksel Hamam, Çiftlere Özel Romantik, Arındırıcı Güzellik ve Gelin / Bekarlığa Veda paketleri; süreleri, içerikleri ve uygun misafir profilleriyle gösterilir. Bu ekran yerelde hazırlanmıştır ve henüz canlıya alınmamıştır.
 - Takvim günündeki artı düğmesi seçilen tarihle yeni rezervasyon formunu açar.
 - Rezervasyon giriş formu Türkçe Genel / Detay düzenindedir. Genel bölümde tarih-saat-terapist özeti, aranabilir hizmet şablonları, seçilen hizmet özeti, ek hizmet alanı ve üye/misafir seçimi; Detay bölümünde telefon, durum ve not bulunur.
 - Rezervasyon girişi takvimin üzerinde ayrı bir pencere olarak açılır. Pencere Sofitel yeşil-altın renk standardını kullanır; sağ üstteki X formu kaydetmeden kapatır ve günlük rezervasyon takvimine geri döner.
