@@ -312,6 +312,7 @@ Git Version Control içindeki otomatik dağıtım ekranı geçmişte “Yükleni
 - 1 Eylül 2026 tarihli `e8017fa` dağıtımında canlıya alınmamış rezervasyon, paketler ve stok liste akışları birlikte aktarılmıştır. `spa_packages` tablosu ve 5 varsayılan paket canlı MySQL'e eklenmiş; Stok Giriş Listesi, Yeni Giriş, düzenleme/silme rotaları ve negatif stok koruması canlıda doğrulanmıştır. Canlı veri kayıtları ve `.env` değiştirilmemiştir.
 - 1 Eylül 2026 tarihli `dd1c76e` dağıtımında Stok Çıkış sekmesi liste-merkezli akışa geçirilmiştir. Stok Çıkış Listesi, Yeni Çıkış formu ve listeye dönüş canlıda doğrulanmış; mevcut canlı veriler ve `.env` değiştirilmemiştir.
 - 1 Eylül 2026 tarihli `142ce22` dağıtımında tarayıcı sekme başlığı `Yeni Hasta Kaydı` yerine `Spa` olarak değiştirilmiş ve canlıda doğrulanmıştır.
+- 1 Eylül 2026 tarihli `bb3860e` dağıtımında Verimor SMS entegrasyonu canlıya alınmıştır. `sms_settings` ve `sms_messages` tabloları canlı MySQL veritabanında oluşturulmuş, migration kaydı eklenmiş ve Kurulum > SMS Ayarları ekranı devre dışı/boş hesap durumunda doğrulanmıştır. Gerçek SMS gönderilmemiş; `.env` ile mevcut canlı veriler korunmuştur.
 
 ## Yeni bir Codex görevi başlatırken
 
