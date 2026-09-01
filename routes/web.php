@@ -9,6 +9,7 @@ use App\Http\Controllers\EmployeeScheduleController;
 use App\Http\Controllers\MemberController;
 use App\Http\Controllers\OccupationController;
 use App\Http\Controllers\ReservationController;
+use App\Http\Controllers\SpaPackageController;
 use App\Http\Controllers\StockController;
 use App\Http\Controllers\WorkShiftController;
 use App\Http\Controllers\WorkGroupController;
@@ -47,4 +48,5 @@ Route::middleware(SpaAuthenticate::class)->prefix('api')->group(function () {
     Route::delete('cash/categories/{cashCategory}', [CashController::class, 'destroyCategory']);
     Route::put('cash/closing', [CashController::class, 'saveClosing']);
     Route::apiResource('reservations', ReservationController::class)->only(['index', 'store', 'update', 'destroy']);
+    Route::apiResource('packages', SpaPackageController::class)->only(['index', 'store', 'update', 'destroy']);
 });
