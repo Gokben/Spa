@@ -13,7 +13,7 @@ Sofitel Spa operasyonlarını tek arayüzden yönetmek için masaüstü uygulama
 - Canlı uygulama: `https://krpsoft.com.tr/spa/`
 - GitHub: `https://github.com/Gokben/Spa.git`
 - Aktif geliştirme dalı: `codex/add-agustos-index`
-- Son arayüz geliştirme commit'i: `db10dfe`
+- Bu görev öncesindeki son Git commit: `2966c21`
 - Canlı Laravel uygulama klasörü: `/home/krpsoftc/spa-app`
 
 Kimlik bilgileri, cPanel oturum adresleri ve `.env` sırları bu dosyada tutulmaz.
@@ -108,7 +108,7 @@ Vox ERP randevu modülü SPA'ya uyarlanarak Rezervasyon menüsüne bağlanmışt
 - Günlük çizelgenin üstündeki rezervasyon/terapist sayısını ve artı düğmesini gösteren yeşil bilgi şeridi kaldırılmıştır.
 - Haftalık görünüm pazartesiden pazara yedi günlük planı gösterir.
 - Aylık görünümde rezervasyonlar gün ve başlangıç saatiyle gösterilir.
-- Her görünümde önceki/sonraki dönem ve Bugün düğmeleri bulunur; hafta veya gün ay sınırını geçtiğinde API gerekli tarih aralığını birlikte getirir.
+- Tarih başlığında önceki/sonraki dönem düğmeleri bulunur; hafta veya gün ay sınırını geçtiğinde API gerekli tarih aralığını birlikte getirir. `Bugün` düğmesi kullanıcı isteğiyle kaldırılmıştır.
 - Günlük çizelgedeki boş saate veya haftalık/aylık gün alanına sağ tıklanınca Yeni, Düzenle ve Sil seçenekli bağlam menüsü açılır. Boş alanda yalnızca Yeni aktiftir; mevcut rezervasyonda Düzenle ve Sil de etkinleşir. Kullanıcının seçimi olmadan işlem yapılmaz; Sil ayrıca onay ister. Günlük çizelgeden Yeni seçildiğinde tarih ve yarım saatlik zaman aralığı otomatik doldurulur.
 - Rezervasyon penceresi varsayılan olarak Günlük görünümle açılır; saatler 08:00–22:00 arasında sol tarafta dikey eksende gösterilir.
 - Rezervasyon penceresi ilk açılışta otomatik olarak tam ekran olur.
@@ -282,6 +282,7 @@ Git Version Control içindeki otomatik dağıtım ekranı geçmişte “Yükleni
 - 31 Ağustos 2026 tarihli `7a4a06e` dağıtımında yalnızca `resources/views/spa.blade.php` güncellenmiş; migration çalıştırılmamış, `.env`, canlı MySQL verileri ve test kayıtları değiştirilmemiştir.
 - Günlük rezervasyon kartlarının saat çizgilerine sabit dakika/piksel hesabıyla tam oturması yerelde ve canlıda doğrulanmıştır.
 - 1 Eylül 2026 tarihli `db10dfe` dağıtımında yalnızca `resources/views/spa.blade.php` güncellenmiş; migration çalıştırılmamış, `.env`, canlı MySQL verileri ve rezervasyon kayıtları değiştirilmemiştir.
+- Rezervasyon tarih başlığındaki `Bugün` düğmesi ve araç çubuğundaki `Yeni` düğmesi yerelde kaldırılmıştır. Yeni rezervasyon açma işlemi sağ tık ve boş saat aralığına çift tıklama üzerinden çalışmaya devam eder; değişiklikler henüz canlıya alınmamıştır.
 - 31 Ağustos 2026 dağıtımında yalnızca `app/Http/Controllers/ReservationController.php` ve `resources/views/spa.blade.php` güncellenmiş, migration uygulanmamış ve canlı MySQL verileri değiştirilmemiştir.
 
 ## Yeni bir Codex görevi başlatırken
