@@ -117,6 +117,7 @@ Vox ERP randevu modülü SPA'ya uyarlanarak Rezervasyon menüsüne bağlanmışt
 - Hizmet, tarih, başlangıç/bitiş saati, personel, durum, telefon ve not bilgileri tutulur.
 - Durumlar Planlandı, Onaylandı, Tamamlandı, İptal ve Gelmedi seçenekleridir.
 - Aynı personelin çakışan saatlerde iki aktif rezervasyonuna sunucu tarafında izin verilmez.
+- Rezervasyon kartlarının mouse-over durumunda durum rengi koyulaşır ve beyaz metin korunur; böylece takvim üzerindeki saat, misafir ve hizmet bilgileri okunaklı kalır.
 - Sol menüde `Paketler`, kullanıcı isteğiyle `Kurulum` öğesinin hemen altında yer alır. Açılan Vox tarzı paket penceresinde Klasik Rahatlama, Geleneksel Hamam, Çiftlere Özel Romantik, Arındırıcı Güzellik ve Gelin / Bekarlığa Veda paketleri; süreleri, içerikleri ve uygun misafir profilleriyle gösterilir. Paketler Laravel API ve `spa_packages` tablosunda saklanır; kullanıcı yeni paket ekleyebilir, mevcut paketi düzenleyebilir ve onay vererek silebilir. İşlem sütununda yazılımın yeşil-altın standardına uygun yeşil kalem ve kırmızı çöp kutusu SVG ikonları kullanılır. Bu CRUD ekranı yerelde hazırlanmıştır ve henüz canlıya alınmamıştır.
 - Takvim günündeki artı düğmesi seçilen tarihle yeni rezervasyon formunu açar.
 - Rezervasyon giriş formu Türkçe Genel / Detay düzenindedir. Genel bölümde tarih-saat-terapist özeti, aranabilir hizmet şablonları, seçilen hizmet özeti, ek hizmet alanı ve üye/misafir seçimi; Detay bölümünde telefon, durum ve not bulunur.
