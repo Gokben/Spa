@@ -282,7 +282,8 @@ Git Version Control içindeki otomatik dağıtım ekranı geçmişte “Yükleni
 - 31 Ağustos 2026 tarihli `7a4a06e` dağıtımında yalnızca `resources/views/spa.blade.php` güncellenmiş; migration çalıştırılmamış, `.env`, canlı MySQL verileri ve test kayıtları değiştirilmemiştir.
 - Günlük rezervasyon kartlarının saat çizgilerine sabit dakika/piksel hesabıyla tam oturması yerelde ve canlıda doğrulanmıştır.
 - 1 Eylül 2026 tarihli `db10dfe` dağıtımında yalnızca `resources/views/spa.blade.php` güncellenmiş; migration çalıştırılmamış, `.env`, canlı MySQL verileri ve rezervasyon kayıtları değiştirilmemiştir.
-- Rezervasyon tarih başlığındaki `Bugün` düğmesi ve araç çubuğundaki `Yeni` düğmesi yerelde kaldırılmıştır. Yeni rezervasyon açma işlemi sağ tık ve boş saat aralığına çift tıklama üzerinden çalışmaya devam eder; değişiklikler henüz canlıya alınmamıştır.
+- Rezervasyon tarih başlığındaki `Bugün` düğmesi ve araç çubuğundaki `Yeni` düğmesi yerelde ve canlıda kaldırılmıştır. Yeni rezervasyon açma işlemi sağ tık ve boş saat aralığına çift tıklama üzerinden çalışmaya devam eder.
+- 1 Eylül 2026 tarihli `5ab43fc` dağıtımında yalnızca `resources/views/spa.blade.php` güncellenmiş; migration çalıştırılmamış, `.env`, canlı MySQL verileri ve rezervasyon kayıtları değiştirilmemiştir.
 - 31 Ağustos 2026 dağıtımında yalnızca `app/Http/Controllers/ReservationController.php` ve `resources/views/spa.blade.php` güncellenmiş, migration uygulanmamış ve canlı MySQL verileri değiştirilmemiştir.
 
 ## Yeni bir Codex görevi başlatırken
