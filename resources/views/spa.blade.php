@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="csrf-token" content="{{ csrf_token() }}">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Yeni Hasta Kaydı</title>
+  <title>Spa</title>
   <style>
     :root { --brand:#107c41; --brand-dark:#0b5c30; --ink:#1f2937; --muted:#5f6b7a; --line:#d7dde6; --canvas:#f3f5f7; --surface:#fff; --focus:#0067c0; }
     * { box-sizing:border-box; } body { margin:0; background:var(--canvas); color:var(--ink); font:14px/1.4 "Segoe UI", system-ui, sans-serif; }
