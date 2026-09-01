@@ -278,7 +278,7 @@ Git Version Control içindeki otomatik dağıtım ekranı geçmişte “Yükleni
 - 31 Ağustos 2026 tarihli `0287d9f` dağıtımında yalnızca `resources/views/spa.blade.php` güncellenmiş; migration çalıştırılmamış, `.env`, canlı MySQL verileri ve test kayıtları değiştirilmemiştir.
 - Kurulumdaki Kategoriler sekmesi, örnek `Masaj` kaydı ve Stok Kartındaki çoklu kategori seçimi yerelde ve canlıda doğrulanmıştır.
 - Stok Kartındaki çoklu kategori seçenekleri yan yana kutular yerine, tek alana tıklanınca dikey açılan seçim listesine dönüştürülmüştür. Seçilen kategori adları alan üzerinde özetlenir; davranış yerelde ve canlıda doğrulanmıştır.
-- Stok Kartındaki açılır kategori listesinin seçenekleri yerelde listenin sol kenarına hizalanmıştır; henüz canlıya alınmamıştır.
+- Stok Kartındaki açılır kategori listesinin seçenek satırları tüm liste genişliğini kullanacak ve onay kutusuyla birlikte en sol kenardan başlayacak şekilde yerelde hizalanmıştır; henüz canlıya alınmamıştır.
 - Rezervasyonların terapistler arasında sürükle-bırakla taşınması ve günlük çizelgedeki yeşil bilgi şeridinin kaldırılması yerelde ve canlıda doğrulanmıştır.
 - 31 Ağustos 2026 tarihli `7a4a06e` dağıtımında yalnızca `resources/views/spa.blade.php` güncellenmiş; migration çalıştırılmamış, `.env`, canlı MySQL verileri ve test kayıtları değiştirilmemiştir.
 - Günlük rezervasyon kartlarının saat çizgilerine sabit dakika/piksel hesabıyla tam oturması yerelde ve canlıda doğrulanmıştır.

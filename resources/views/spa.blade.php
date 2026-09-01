@@ -367,7 +367,7 @@
     .stock-category-trigger-arrow { color:#6a5523; font-size:13px; }
     .stock-category-menu { position:absolute; z-index:40; top:calc(100% + 2px); left:0; right:0; display:flex; flex-direction:column; gap:2px; max-height:190px; padding:5px; overflow:auto; border:1px solid #9c7b2d; background:#fffdf7; box-shadow:0 5px 12px rgba(30,38,32,.24); }
     .stock-category-menu[hidden] { display:none; }
-    .stock-category-menu label { align-self:stretch; display:flex; align-items:center; justify-content:flex-start; gap:7px; width:100%; min-height:28px; padding:4px 7px; border:1px solid transparent; background:#f8edcf; text-align:left; cursor:pointer; font:10px Tahoma; }
+    .stock-form .stock-category-menu > label { align-self:stretch; justify-self:stretch; display:flex; align-items:center; justify-content:flex-start; gap:7px; width:auto; min-height:28px; margin:0; padding:4px 7px; box-sizing:border-box; border:1px solid transparent; background:#f8edcf; text-align:left; cursor:pointer; font:10px Tahoma; }
     .stock-category-menu label:hover { border-color:#c9ad67; background:#fff0bd; }
     .stock-category-menu input { width:auto; height:auto; min-height:0; }
     .stock-category-empty { padding:6px; color:#76694e; font-style:italic; }
