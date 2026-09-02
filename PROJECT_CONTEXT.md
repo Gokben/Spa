@@ -307,6 +307,7 @@ Git Version Control içindeki otomatik dağıtım ekranı geçmişte “Yükleni
 ## Son durum
 
 - Yazılımdaki üye, personel, rezervasyon, cari kart ve SMS telefon girişleri ile telefon gösterimleri `0 (XXX) XXX XX XX` standardında ortak maske kullanır. Eski kayıtlar değiştirilmeden ekranda bu biçime dönüştürülür; yeni girişler yazılırken otomatik biçimlenir.
+- 2 Eylül 2026 tarihli `dc50e0d` dağıtımında Cari Karttaki Teknik Servis / İç Servis / Dış Servis alanları kaldırılmış ve ortak telefon biçimi canlıya alınmıştır. Cari form ile üye listesindeki `0 (XXX) XXX XX XX` görünümü canlıda doğrulanmış; migration çalıştırılmamış ve canlı veriler değiştirilmemiştir.
 
 - Grup seçimi zorunlu çalışma programı değişikliği yerelde, GitHub'da ve canlıda bulunmaktadır.
 - Canlıda meslek ve çalışma grubu altyapısı hazırdır.
