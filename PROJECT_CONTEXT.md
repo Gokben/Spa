@@ -107,7 +107,7 @@ Vox ERP Ön Kasa modülü Laravel yapısına uyarlanarak Ön Kasa menüsüne ba�
 - Cari Kartlar penceresi mevcut Sofitel yeşil-altın renk standardında Vox/Windows masaüstü penceresi olarak açılır.
 - İlk görünüm cari listesidir; kod, kısa ad, ilgili kişi, cari tipi ve telefon gösterilir.
 - Liste işlemlerinde turuncu fatura hareketleri, yeşil düzenle ve kırmızı sil ikonları kullanılır.
-- Yeni cari kartta cari kodu, unvan/ad, kısa ad, vergi dairesi, vergi/T.C. kimlik numarası, cari tipi, telefon, e-posta, yetkili kişi, fatura adresi, firma detayı, iç/dış servis ve durum alanları bulunur.
+- Yeni cari kartta cari kodu, unvan/ad, kısa ad, vergi dairesi, vergi/T.C. kimlik numarası, cari tipi, telefon, e-posta, yetkili kişi, fatura adresi, firma detayı ve durum alanları bulunur. Teknik Servis, İç Servis ve Dış Servis alanları kullanıcı isteğiyle arayüzden kaldırılmıştır.
 - Bir carinin hareket ekranında kayıtlar fatura bazında tarih, giriş/çıkış, fatura no, miktar, toplam, KDV'li toplam, iskontosuz tutar, iskonto, ortalama iskonto ve ödeme tipiyle gösterilir.
 - Fatura satırları artı/eksi düğmesiyle açılıp kapanır; stok kartı/açıklama, miktar, iskonto oranı ve birim fiyat görünür.
 - Cari kart silindiğinde ona bağlı fatura ve fatura satırları da silinir. Fatura satırındaki stok kartı silinirse satır korunur, stok bağlantısı boşalır.
@@ -305,6 +305,8 @@ Canlı hostingde shell erişimi kapalıdır. Çalışan yöntem:
 Git Version Control içindeki otomatik dağıtım ekranı geçmişte “Yükleniyor” durumunda kalmıştır. Bu nedenle Dosya Yöneticisi yöntemi kullanılmıştır.
 
 ## Son durum
+
+- Yazılımdaki üye, personel, rezervasyon, cari kart ve SMS telefon girişleri ile telefon gösterimleri `0 (XXX) XXX XX XX` standardında ortak maske kullanır. Eski kayıtlar değiştirilmeden ekranda bu biçime dönüştürülür; yeni girişler yazılırken otomatik biçimlenir.
 
 - Grup seçimi zorunlu çalışma programı değişikliği yerelde, GitHub'da ve canlıda bulunmaktadır.
 - Canlıda meslek ve çalışma grubu altyapısı hazırdır.
