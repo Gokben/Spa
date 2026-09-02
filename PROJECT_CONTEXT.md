@@ -196,6 +196,7 @@ Ekleme, düzenleme ve silme desteklenir. Canlıda tanımlı başlangıç kayıtl
 - Sağlayıcıdan gelen `401/403`, istek limiti ve bağlantı hataları ayrı kullanıcı mesajlarıyla gösterilir; yanlış API bilgisi artık bağlantı sorunu olarak raporlanmaz.
 - Kampanya kimliği, hedef numara, mesaj, durum ve sağlayıcı yanıtı `sms_messages` tablosunda kaydedilir.
 - Ticari ileti seçilirse Verimor'a İYS bireysel alıcı bilgisi gönderilir; varsayılan test/rezervasyon bildirimi ticari değildir.
+- Bir rezervasyonun terapisti, başlangıç saati veya bitiş saati gerçekten değiştiğinde `0 (543) 548 01 22` numarasına eski/yeni terapist ve saat bilgilerini içeren otomatik, ticari olmayan SMS gönderilir. SMS hatası rezervasyon güncellemesini geri almaz; başarısız deneme `sms_messages` tablosunda `failed` olarak saklanır. Yalnızca not, durum veya başka alanların değişmesi SMS tetiklemez.
 - Canlı Verimor API erişimi etkinleştirilmiş, izinli DNS olarak `krpsoft.com.tr` tanımlanmış ve API bilgileri canlı uygulamada şifreli olarak kaydedilmiştir. 1 Eylül 2026 testinde kimlik doğrulaması başarılı olmuş; ancak hesapta onaylı SMS başlığı bulunmadığı için sağlayıcı `INVALID_SOURCE_ADDRESS` yanıtı vermiş, kampanya oluşmamış ve SMS teslim edilmemiştir. Yeni test, Verimor'da bir gönderici başlığı onaylandıktan sonra yapılmalıdır.
 
 ## Çalışma Programı

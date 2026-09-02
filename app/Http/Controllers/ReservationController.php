@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Employee;
 use App\Models\Member;
 use App\Models\Reservation;
+use App\ReservationChangeSmsNotifier;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
@@ -20,8 +21,8 @@ class ReservationController extends Controller
             'end' => ['nullable', 'required_with:start', 'date_format:Y-m-d', 'after:start'],
         ]);
         $month = $filters['month'] ?? now()->format('Y-m');
-        $start = $filters['start'] ?? $month . '-01';
-        $end = $filters['end'] ?? date('Y-m-d', strtotime($start . ' +1 month'));
+        $start = $filters['start'] ?? $month.'-01';
+        $end = $filters['end'] ?? date('Y-m-d', strtotime($start.' +1 month'));
 
         return response()->json(['data' => [
             'month' => substr($start, 0, 7),
@@ -46,13 +47,18 @@ class ReservationController extends Controller
         return response()->json(['data' => Reservation::create($data)->load(['member', 'employee'])], 201);
     }
 
-    public function update(Request $request, Reservation $reservation): JsonResponse
+    public function update(Request $request, Reservation $reservation, ReservationChangeSmsNotifier $notifier): JsonResponse
     {
+        $original = $reservation->only(['employee_id', 'start_time', 'end_time']);
         $data = $this->validated($request);
         $this->ensureAvailable($data, $reservation);
         $reservation->update($data);
+        $reservation = $reservation->refresh()->load(['member', 'employee']);
 
-        return response()->json(['data' => $reservation->refresh()->load(['member', 'employee'])]);
+        return response()->json([
+            'data' => $reservation,
+            'sms_notification' => $notifier->notify($reservation, $original),
+        ]);
     }
 
     public function destroy(Reservation $reservation): JsonResponse
@@ -76,7 +82,7 @@ class ReservationController extends Controller
             'status' => ['required', Rule::in(['planned', 'confirmed', 'completed', 'cancelled', 'no_show'])],
             'notes' => ['nullable', 'string', 'max:2000'],
         ]);
-        if (!empty($data['member_id'])) {
+        if (! empty($data['member_id'])) {
             $member = Member::find($data['member_id']);
             $data['guest_name'] = $member->full_name;
             $data['phone'] = $member->phone;
@@ -87,7 +93,9 @@ class ReservationController extends Controller
 
     private function ensureAvailable(array $data, ?Reservation $reservation = null): void
     {
-        if (empty($data['employee_id']) || $data['status'] === 'cancelled') return;
+        if (empty($data['employee_id']) || $data['status'] === 'cancelled') {
+            return;
+        }
         $conflict = Reservation::query()
             ->where('employee_id', $data['employee_id'])
             ->whereDate('reservation_date', $data['reservation_date'])
