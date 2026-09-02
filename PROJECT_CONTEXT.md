@@ -1,6 +1,6 @@
 # Sofitel Spa Yazılımı — Proje Hafızası
 
-Son güncelleme: 1 Eylül 2026
+Son güncelleme: 2 Eylül 2026
 
 ## Projenin amacı
 
@@ -37,6 +37,8 @@ Kimlik bilgileri, cPanel oturum adresleri ve `.env` sırları bu dosyada tutulma
   - Çalışma Programı
 - Raporlar
 - Kurulum
+- Paketler
+- Cari Kartlar
 
 ## Giriş davranışı
 
@@ -98,6 +100,17 @@ Vox ERP Ön Kasa modülü Laravel yapısına uyarlanarak Ön Kasa menüsüne ba�
 - Ödeme türleri Nakit, Kredi Kartı, Havale/EFT ve Oda Hesabı seçenekleridir.
 - Gelir ve gider kategorileri ayrı tanımlanır; kullanılan kategoriler silinemez, pasifleştirilebilir.
 - Gün sonu kaydı beklenen bakiye, sayılan bakiye ve farkı saklar; aynı tarih yeniden kaydedildiğinde kayıt güncellenir.
+
+## Cari Kartlar
+
+- Sol menüde `Cari Kartlar`, `Paketler` öğesinin hemen ardından gelir.
+- Cari Kartlar penceresi mevcut Sofitel yeşil-altın renk standardında Vox/Windows masaüstü penceresi olarak açılır.
+- İlk görünüm cari listesidir; kod, kısa ad, ilgili kişi, cari tipi ve telefon gösterilir.
+- Liste işlemlerinde turuncu fatura hareketleri, yeşil düzenle ve kırmızı sil ikonları kullanılır.
+- Yeni cari kartta cari kodu, unvan/ad, kısa ad, vergi dairesi, vergi/T.C. kimlik numarası, cari tipi, telefon, e-posta, yetkili kişi, fatura adresi, firma detayı, iç/dış servis ve durum alanları bulunur.
+- Bir carinin hareket ekranında kayıtlar fatura bazında tarih, giriş/çıkış, fatura no, miktar, toplam, KDV'li toplam, iskontosuz tutar, iskonto, ortalama iskonto ve ödeme tipiyle gösterilir.
+- Fatura satırları artı/eksi düğmesiyle açılıp kapanır; stok kartı/açıklama, miktar, iskonto oranı ve birim fiyat görünür.
+- Cari kart silindiğinde ona bağlı fatura ve fatura satırları da silinir. Fatura satırındaki stok kartı silinirse satır korunur, stok bağlantısı boşalır.
 
 ## Rezervasyon
 
@@ -221,6 +234,9 @@ Başlıca uygulama tabloları:
 - `reservations`
 - `sms_settings`
 - `sms_messages`
+- `current_accounts`
+- `current_account_invoices`
+- `current_account_invoice_items`
 
 `employees` tablosunda nullable `occupation_id` ve `work_group_id` alanları vardır. Her ikisi de ilgili tanım silindiğinde `NULL` olacak dış anahtarlarla bağlıdır.
 
@@ -245,6 +261,8 @@ Başlıca uygulama tabloları:
 - `/api/sms`
 - `/api/sms/settings`
 - `/api/sms/send`
+- `/api/current-accounts`
+- `/api/current-accounts/{current_account}`
 
 API erişimi `SpaAuthenticate` middleware katmanından geçer.
 
@@ -264,6 +282,7 @@ Projeye özgü migration sırası:
 - `2026_08_29_020000_create_reservations_table`
 - `2026_08_31_000000_create_categories_table`
 - `2026_09_01_020000_create_sms_module_tables`
+- `2026_09_02_000000_create_current_accounts_module_tables`
 
 ## Yerel test durumu
 
@@ -317,6 +336,7 @@ Git Version Control içindeki otomatik dağıtım ekranı geçmişte “Yükleni
 - 1 Eylül 2026 tarihli `bb3860e` dağıtımında Verimor SMS entegrasyonu canlıya alınmıştır. `sms_settings` ve `sms_messages` tabloları canlı MySQL veritabanında oluşturulmuş, migration kaydı eklenmiş ve Kurulum > SMS Ayarları ekranı devre dışı/boş hesap durumunda doğrulanmıştır. Gerçek SMS gönderilmemiş; `.env` ile mevcut canlı veriler korunmuştur.
 - Verimor SMS hata yönetimi, sağlayıcının `401/403` kimlik doğrulama yanıtlarını gerçek bağlantı hatalarından ayıracak şekilde düzeltilmiştir.
 - Verimor API erişimi ve canlı uygulama kimlik bilgileri doğrulanmıştır. Test SMS'i hesapta onaylı gönderici başlığı bulunmaması nedeniyle `INVALID_SOURCE_ADDRESS` ile reddedilmiştir; teslimat veya kampanya oluşmamıştır.
+- Cari Kartlar modülü yerelde hazırlanmıştır. Menü sırası, cari listesi, cari kart formu, API kaydı ve fatura bazlı hareket/satır detayı tarayıcıda doğrulanmıştır. Doğrulama için oluşturulan geçici cari ve fatura kayıtları temizlenmiş; canlıya dosya, migration veya test verisi gönderilmemiştir.
 
 ## Yeni bir Codex görevi başlatırken
 

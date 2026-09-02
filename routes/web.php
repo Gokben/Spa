@@ -4,6 +4,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\BusinessHourController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\CashController;
+use App\Http\Controllers\CurrentAccountController;
 use App\Http\Controllers\EmployeeController;
 use App\Http\Controllers\EmployeeScheduleController;
 use App\Http\Controllers\MemberController;
@@ -52,6 +53,7 @@ Route::middleware(SpaAuthenticate::class)->prefix('api')->group(function () {
     Route::put('cash/closing', [CashController::class, 'saveClosing']);
     Route::apiResource('reservations', ReservationController::class)->only(['index', 'store', 'update', 'destroy']);
     Route::apiResource('packages', SpaPackageController::class)->only(['index', 'store', 'update', 'destroy']);
+    Route::apiResource('current-accounts', CurrentAccountController::class)->only(['index', 'show', 'store', 'update', 'destroy']);
     Route::get('sms', [SmsController::class, 'index']);
     Route::put('sms/settings', [SmsController::class, 'updateSettings']);
     Route::post('sms/send', [SmsController::class, 'send']);
