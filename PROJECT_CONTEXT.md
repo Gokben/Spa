@@ -197,7 +197,7 @@ Ekleme, düzenleme ve silme desteklenir. Canlıda tanımlı başlangıç kayıtl
 - Kampanya kimliği, hedef numara, mesaj, durum ve sağlayıcı yanıtı `sms_messages` tablosunda kaydedilir.
 - Ticari ileti seçilirse Verimor'a İYS bireysel alıcı bilgisi gönderilir; varsayılan test/rezervasyon bildirimi ticari değildir.
 - Bir rezervasyonun terapisti, başlangıç saati veya bitiş saati gerçekten değiştiğinde `0 (543) 548 01 22` numarasına eski/yeni terapist ve saat bilgilerini içeren otomatik, ticari olmayan SMS gönderilir. SMS hatası rezervasyon güncellemesini geri almaz; başarısız deneme `sms_messages` tablosunda `failed` olarak saklanır. Yalnızca not, durum veya başka alanların değişmesi SMS tetiklemez.
-- Canlı Verimor API erişimi etkinleştirilmiş, izinli DNS olarak `krpsoft.com.tr` tanımlanmış ve API bilgileri canlı uygulamada şifreli olarak kaydedilmiştir. 1 Eylül 2026 testinde kimlik doğrulaması başarılı olmuş; ancak hesapta onaylı SMS başlığı bulunmadığı için sağlayıcı `INVALID_SOURCE_ADDRESS` yanıtı vermiş, kampanya oluşmamış ve SMS teslim edilmemiştir. Yeni test, Verimor'da bir gönderici başlığı onaylandıktan sonra yapılmalıdır.
+- Canlı Verimor API erişimi etkinleştirilmiş, izinli DNS olarak `krpsoft.com.tr` tanımlanmış ve API bilgileri canlı uygulamada şifreli olarak kaydedilmiştir. Gönderici başlığı boş bırakılarak yapılan 2 Eylül 2026 testinde de sağlayıcı `INVALID_SOURCE_ADDRESS` yanıtı vermiştir. Bu hesapta başlıksız gönderim kullanılamamaktadır; Verimor'da onaylı bir gönderici başlığı tanımlanmadan kampanya oluşmaz ve SMS teslim edilmez.
 
 ## Çalışma Programı
 
@@ -309,6 +309,7 @@ Git Version Control içindeki otomatik dağıtım ekranı geçmişte “Yükleni
 
 - Yazılımdaki üye, personel, rezervasyon, cari kart ve SMS telefon girişleri ile telefon gösterimleri `0 (XXX) XXX XX XX` standardında ortak maske kullanır. Eski kayıtlar değiştirilmeden ekranda bu biçime dönüştürülür; yeni girişler yazılırken otomatik biçimlenir.
 - 2 Eylül 2026 tarihli `dc50e0d` dağıtımında Cari Karttaki Teknik Servis / İç Servis / Dış Servis alanları kaldırılmış ve ortak telefon biçimi canlıya alınmıştır. Cari form ile üye listesindeki `0 (XXX) XXX XX XX` görünümü canlıda doğrulanmış; migration çalıştırılmamış ve canlı veriler değiştirilmemiştir.
+- 2 Eylül 2026 tarihli `84e249d` dağıtımında rezervasyon terapisti veya saatleri değiştiğinde `0 (543) 548 01 22` numarasına otomatik bildirim gönderen tetikleyici canlıya alınmıştır. Migration çalıştırılmamıştır. Gönderici başlığı canlı SMS ayarlarında boşaltılmış; tek gerçek test sağlayıcı tarafından `INVALID_SOURCE_ADDRESS` ile reddedilmiş, kampanya oluşmamış ve SMS teslim edilmemiştir. İkinci gönderim yapılmamıştır.
 
 - Grup seçimi zorunlu çalışma programı değişikliği yerelde, GitHub'da ve canlıda bulunmaktadır.
 - Canlıda meslek ve çalışma grubu altyapısı hazırdır.
