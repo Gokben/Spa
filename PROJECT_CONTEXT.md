@@ -118,6 +118,7 @@ Vox ERP randevu modülü SPA'ya uyarlanarak Rezervasyon menüsüne bağlanmışt
 
 - Rezervasyon takvimi doğrudan günlük görünümde açılır; Günlük, Haftalık ve Aylık görünüm düğmeleri araç çubuğundan kaldırılmıştır.
 - Günlük görünüm rezervasyonları 08:00–22:00 saat çizelgesi üzerinde süreleri oranında gösterir; çakışan rezervasyonlar yan yana yerleşir. Ardışık saat blokları, geçişleri kolay izlemek için dönüşümlü açık tonlarla ayrılır.
+- Günlük çizelge 10 dakikalık hassasiyetle çalışır. On dakikalık alt bölümler normal görünümde çizilmez; fare terapist sütununda hareket ederken yalnızca en yakın 10 dakikayı gösteren mavi çizgi ve saat etiketi görünür, fare ayrılınca kaybolur. Sağ tık, çift tık ve sürükle-bırak işlemleri 10 dakikalık aralığa hizalanır; yeni rezervasyon için varsayılan süre 30 dakikadır.
 - Günlük çizelgede her saat 60 piksel, her yarım saat 30 piksel sabit ölçüyle hesaplanır. Rezervasyon kartının üst ve alt kenarı kendi başlangıç/bitiş saat çizgilerine tam oturur.
 - Günlük görünümde mesleği Terapist olan aktif personeller ad-soyad başlıklı ayrı sütunlarda gösterilir; rezervasyon kartı bağlı olduğu terapistin sütununa yerleşir.
 - Terapist sütunundaki boş saate sağ tıklayıp Yeni seçildiğinde tarih, yarım saatlik zaman aralığı ve terapist otomatik olarak forma aktarılır.
