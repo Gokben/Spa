@@ -1,6 +1,6 @@
 # Sofitel Spa Yazılımı — Proje Hafızası
 
-Son güncelleme: 2 Eylül 2026
+Son güncelleme: 21 Eylül 2026
 
 ## Projenin amacı
 
@@ -137,6 +137,7 @@ Vox ERP randevu modülü SPA'ya uyarlanarak Rezervasyon menüsüne bağlanmışt
 - Aynı personelin çakışan saatlerde iki aktif rezervasyonuna sunucu tarafında izin verilmez.
 - Rezervasyon kartları mouse-over durumunda maviye döner ve beyaz metin korunur. Yanında açılan koyu bilgi kartında mevcut hizmet, tarih, saat, terapist, misafir, üye, telefon, üyelik, doğum tarihi, durum ve not bilgileri gösterilir.
 - Sol menüde `Paketler`, kullanıcı isteğiyle `Kurulum` öğesinin hemen altında yer alır. Açılan Vox tarzı paket penceresinde Klasik Rahatlama, Geleneksel Hamam, Çiftlere Özel Romantik, Arındırıcı Güzellik ve Gelin / Bekarlığa Veda paketleri; süreleri, içerikleri ve uygun misafir profilleriyle gösterilir. Paketler Laravel API ve `spa_packages` tablosunda saklanır; kullanıcı yeni paket ekleyebilir, mevcut paketi düzenleyebilir ve onay vererek silebilir. İşlem sütununda yazılımın yeşil-altın standardına uygun yeşil kalem ve kırmızı çöp kutusu SVG ikonları kullanılır. Bu CRUD ekranı yerelde ve canlıda doğrulanmıştır.
+- Paketler Kurulum > Hizmetler altında tanımlanan hizmet gruplarına bağlanabilir. Yeni/düzenleme formunda hizmet grubu zorunlu seçilir; paket listesinde Hizmet Grubu sütunu ile Tüm hizmet grupları, her tanımlı grup ve Grupsuz filtreleri bulunur. Önceden var olan paketler kullanıcı sınıflandırana kadar Grupsuz kalır. Bir hizmet grubu silinirse bağlı paketler silinmez, Grupsuz duruma geçer.
 - Takvim günündeki artı düğmesi seçilen tarihle yeni rezervasyon formunu açar.
 - Rezervasyon giriş formu Türkçe Genel / Detay düzenindedir. Genel bölümde tarih-saat-terapist özeti, aranabilir hizmet şablonları, seçilen hizmet özeti, ek hizmet alanı ve üye/misafir seçimi; Detay bölümünde telefon, durum ve not bulunur.
 - Rezervasyon girişi takvimin üzerinde ayrı bir pencere olarak açılır. Pencere Sofitel yeşil-altın renk standardını kullanır; sağ üstteki X formu kaydetmeden kapatır ve günlük rezervasyon takvimine geri döner.
@@ -144,7 +145,7 @@ Vox ERP randevu modülü SPA'ya uyarlanarak Rezervasyon menüsüne bağlanmışt
 
 ## Kurulum
 
-Kurulum penceresinde altı sekme bulunur:
+Kurulum penceresinde yedi sekme bulunur:
 
 1. Mesai Tanımları
 2. Çalışma Saatleri
@@ -152,6 +153,7 @@ Kurulum penceresinde altı sekme bulunur:
 4. Çalışma Grupları
 5. Kategoriler
 6. SMS Ayarları
+7. Hizmetler
 
 ### Mesai Tanımları
 
@@ -200,6 +202,12 @@ Ekleme, düzenleme ve silme desteklenir. Canlıda tanımlı başlangıç kayıtl
 - Bir rezervasyonun terapisti, başlangıç saati veya bitiş saati gerçekten değiştiğinde `0 (543) 548 01 22` numarasına eski/yeni terapist ve saat bilgilerini içeren otomatik, ticari olmayan SMS gönderilir. SMS hatası rezervasyon güncellemesini geri almaz; başarısız deneme `sms_messages` tablosunda `failed` olarak saklanır. Yalnızca not, durum veya başka alanların değişmesi SMS tetiklemez.
 - Canlı Verimor API erişimi etkinleştirilmiş, izinli DNS olarak `krpsoft.com.tr` tanımlanmış ve API bilgileri canlı uygulamada şifreli olarak kaydedilmiştir. Gönderici başlığı boş bırakılarak yapılan 2 Eylül 2026 testinde de sağlayıcı `INVALID_SOURCE_ADDRESS` yanıtı vermiştir. Bu hesapta başlıksız gönderim kullanılamamaktadır; Verimor'da onaylı bir gönderici başlığı tanımlanmadan kampanya oluşmaz ve SMS teslim edilmez.
 
+### Hizmetler
+
+- `Hizmetler` sekmesi Kurulum ekranında `SMS Ayarları` sekmesinin hemen sağında yer alır.
+- Hizmet grubu ekleme, düzenleme ve onaylı silme işlemleri desteklenir.
+- Başlangıç kayıtları `Masaj`, `Hamam` ve `Bakım` şeklindedir.
+
 ## Çalışma Programı
 
 - Haftalık takvim görünümündedir.
@@ -226,6 +234,7 @@ Başlıca uygulama tabloları:
 - `occupations`
 - `work_groups`
 - `categories`
+- `service_groups`
 - `category_stock_item`
 - `stock_items`
 - `stock_movements`
@@ -242,6 +251,8 @@ Başlıca uygulama tabloları:
 
 `employees` tablosunda nullable `occupation_id` ve `work_group_id` alanları vardır. Her ikisi de ilgili tanım silindiğinde `NULL` olacak dış anahtarlarla bağlıdır.
 
+`spa_packages` tablosundaki nullable `service_group_id`, paketleri `service_groups` tablosuna bağlar. Hizmet grubu silindiğinde paket kaydı korunur ve bağlantı `NULL` olur.
+
 ## Önemli API uçları
 
 - `/api/members`
@@ -252,6 +263,7 @@ Başlıca uygulama tabloları:
 - `/api/occupations`
 - `/api/work-groups`
 - `/api/categories`
+- `/api/service-groups`
 - `/api/employee-schedules`
 - `/api/stock-items`
 - `/api/stock-movements`
@@ -285,6 +297,8 @@ Projeye özgü migration sırası:
 - `2026_08_31_000000_create_categories_table`
 - `2026_09_01_020000_create_sms_module_tables`
 - `2026_09_02_000000_create_current_accounts_module_tables`
+- `2026_09_21_010000_create_service_groups_table`
+- `2026_09_21_020000_add_service_group_to_spa_packages_table`
 
 ## Yerel test durumu
 
@@ -307,6 +321,50 @@ Canlı hostingde shell erişimi kapalıdır. Çalışan yöntem:
 Git Version Control içindeki otomatik dağıtım ekranı geçmişte “Yükleniyor” durumunda kalmıştır. Bu nedenle Dosya Yöneticisi yöntemi kullanılmıştır.
 
 ## Son durum
+
+- 21 Eylül 2026: Paket yeni/düzenleme formundaki Kaydet ve İptal düğmeleri Vox/Windows krem zeminini koruyacak şekilde güncellendi. Kaydet'te 18×18 piksel, 1 piksel çizgili yeşil disket; İptal'de aynı ölçüde kırmızı daire-X SVG ikonu kullanılır. İptal ikonunun çemberi ve çarpısı, Kaydet ikonu ile optik olarak eşit görünecek şekilde büyütüldü. Düğme metinleri kaldırıldı; açıklamalar yalnızca fare üzerine gelince araç ipucu olarak gösterilir ve erişilebilir adlar korunur. Yerel Yeni Paket ekranında görsel olarak doğrulandı. Canlıya aktarılmadı.
+- 21 Eylül 2026: Yeni Paket ekranındaki `Paket Listesi` geri dönüş düğmesi kaldırıldı. Pencerenin sağ üstündeki X düğmesi `Paket listesine dön` erişilebilir adıyla Yeni Paket penceresini kapatıp Paketler listesini yeniden gösterir. Yerelde açma-kapama akışı doğrulandı. Canlıya aktarılmadı.
+- 21 Eylül 2026: Yazılım genelindeki Kaydet ve İptal/Vazgeç düğmeleri, işlem tablolarındaki düğme ölçüsüyle birleştirildi. Düğmeler 28×23 piksel Vox/Windows krem zeminde; Kaydet için 18×18 ince yeşil disket, İptal için 18×18 ince kırmızı daire-X kullanır. Metinler kaldırıldı; düğmenin işleme özel açıklaması `title` ve `aria-label` olarak korunur. Sayfa açılışında bulunan ve sonradan dinamik üretilen düğmeler ortak dönüştürücüyle kapsanır. Yerelde Kurulum > Mesai Tanımları, Hizmetler ve Çalışma Saatleri ekranlarında görsel ve erişilebilirlik ağacında doğrulandı. Canlıya aktarılmadı.
+- 21 Eylül 2026: Kurulum > Çalışma Saatleri ekranında Kaydet ikonunu saran geniş araç çubuğunun çerçevesi ve gradyan zemini kaldırıldı; Kaydet ikonu ve sağdaki durum mesajı doğrudan panel zemini üzerinde gösterilir. Yerelde görsel olarak doğrulandı. Canlıya aktarılmadı.
+- 21 Eylül 2026: Kurulum tanım tablolarında düzenleme sırasında gösterilen Kaydet ve İptal düğmelerinin dış ölçüleri, Düzenle/Sil düğmeleriyle eşit olacak şekilde 28×23 piksele getirildi. Her iki ikon 18×18 piksel ve ortalanmış olarak kalır. Kurulum > Hizmetler ekranında yerelde görsel olarak doğrulandı. Canlıya aktarılmadı.
+- 21 Eylül 2026: Kurulum > SMS Ayarları ekranındaki Verimor hesap girişlerinin kart dışına taşması düzeltildi. SMS kartları daralabilir hale getirildi; formun değer sütunu `minmax(0, 1fr)` kullanır ve input/textarea genişlikleri `border-box` hesabıyla kendi kartı içinde kalır. Yerelde iki kart yan yana görünümde doğrulandı. Canlıya aktarılmadı.
+- 21 Eylül 2026: Yerel paket verilerinde `Öne Çıkan İçerikler` alanında `Masajlar` geçen tüm kayıtlar Masaj hizmet grubuna bağlandı. Toplam 16 eşleşmenin 3'ü önceden atanmıştı; kalan 13 paket toplu olarak güncellendi ve Paketler listesinde 16 kaydın tamamının Masaj grubunda olduğu doğrulandı. Canlı veritabanına uygulanmadı.
+- 21 Eylül 2026: Yerel paket verilerinde `Öne Çıkan İçerikler` alanında `Bakım` geçen 14 kaydın tamamı Bakım hizmet grubuna bağlandı. Önceden Bakım grubunda olan eşleşme yoktu; 14 paket toplu olarak güncellendi ve Paketler listesinde doğrulandı. Canlı veritabanına uygulanmadı.
+- 21 Eylül 2026: Yerel paket verilerinde `Öne Çıkan İçerikler` alanında `Üyelik` geçen 6 kayıt (Daily Use, Pool Access, 1/3/6/12 Month) mevcut `Üyelikler` hizmet grubuna bağlandı. Önceden bu gruba atanmış eşleşme yoktu; 6 paket toplu olarak güncellendi ve Paketler listesinde doğrulandı. Canlı veritabanına uygulanmadı.
+- 21 Eylül 2026: Yerel paket verilerinde hizmet grubu boş olan ve Paket Türü alanında `Massage` geçen 5 kayıt (Head Massage, Indian Head Massage, Face Massage, Foot Massage, Back Massage) Masaj hizmet grubuna bağlandı. Güncelleme sonrasında `Grupsuz + Massage` koşulunda kayıt kalmadığı doğrulandı. Canlı veritabanına uygulanmadı.
+
+- 21 Eylül 2026: Paketler hizmet gruplarına bağlandı. Paket formuna zorunlu Hizmet Grubu seçimi; listeye Hizmet Grubu sütunu ve Tüm/Masaj/Hamam/Bakım/Grupsuz filtresi eklendi. API paketlerle birlikte hizmet grubu ilişkisini döndürür ve grup kimliğini doğrular. `2026_09_21_020000_add_service_group_to_spa_packages_table` migrationı yerel SQLite'ta uygulandı; mevcut 41 paket değiştirilmeden Grupsuz bırakıldı. Paket listesi, filtre seçenekleri ve Yeni Paket formundaki grup seçimi tarayıcıda doğrulandı. Canlıya aktarılmadı.
+
+- 21 Eylül 2026: Hizmetler listesindeki 18×18 piksel ince çizgili yeşil kalemli belge ve kırmızı çöp kutusu ikonları ortak satır işlem standardı yapıldı. Mesai tanımları, diğer Kurulum tanımları, Stok Kartları, Stok Giriş/Çıkış, Ön Kasa hareketleri ve kategorileri, Rezervasyon Listesi, Paketler ve Cari Kartlar ekranlarındaki düzenle/sil düğmeleri aynı 28×23 piksel Vox/Windows düğme ölçüsü ve ikon görünümüne geçirildi. Düğmelerin mevcut işlemleri ve erişilebilir adları korundu; Mesai Tanımları ile Hizmetler ekranlarında yerel görsel doğrulama yapıldı. Değişiklik yereldedir.
+
+- 21 Eylül 2026: Yazılımdaki kullanıcıya açık tüm `Yenile` düğmeleri kaldırıldı. Üye listesindeki ikonlu yenileme kontrolü, Kurulum sekmelerindeki yenileme kontrolleri, Ön Kasa düğmesi ve rezervasyon ekranındaki gizli yenileme kontrolü artık arayüzde gösterilmez. Ekranların ilk açılışta ve kayıt işlemlerinden sonra otomatik veri yükleme davranışı korunmuştur. Değişiklik yereldedir.
+
+- 21 Eylül 2026: Kurulum ekranında `SMS Ayarları` sekmesinin yanına `Hizmetler` sekmesi eklendi. `service_groups` tablosu ve listeleme/ekleme/düzenleme/silme API uçları hazırlandı; başlangıçta Masaj, Hamam ve Bakım kayıtları oluşturuldu. Yerelde geçici kayıtla CRUD akışı test edilip kayıt temizlendi; tarayıcıda üç başlangıç kaydı, Yeni Hizmet, Düzenle ve Sil kontrolleri doğrulandı. Canlıya aktarılmadı.
+
+- 21 Eylül 2026: Paketler araç çubuğundaki `Yenile` düğmesi kaldırıldı. İki süre ve iki fiyat taşıyan 5 paket, her biri tek süre/tek fiyat içeren 10 bağımsız pakete ayrıldı; toplam paket sayısı 41'den 46'ya çıktı. Yeni/düzenleme formundaki ikinci fiyat alanı ve API yazma desteği kaldırıldı. `2026_09_21_000000_split_multi_price_spa_packages` migrationı yerelde çalıştırıldı; ikinci fiyatı dolu kayıt kalmadığı, 10 yeni satırın tutarları ve yerel Paketler ekranı doğrulandı. Canlıya aktarılmadı.
+
+- 7 Eylül 2026: Kullanıcının canlıya alma onayından sonra spa-new-package-front.zip spa-app altında çıkarıldı. Yalnızca resources/views/spa.blade.php güncellendi. Canlı Yeni Paket formunun ortalanmış, ilk alanı odaklanmış ve liste görev düğmesi gizlenmiş şekilde bağımsız açıldığı doğrulandı. Veritabanı ve fiyatlar değiştirilmedi; önceki onay engeli çözüldü.
+
+- 7 Eylül 2026: Yeni Paket formu yerelde ekran ortasında bağımsız ve odaklanmış açılır; paket listesi ve liste görev düğmesi form açıkken gizlenir, İptal/X ile geri gelir. Yerelde 720x490 ortalanmış pencere, ilk alan odağı ve listeye dönüş doğrulandı; PHP lint ve git diff --check geçti. spa-new-package-front.zip canlı spa-app dizinine yüklendi ancak çıkarma işlemi otomatik onay denetiminde açık canlı dağıtım onayı eksikliğiyle reddedildi. Canlıya uygulanmadı; kullanıcı onayı bekleniyor.
+
+- 7 Eylül 2026: Paket fiyatları canlıya alındı. spa-package-prices-20260907.sql krpsoftc_spa üzerinde uygulandı; alternative_price alanı ve migration kaydı eklendi, eşleşen 36 fiyat güncellendi. spa-package-prices-20260907.zip içindeki SpaPackage modeli, SpaPackageController, paket fiyat değişikliklerini içeren Blade ve migration spa-app altına çıkarıldı. Canlı Paketler ekranında toplam 41 kayıt, 36 Euro fiyatı ve 5 çift süreli fiyat doğrulandı; eşleşmeyen 5 paketin boş fiyatları korundu. Dağıtım Blade dosyası önceki canlı deploy-20260907 sürümünden yalnızca packageRows ve packageForm değiştirilerek üretildi; bekleyen web rezervasyonu değişiklikleri bu dağıtıma dahil edilmedi.
+
+- 7 Eylül 2026: masaj1lar.jpg görseliyle eşleşen 36 yerel paketin Euro fiyatları güncellendi. İki süreli 5 hizmet için nullable alternative_price alanı, API doğrulaması ve ikinci süre fiyatı form alanı eklendi; listede fiyatlar süre sırasıyla gösterilir. 2026_09_07_020000 migrationı yalnızca yerelde uygulandı. 41 kayıt ve eşleşmeyen 5 paket korundu; tüm fiyatlar API üzerinden, fiyat listesi ve iki fiyatlı düzenleme formu tarayıcıda doğrulandı. PHP sözdizimi ve git diff --check geçti. Canlıya aktarılmadı.
+
+- 7 Eylül 2026: Web rezervasyonu yerelde hazır. spaweb için 3 adımlı tarih/kişi/hizmet/saat, iletişim ve özet formu; booking.php ve booking-service.php aynı reservations tablosuna planned/null employee_id ve [WEB] notuyla kayıt yazar. CSRF, IP hız limiti, session idempotency, doğrulama eklendi. ReservationController index web_requests döndürür; takvimde talep kutusu ve düzenleme dışı 15 saniye yenileme vardır. Transaction testleri ve GET/419/422 yerel kontrolleri başarılı. Migration yok. spa-web-booking-app.zip spa-app altına yüklendi ancak Extract Files otomatik denetim tarafından son onay eksikliğiyle durduruldu. Canlı değişiklik uygulanmadı; kullanıcı son onayı bekleniyor. Web paketi yerelde spa-web-booking-site.zip olarak hazır.
+
+
+- 7 Eylül 2026 canlı dağıtımı tamamlandı: spa-update-20260907.zip içindeki 8 dosya spa-app altında çıkarıldı; spa-update-20260907.sql phpMyAdmin üzerinden 88 sorguyla başarıyla uygulandı. Canlıda 41 paket, ayrı Yeni Paket ekranı, EUR fiyat alanı, üye fotoğrafı seçimi ve Kapat düğmesinin kaldırılması doğrulandı. Fotoğraf POST rotası boş istekle 422/photo doğrulama hatası döndürdü; gerçek üye fotoğrafı veya test verisi yüklenmedi. Mevcut canlı kayıtlar ve .env korundu.
+
+- Üye kartının araç çubuğundaki Kapat düğmesi kullanıcı isteğiyle kaldırıldı; pencere başlığındaki X kullanılabilir.
+
+- Üye kartı Bilgiler sekmesine fotoğraf seçimi/önizlemesi eklendi. Kaydet ile JPG/PNG/WebP (en fazla 5 MB) yüklenir. members.photo_path özel yerel diskteki dosyayı tutar; fotoğraf oturum korumalı API üzerinden görüntülenir. Yerel migration: 2026_09_07_010000_add_photo_to_members_table. Canlıya aktarılmadı.
+
+- 7 Eylül 2026: Paketlere nullable decimal(10,2) price alanı eklendi; para birimi sabit EUR. Yeni/düzenleme formunda Fiyat (€), listede Euro biçimli fiyat gösterilir. Eski fiyatlar NULL kalır (—); negatif ve ikiden fazla ondalık basamak reddedilir. Yerel migration: 2026_09_07_000000_add_price_to_spa_packages_table. Canlıya aktarılmadı.
+
+- 7 Eylül 2026: Paketler > Yeni Paket, listeyi gizleyip ayrı Yeni Paket penceresini açar. Kaydet sonrası liste yenilenir; İptal, Paket Listesi ve X listeye döner. Hata durumunda form korunur ve çift gönderim engellenir. Değişiklik yereldedir.
+
+- 7 Eylül 2026: Kullanıcının masajlar.jpg listesindeki 36 hizmet/üyelik, yerel Paketler API üzerinden eklendi. Mevcut 5 paket korundu; toplam 41 kayıt var. İngilizce hizmet adları ve süre seçenekleri korundu; kategori bilgisi featured_contents alanında, kaynakta bulunmayan hedef kitle bilgisi Belirtilmemiş olarak tutuldu. Şema veya uygulama kodu değişmedi, canlıya aktarılmadı. Tekrar çalıştırılabilir aktarım: E:\kirpi\spa\import-masajlar.ps1.
 
 - Yazılımdaki üye, personel, rezervasyon, cari kart ve SMS telefon girişleri ile telefon gösterimleri `0 (XXX) XXX XX XX` standardında ortak maske kullanır. Eski kayıtlar değiştirilmeden ekranda bu biçime dönüştürülür; yeni girişler yazılırken otomatik biçimlenir.
 - 2 Eylül 2026 tarihli `dc50e0d` dağıtımında Cari Karttaki Teknik Servis / İç Servis / Dış Servis alanları kaldırılmış ve ortak telefon biçimi canlıya alınmıştır. Cari form ile üye listesindeki `0 (XXX) XXX XX XX` görünümü canlıda doğrulanmış; migration çalıştırılmamış ve canlı veriler değiştirilmemiştir.
@@ -344,6 +402,21 @@ Git Version Control içindeki otomatik dağıtım ekranı geçmişte “Yükleni
 - Verimor SMS hata yönetimi, sağlayıcının `401/403` kimlik doğrulama yanıtlarını gerçek bağlantı hatalarından ayıracak şekilde düzeltilmiştir.
 - Verimor API erişimi ve canlı uygulama kimlik bilgileri doğrulanmıştır. Test SMS'i hesapta onaylı gönderici başlığı bulunmaması nedeniyle `INVALID_SOURCE_ADDRESS` ile reddedilmiştir; teslimat veya kampanya oluşmamıştır.
 - Cari Kartlar modülü yerelde hazırlanmıştır. Menü sırası, cari listesi, cari kart formu, API kaydı ve fatura bazlı hareket/satır detayı tarayıcıda doğrulanmıştır. Doğrulama için oluşturulan geçici cari ve fatura kayıtları temizlenmiş; canlıya dosya, migration veya test verisi gönderilmemiştir.
+- 21 Eylül 2026: Paketler tablosuna aktif hizmet grubu filtresini izleyen sade toplam satırı eklenmiştir. Satırda yalnızca görüntülenen paket adedi gösterilir; fiyatlı paket adedi, fiyat toplamı ve açıklama alanları kullanıcı isteğiyle kaldırılmıştır. Yerelde doğrulanmış; canlıya aktarılmamıştır.
+- 21 Eylül 2026: Rezervasyon Girişi > Hizmet şablonu seçimi alanındaki sabit örnek hizmetler kaldırılmıştır. Liste artık rezervasyon API yanıtındaki gerçek `spa_packages` kayıtlarından oluşturulur; yalnızca dakika cinsinden randevu süresi bulunan mevcut paketler gösterilir. Paket adı, süresi, hizmet grubu ve gerçek kayıt numarası kullanılır; veritabanında bulunmayan örnek hizmetler eklenmez. Canlıya aktarılmamıştır.
+- 21 Eylül 2026: Yerel paket verilerinde yanlışlıkla Bakım grubunda kalan `Pure Escape Massage & Hammam` ve `Ottoman Sultan Hammam 75 Dakika` mevcut Hamam hizmet grubuna taşındı. Yeni paket eklenmedi; Hamam grubundaki gerçek süreli hizmet sayısı 7 olarak doğrulandı. Canlı veritabanına uygulanmadı.
+- 21 Eylül 2026: Rezervasyon Girişi > Hizmet şablonu tablosundaki Kod sütunu seçim kutusu sütununa dönüştürüldü. Gerçek bir paket işaretlendiğinde adı ve kayıtlı EUR fiyatı sağdaki Ek hizmetler ve ürünler tablosuna eklenir; işaret kaldırıldığında veya seçili satır kaldırma düğmesiyle silindiğinde listeden çıkar. Yeni ürün/hizmet kaydı üretilmez. Canlıya aktarılmadı.
+- 21 Eylül 2026: Rezervasyon Girişi ekranındaki `Seçilen hizmet` başlığı, açıklaması ve görünen Hizmet adı alanı kaldırıldı. İlk işaretlenen gerçek paket rezervasyonun ana hizmeti olarak arka planda tutulur; ana seçim kaldırılırsa sıradaki işaretli paket devralır. Canlıya aktarılmadı.
+- 21 Eylül 2026: Rezervasyon hizmet listesindeki seçim kutularının tarayıcıya ait kabartmalı/gölgeli çerçevesi kaldırıldı. Kutular düz beyaz zeminli, ince gri çerçeveli; seçili durumda yeşil zemin ve beyaz ince onay işaretli Vox stiline geçirildi. Canlıya aktarılmadı.
+- 21 Eylül 2026: Rezervasyon Girişi > Ek hizmetler ve ürünler bölümündeki artı düğmesi başlığın sağına taşındı ve X düğmesi kaldırıldı. Artı düğmesi gerçek aktif stok kartlarını kod, ad, mevcut miktar ve satış fiyatıyla açar; stok kartı yanındaki seçim kutusu ürünü aşağıdaki Ürün / Hizmet listesine ekler veya çıkarır. Canlıya aktarılmadı.
+- 21 Eylül 2026: Rezervasyon Girişi > Üye / misafir seçimi bölümündeki sağ taraftaki `Misafir bilgileri`, telefon açıklaması ve Ad Soyad kutusu görünümden kaldırıldı. Üye arama/listesi tam genişliğe çıkarıldı; listeden seçilen üyenin adı ve telefonu rezervasyon formundaki gizli alanlara aktarılmaya devam eder. Canlıya aktarılmadı.
+- 21 Eylül 2026: Rezervasyon Girişi > Ürün / Hizmet tablosuna toplam satırı eklendi. Seçilen gerçek paketlerin hizmet adedi ve EUR toplamı gösterilir; stok ürünü seçilmişse ürün adedi ve TL toplamı aynı satırda para birimleri karıştırılmadan ayrıca gösterilir. Canlıya aktarılmadı.
+- 21 Eylül 2026: Rezervasyon Girişi ekranındaki yeşil `Hizmet şablonu seçimi` başlık şeridi kaldırıldı; hizmet arama, grup filtresi ve seçim tablosu korunarak yukarı taşındı. Canlıya aktarılmadı.
+- 21 Eylül 2026: Görünümden kaldırılan zorunlu Misafir Ad Soyad alanının boş kalıp hizmet seçilmiş rezervasyonun kaydını sessizce engellemesi düzeltildi. Üye seçilmemiş yeni rezervasyonda gizli misafir adı otomatik `Misafir` olur; üye seçilirse gerçek üye adı ve telefonu bu değerin üzerine yazılır. Canlıya aktarılmadı.
+- 21 Eylül 2026: Üye / misafir arama ve seçim bölümünün Genel üstü ve Detay sekmesi yerleşimleri kullanıcı isteğiyle geri alındı. Bölüm ilk tasarımdaki gibi Genel sekmesinde, hizmet ve ürün seçimlerinin altında bulunur; Detay sekmesi telefon, durum ve not alanlarıyla kalır. Canlıya aktarılmadı.
+- 21 Eylül 2026: Rezervasyon formunda işaretlenen gerçek hizmet ve stok kartları artık `reservation_items` tablosunda rezervasyona bağlı olarak kalıcı saklanır; düzenleme ekranı açıldığında seçimler ve toplamlar geri yüklenir. Hizmet satırının adına tıklamak da seçim kutusunu işaretler. Yerel migration uygulandı; rezervasyon kayıt ve SMS regresyon testlerinde 5 test / 20 doğrulama geçti. Canlıya aktarılmadı.
+- 21 Eylül 2026: Üye Kartı > Üyelik sekmesindeki Üyelik Türü serbest metin alanı kaldırıldı; seçimler Paketler ekranındaki `Üyelikler` hizmet grubuna bağlı gerçek paketlerden yüklenir. Paket süreleri (`Günlük`, `1/3/6/12 Ay`) seçimle Süre alanına aktarılır; başlangıç tarihi seçildiğinde bitiş tarihi ay sonu taşmaları da gözetilerek otomatik hesaplanır. Yerel tarayıcıda `1 Month` için 18.07.2026 → 18.08.2026 ve 31.01.2026 → 28.02.2026 doğrulandı; kayıt yapılmadı ve canlıya aktarılmadı.
+- 21 Eylül 2026: Birikmiş SPA değişikliklerinin tamamı `spa-all-20260921-1519.zip` paketiyle canlıdaki `/home/krpsoftc/spa-app` dizinine aktarıldı. `spa-all-20260921-1519.sql` başarıyla uygulandı (24 sorgu); çok fiyatlı paketler ayrıştırıldı, `Masaj`, `Hamam`, `Bakım`, `Üyelikler` hizmet grupları ve `reservation_items` tablosu oluşturuldu, paket-grup ilişkileri atandı. Canlı ana sayfa, geçici giriş ve üyeler API'si 200 yanıt verdi; 4 hizmet grubu, 45 paket ve rezervasyon uç noktası doğrulandı. `.env`, mevcut üye ve rezervasyon kayıtları korunmuştur.
 
 ## Yeni bir Codex görevi başlatırken
 

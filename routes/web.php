@@ -10,6 +10,7 @@ use App\Http\Controllers\EmployeeScheduleController;
 use App\Http\Controllers\MemberController;
 use App\Http\Controllers\OccupationController;
 use App\Http\Controllers\ReservationController;
+use App\Http\Controllers\ServiceGroupController;
 use App\Http\Controllers\SpaPackageController;
 use App\Http\Controllers\SmsController;
 use App\Http\Controllers\StockController;
@@ -26,6 +27,8 @@ Route::post('/login', [AuthController::class, 'store'])->middleware('guest')->na
 Route::post('/logout', [AuthController::class, 'destroy'])->middleware('auth');
 
 Route::middleware(SpaAuthenticate::class)->prefix('api')->group(function () {
+    Route::post('members/{member}/photo', [MemberController::class, 'uploadPhoto']);
+    Route::get('members/{member}/photo', [MemberController::class, 'photo']);
     Route::apiResource('members', MemberController::class)->only(['index', 'show', 'store', 'update']);
     Route::apiResource('work-shifts', WorkShiftController::class)->only(['index', 'store', 'update', 'destroy']);
     Route::get('business-hours', [BusinessHourController::class, 'index']);
@@ -33,6 +36,7 @@ Route::middleware(SpaAuthenticate::class)->prefix('api')->group(function () {
     Route::apiResource('occupations', OccupationController::class)->only(['index', 'store', 'update', 'destroy']);
     Route::apiResource('work-groups', WorkGroupController::class)->only(['index', 'store', 'update', 'destroy']);
     Route::apiResource('categories', CategoryController::class)->only(['index', 'store', 'update', 'destroy']);
+    Route::apiResource('service-groups', ServiceGroupController::class)->only(['index', 'store', 'update', 'destroy']);
     Route::apiResource('employees', EmployeeController::class)->only(['index', 'show', 'store', 'update']);
     Route::post('employees/{employee}/photo', [EmployeeController::class, 'uploadPhoto']);
     Route::get('employee-schedules', [EmployeeScheduleController::class, 'index']);

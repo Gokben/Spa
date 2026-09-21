@@ -11,6 +11,7 @@ class MemberResource extends JsonResource
     {
         return [
             'id' => $this->id, 'memberNo' => $this->member_no, 'name' => $this->full_name,
+            'photoUrl' => $this->photo_path ? url('/api/members/'.$this->id.'/photo').'?v='.rawurlencode(basename($this->photo_path)) : null,
             'identity' => $this->identity_number, 'occupation' => $this->occupation,
             'birthDate' => $this->birth_date?->format('Y-m-d'), 'address' => $this->address,
             'phone' => $this->phone, 'email' => $this->email,

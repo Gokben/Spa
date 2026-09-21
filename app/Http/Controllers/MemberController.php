@@ -37,6 +37,34 @@ class MemberController extends Controller
         return new MemberResource($member->refresh());
     }
 
+    public function uploadPhoto(\Illuminate\Http\Request $request, Member $member): MemberResource
+    {
+        $data = $request->validate(['photo' => ['required', 'image', 'mimes:jpg,jpeg,png,webp', 'max:5120']], [
+            'photo.image' => 'Geçerli bir fotoğraf seçin.',
+            'photo.mimes' => 'Fotoğraf JPG, PNG veya WebP olmalıdır.',
+            'photo.max' => 'Fotoğraf en fazla 5 MB olabilir.',
+        ]);
+        $disk = \Illuminate\Support\Facades\Storage::disk('local');
+        $path = $data['photo']->store('members', 'local');
+        abort_unless($path, 500, 'Fotoğraf kaydedilemedi.');
+        $previous = $member->photo_path;
+        try {
+            $member->photo_path = $path;
+            $member->save();
+        } catch (\Throwable $error) {
+            $disk->delete($path);
+            throw $error;
+        }
+        if ($previous && str_starts_with($previous, 'members/')) $disk->delete($previous);
+        return new MemberResource($member->refresh());
+    }
+
+    public function photo(Member $member)
+    {
+        $disk = \Illuminate\Support\Facades\Storage::disk('local');
+        abort_unless($member->photo_path && $disk->exists($member->photo_path), 404);
+        return response()->file($disk->path($member->photo_path), ['Cache-Control' => 'private, no-store', 'X-Content-Type-Options' => 'nosniff']);
+    }
     private function attributes(array $data): array
     {
         return [
