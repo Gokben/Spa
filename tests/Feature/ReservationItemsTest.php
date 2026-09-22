@@ -49,6 +49,11 @@ class ReservationItemsTest extends TestCase
         $this->getJson('/api/reservations?start=2026-09-01&end=2026-10-01')
             ->assertOk()
             ->assertJsonCount(3, 'data.reservations.0.items');
+
+        $this->getJson("/api/reservations/{$reservationId}")
+            ->assertOk()
+            ->assertJsonPath('data.id', $reservationId)
+            ->assertJsonCount(3, 'data.items');
     }
 
     public function test_updating_a_reservation_replaces_its_selected_items(): void

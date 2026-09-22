@@ -54,6 +54,48 @@ class MemberApiTest extends TestCase
         $this->assertNotSame('00000000000', DB::table('members')->where('id', $member->id)->value('identity_number'));
     }
 
+    public function test_authenticated_user_can_delete_member(): void
+    {
+        $user = User::factory()->create();
+        $member = $this->member();
+
+        $this->actingAs($user)->deleteJson("/api/members/{$member->id}")
+            ->assertOk()
+            ->assertJsonPath('message', 'Misafir kaydı silindi.');
+
+        $this->assertDatabaseMissing('members', ['id' => $member->id]);
+    }
+
+    public function test_authenticated_user_can_list_each_reserved_service_for_member(): void
+    {
+        $user = User::factory()->create();
+        $member = $this->member();
+        $reservationId = DB::table('reservations')->insertGetId([
+            'member_id' => $member->id,
+            'guest_name' => $member->full_name,
+            'service_name' => 'Klasik Rahatlama Paketi',
+            'reservation_date' => '2026-09-22',
+            'start_time' => '10:00',
+            'end_time' => '12:00',
+            'status' => 'completed',
+            'created_at' => now(),
+            'updated_at' => now(),
+        ]);
+        DB::table('reservation_items')->insert([
+            ['reservation_id' => $reservationId, 'spa_package_id' => 1, 'stock_item_id' => null, 'type' => 'package', 'name' => 'İsveç Masajı', 'unit_price' => 95, 'currency' => 'EUR', 'created_at' => now(), 'updated_at' => now()],
+            ['reservation_id' => $reservationId, 'spa_package_id' => 2, 'stock_item_id' => null, 'type' => 'package', 'name' => 'Hamam Ritüeli', 'unit_price' => 75, 'currency' => 'EUR', 'created_at' => now(), 'updated_at' => now()],
+        ]);
+
+        $this->actingAs($user)->getJson("/api/members/{$member->id}/services")
+            ->assertOk()
+            ->assertJsonPath('data.member.memberNo', 'T-001')
+            ->assertJsonCount(2, 'data.services')
+            ->assertJsonPath('data.services.0.service_name', 'İsveç Masajı')
+            ->assertJsonPath('data.services.1.service_name', 'Hamam Ritüeli')
+            ->assertJsonPath('data.services.0.reservation_id', $reservationId)
+            ->assertJsonPath('data.services.0.status', 'completed');
+    }
+
     private function member(): Member
     {
         return Member::create([

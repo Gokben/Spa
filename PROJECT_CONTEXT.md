@@ -1,6 +1,6 @@
 # Sofitel Spa Yazılımı — Proje Hafızası
 
-Son güncelleme: 21 Eylül 2026
+Son güncelleme: 22 Eylül 2026
 
 ## Projenin amacı
 
@@ -242,6 +242,7 @@ Başlıca uygulama tabloları:
 - `cash_categories`
 - `cash_transactions`
 - `cash_closings`
+- `member_payments`
 - `reservations`
 - `sms_settings`
 - `sms_messages`
@@ -256,6 +257,7 @@ Başlıca uygulama tabloları:
 ## Önemli API uçları
 
 - `/api/members`
+- `/api/members/{member}/payments`
 - `/api/employees`
 - `/api/employees/{employee}/photo`
 - `/api/work-shifts`
@@ -299,6 +301,7 @@ Projeye özgü migration sırası:
 - `2026_09_02_000000_create_current_accounts_module_tables`
 - `2026_09_21_010000_create_service_groups_table`
 - `2026_09_21_020000_add_service_group_to_spa_packages_table`
+- `2026_09_22_000000_create_member_payments_table`
 
 ## Yerel test durumu
 
@@ -359,6 +362,9 @@ Git Version Control içindeki otomatik dağıtım ekranı geçmişte “Yükleni
 - Üye kartının araç çubuğundaki Kapat düğmesi kullanıcı isteğiyle kaldırıldı; pencere başlığındaki X kullanılabilir.
 
 - Üye kartı Bilgiler sekmesine fotoğraf seçimi/önizlemesi eklendi. Kaydet ile JPG/PNG/WebP (en fazla 5 MB) yüklenir. members.photo_path özel yerel diskteki dosyayı tutar; fotoğraf oturum korumalı API üzerinden görüntülenir. Yerel migration: 2026_09_07_010000_add_photo_to_members_table. Canlıya aktarılmadı.
+- Misafirler listesine VOX Hasta Kartları örneğindeki `Eylemler` sütunu eklendi. Her satırda 32×32 `Hizmetler`, `Düzenle`, `Sil` ve `Misafir Bilgi Formu` ikonları bulunur; hizmetler üyelik sekmesini, düzenle/bilgi formu misafir kartını açar, silme onay sonrası DELETE `/api/members/{member}` üzerinden kaydı ve varsa yerel fotoğrafını kaldırır. Member API testi 4 test / 13 assertion ile geçti. Yalnızca yerelde; canlıya aktarılmadı.
+- Misafirler penceresi büyütüldüğünde tablo ve satırlar artık kullanılabilir yatay alanın tamamına yayılır; pencere daraldığında minimum kolon genişlikleri ve yatay kaydırma korunur. Yerelde görsel olarak doğrulandı; canlıya aktarılmadı.
+- Kullanıcı arayüzündeki çift dilli İngilizce alan başlıkları kaldırıldı; misafir kartı yalnızca Türkçe etiketler kullanıyor. `Misafir No / Guest No` ifadesi `Misafir No` yapıldı, İngilizce süre gösterimleri (`3 Month` vb.) Türkçe karşılıklarına çevrildi, personel kartındaki `E-mail` `E-posta`, çalışma programındaki `OFF` ise `HAFTA TATİLİ` oldu. Yerelde görsel olarak doğrulandı; canlıya aktarılmadı.
 
 - 7 Eylül 2026: Paketlere nullable decimal(10,2) price alanı eklendi; para birimi sabit EUR. Yeni/düzenleme formunda Fiyat (€), listede Euro biçimli fiyat gösterilir. Eski fiyatlar NULL kalır (—); negatif ve ikiden fazla ondalık basamak reddedilir. Yerel migration: 2026_09_07_000000_add_price_to_spa_packages_table. Canlıya aktarılmadı.
 
@@ -417,6 +423,18 @@ Git Version Control içindeki otomatik dağıtım ekranı geçmişte “Yükleni
 - 21 Eylül 2026: Rezervasyon formunda işaretlenen gerçek hizmet ve stok kartları artık `reservation_items` tablosunda rezervasyona bağlı olarak kalıcı saklanır; düzenleme ekranı açıldığında seçimler ve toplamlar geri yüklenir. Hizmet satırının adına tıklamak da seçim kutusunu işaretler. Yerel migration uygulandı; rezervasyon kayıt ve SMS regresyon testlerinde 5 test / 20 doğrulama geçti. Canlıya aktarılmadı.
 - 21 Eylül 2026: Üye Kartı > Üyelik sekmesindeki Üyelik Türü serbest metin alanı kaldırıldı; seçimler Paketler ekranındaki `Üyelikler` hizmet grubuna bağlı gerçek paketlerden yüklenir. Paket süreleri (`Günlük`, `1/3/6/12 Ay`) seçimle Süre alanına aktarılır; başlangıç tarihi seçildiğinde bitiş tarihi ay sonu taşmaları da gözetilerek otomatik hesaplanır. Yerel tarayıcıda `1 Month` için 18.07.2026 → 18.08.2026 ve 31.01.2026 → 28.02.2026 doğrulandı; kayıt yapılmadı ve canlıya aktarılmadı.
 - 21 Eylül 2026: Birikmiş SPA değişikliklerinin tamamı `spa-all-20260921-1519.zip` paketiyle canlıdaki `/home/krpsoftc/spa-app` dizinine aktarıldı. `spa-all-20260921-1519.sql` başarıyla uygulandı (24 sorgu); çok fiyatlı paketler ayrıştırıldı, `Masaj`, `Hamam`, `Bakım`, `Üyelikler` hizmet grupları ve `reservation_items` tablosu oluşturuldu, paket-grup ilişkileri atandı. Canlı ana sayfa, geçici giriş ve üyeler API'si 200 yanıt verdi; 4 hizmet grubu, 45 paket ve rezervasyon uç noktası doğrulandı. `.env`, mevcut üye ve rezervasyon kayıtları korunmuştur.
+- 22 Eylül 2026: SPA arayüzündeki metinler genel olarak Verdana 14 px standardına geçirildi; ikon ölçüleri korundu. Paketler ekranında hizmet grubu filtresinin yanına paket adı, hizmet grubu, süre, öne çıkan içerik ve hedef kitle içinde anlık arama yapan alan eklendi. `Sofitel Spa paketleri ve öne çıkan içerikleri` açıklaması ve ayrılan boşluk kaldırıldı. Yerel tarayıcıda gövde, arama alanı ve paket tablosunun Verdana 14 px olduğu; arama alanının görünür ve açıklama alanının kaldırılmış olduğu doğrulandı. Paket API testi 10 doğrulamayla geçti; canlıya aktarılmadı.
+- 22 Eylül 2026: Üyeler, Personel, Raporlar, masaüstü Personeller ve Evraklar ekranlarındaki tüm `Listele` yazılı düğmeler kaldırıldı. Kaldırılan personel düğmesine bağlı olay kodu temizlendi; genel şablondaki `Listele` yönlendirme metni `Henüz kayıt bulunmuyor.` olarak değiştirildi. Üyeler ekranında düğmenin kaldırıldığı yerel tarayıcıda doğrulandı; Üye ve Paket API testlerinde 4 test / 20 doğrulama geçti. Canlıya aktarılmadı.
+- 22 Eylül 2026: Kullanıcıya görünen `Üye` terminolojisi `Misafir` olarak değiştirildi; gerçek `Üyelik` paketi, türü ve süre kavramları korundu. Menü `Misafirler`, liste düğmesi `Yeni Misafir`, kart başlığı `Misafir Kartı`, kayıt numarası `Misafir No` oldu; rezervasyon arama/seçim metinleri ve fotoğraf açıklamaları da güncellendi. `Yeni Misafir` düğmesi boş kart açar ve ilk kayıtta üyeler API'sine POST, sonraki kayıtlarda PUT kullanır; kaydedilen kayıt açık listeye eklenir. Yerel tarayıcıda Misafirler listesi ve boş Yeni Misafir kartı açılışı doğrulandı; veri kaydı oluşturulmadı. Üye API testleri 3 test / 10 doğrulamayla geçti; canlıya aktarılmadı.
+- 22 Eylül 2026: Alt görev çubuğuna Türkçe ve İngilizce bayraklı dil seçici eklendi; varsayılan dil Türkçedir. İngilizce seçildiğinde masaüstü, menüler, mevcut pencereler ve sonradan açılan dinamik ekranlardaki kullanıcı arayüzü metinleri İngilizceye çevrilir; Türkçe bayrağı tüm metinleri geri getirir. Çevrilen menü adlarının ekran açma davranışını bozmaması için yönlendirme görünür metinden bağımsız sabit `data-menu-key` değerlerine bağlandı. Her iki dil ve Misafirler ekranının İngilizce açılışı yerel tarayıcıda doğrulandı; canlıya aktarılmadı.
+- 22 Eylül 2026: Misafir Kartındaki ayrı `Üyelik` sekmesi kaldırıldı. Üyelik Türü, Süresi, Başlangıç ve Bitiş alanları `Bilgiler` sekmesinin altına taşındı; gerçek üyelik paketi seçimi ve otomatik bitiş tarihi hesaplaması korunmuştur. Üyelik/hizmet eylemi artık doğrudan Bilgiler sekmesini açar. Üye API testlerinde 4 test / 13 doğrulama geçti; canlıya aktarılmadı.
+- 22 Eylül 2026: Misafirler listesindeki `Hizmetler` eylemi, misafirin rezervasyonlarına bağlı hizmetleri ayrı satırlar halinde gösteren yeni hizmet geçmişi penceresine bağlandı. Liste rezervasyon numarası, tarih, saat, hizmet, terapist, durum ve kayıtlı fiyatı gösterir; aynı rezervasyondaki birden fazla hizmet ayrı satırlardır ve eski kalemsiz rezervasyonlarda ana hizmet adı geriye dönük gösterilir. Yerel DENİZ YILMAZ kaydında aynı rezervasyona bağlı 2 hizmet ayrı satır olarak doğrulandı. Ayrıca görev çubuğunda sonradan açılan pencere düğmeleri bayrakların önüne eklenerek Türkçe/İngilizce bayrakları daima saatin hemen yanında sabitlendi. Üye API testlerinde 5 test / 20 doğrulama geçti; canlıya aktarılmadı.
+- 22 Eylül 2026: Misafir hizmet geçmişindeki ilk sütun `Rez No` olarak kısaltılıp 62 piksele daraltıldı, Terapist sütunu 210 piksele genişletildi ve Eylem sütununa ince çizgili düzenle/sil düğmeleri eklendi. Düzenle ilgili rezervasyonu tüm kayıtlı hizmet seçimleriyle Rezervasyon Girişi ekranında açar; silme onaydan sonra rezervasyonu ve bağlı kalemleri kaldırıp listeyi yeniler. Aynı tarihteki hizmetler aynı, farklı tarihler birbirinden farklı beş açık renk tonuyla gösterilir. Yerel listede başlıklar ve düzenleme ekranının açılışı doğrulandı; 7 test / 33 doğrulama geçti. Canlıya aktarılmadı.
+- 22 Eylül 2026: Rezervasyon Girişi hizmet seçimindeki varsayılan grup filtresi `Tüm hizmet grupları` yerine `Hizmet Grupları` olarak değiştirildi. Hizmet tablosunun son sütunu `Net süre` yerine `Fiyat (€)` oldu ve her satırda paket kaydındaki gerçek Euro fiyatı gösterilir. Canlıya aktarılmadı.
+- 22 Eylül 2026: Rezervasyon Girişi > Genel ekranında `Ek hizmetler ve ürünler` alanı sol tarafa taşınıp daha geniş (1.55 oran), hizmet arama/seçim tablosu sağ tarafa taşınıp daha dar (0.75 oran) hale getirildi. Seçim, toplam ve stok kartı davranışları korunmuştur. Canlıya aktarılmadı.
+- 22 Eylül 2026: Rezervasyon Girişi > Misafir seçimi başlığının sağına `+` düğmesi eklendi. Düğmenin fare ipucu ve erişilebilir adı `Yeni Misafir`dir; tıklandığında boş Yeni Misafir kartını açar. Canlıya aktarılmadı.
+- 22 Eylül 2026: Güncel SPA değişiklikleri `spa-live-20260922-131717.zip` paketiyle canlıdaki `/home/krpsoftc/spa-app` dizinine çıkarıldı. Yalnızca `MemberController.php`, `ReservationController.php`, `resources/views/spa.blade.php` ve `routes/web.php` güncellendi; veritabanı migration'ı uygulanmadı, `.env` ve canlı kayıtlar korunmuştur. cPanel çıkarma sonucu dört dosya için başarılı doğrulandı. Canlı sayfa yenilenip geçici giriş açıldı; Türkçe/İngilizce bayrak seçicisi, `Misafir seçildi` bildirimi ve `Hizmet Grupları` metninin yeni sürümde bulunduğu doğrulandı.
+- 22 Eylül 2026: Misafir bazlı tahsilat altyapısı canlıya alındı. Misafirler > Hizmetler ekranında toplam hizmet, ödenen ve kalan borç özetleri; rezervasyon seçerek Nakit, Kredi Kartı, Havale/EFT veya Oda Hesabı yöntemiyle Euro tahsilat girişi; tahsilat geçmişi ve tahsilat silme işlemleri eklendi. Her tahsilat seçilen rezervasyon ve misafire bağlanır, aynı anda Ön Kasa'ya EUR gelir hareketi oluşturur; fazla tahsilat engellenir. Bağlı kasa hareketi doğrudan değiştirilemez/silinemez; tahsilatlı rezervasyon ve misafir de tahsilat kaldırılmadan silinemez. Ön Kasa TL bakiyesi Euro hareketlerle karıştırılmaz. Canlı MariaDB'de `cash_transactions.currency`, `member_payments` tablosu ve `2026_09_22_000000_create_member_payments_table` migration kaydı 1/1/1 olarak doğrulandı. Canlı arayüzde Ödeme Al düğmesi, özetler, hizmet listesi ve tahsilat geçmişi kontrol edildi; gerçek tahsilat/test kaydı oluşturulmadı. Yerel regresyonlarda toplam 11 test / 55 doğrulama geçti.
 
 ## Yeni bir Codex görevi başlatırken
 

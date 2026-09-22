@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Employee;
 use App\Models\Member;
+use App\Models\MemberPayment;
 use App\Models\Reservation;
 use App\Models\SpaPackage;
 use App\Models\StockItem;
@@ -16,6 +17,11 @@ use Illuminate\Validation\ValidationException;
 
 class ReservationController extends Controller
 {
+    public function show(Reservation $reservation): JsonResponse
+    {
+        return response()->json(['data' => $reservation->load(['member', 'employee', 'items'])]);
+    }
+
     public function index(Request $request): JsonResponse
     {
         $filters = $request->validate([
@@ -86,6 +92,9 @@ class ReservationController extends Controller
 
     public function destroy(Reservation $reservation): JsonResponse
     {
+        if (MemberPayment::where('reservation_id', $reservation->id)->exists()) {
+            throw ValidationException::withMessages(['reservation' => 'Tahsilatı bulunan rezervasyon silinemez. Önce misafirin Hizmetler ekranındaki tahsilatı kaldırın.']);
+        }
         $reservation->delete();
 
         return response()->json([], 204);

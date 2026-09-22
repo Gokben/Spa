@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\CashCategory;
 use App\Models\CashClosing;
 use App\Models\CashTransaction;
+use App\Models\MemberPayment;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -20,14 +21,23 @@ class CashController extends Controller
         if ($request->filled('date_to')) $transactions->whereDate('transaction_date', '<=', $request->date('date_to'));
 
         $opening = (float) DB::table('cash_settings')->where('id', 1)->value('opening_balance');
-        $income = (float) CashTransaction::where('type', 'income')->sum('amount');
-        $expense = (float) CashTransaction::where('type', 'expense')->sum('amount');
+        $income = (float) CashTransaction::where('type', 'income')->where('currency', 'TRY')->sum('amount');
+        $expense = (float) CashTransaction::where('type', 'expense')->where('currency', 'TRY')->sum('amount');
+        $currencyTotals = CashTransaction::query()
+            ->selectRaw('currency, type, SUM(amount) as total')
+            ->groupBy('currency', 'type')->get()->groupBy('currency')
+            ->map(fn ($rows, $currency) => [
+                'currency' => $currency,
+                'income' => (float) ($rows->firstWhere('type', 'income')?->total ?? 0),
+                'expense' => (float) ($rows->firstWhere('type', 'expense')?->total ?? 0),
+            ])->values();
 
         return response()->json(['data' => [
             'opening_balance' => $opening,
             'income_total' => $income,
             'expense_total' => $expense,
             'balance' => $opening + $income - $expense,
+            'currency_totals' => $currencyTotals,
             'transactions' => $transactions->get(),
             'categories' => CashCategory::query()->orderBy('type')->orderBy('name')->get(),
             'closings' => CashClosing::query()->orderByDesc('closing_date')->get(),
@@ -49,6 +59,9 @@ class CashController extends Controller
 
     public function updateTransaction(Request $request, CashTransaction $cashTransaction): JsonResponse
     {
+        if (MemberPayment::where('cash_transaction_id', $cashTransaction->id)->exists()) {
+            throw ValidationException::withMessages(['transaction' => 'Misafir tahsilatları, misafirin Hizmetler ekranından yönetilir.']);
+        }
         $cashTransaction->update($this->transactionData($request));
 
         return response()->json(['data' => $cashTransaction->refresh()->load('category')]);
@@ -56,6 +69,9 @@ class CashController extends Controller
 
     public function destroyTransaction(CashTransaction $cashTransaction): JsonResponse
     {
+        if (MemberPayment::where('cash_transaction_id', $cashTransaction->id)->exists()) {
+            throw ValidationException::withMessages(['transaction' => 'Misafir tahsilatları, misafirin Hizmetler ekranından silinir.']);
+        }
         $cashTransaction->delete();
 
         return response()->json([], 204);
@@ -93,8 +109,8 @@ class CashController extends Controller
             'note' => ['nullable', 'string', 'max:255'],
         ]);
         $opening = (float) DB::table('cash_settings')->where('id', 1)->value('opening_balance');
-        $income = (float) CashTransaction::whereDate('transaction_date', '<=', $data['closing_date'])->where('type', 'income')->sum('amount');
-        $expense = (float) CashTransaction::whereDate('transaction_date', '<=', $data['closing_date'])->where('type', 'expense')->sum('amount');
+        $income = (float) CashTransaction::whereDate('transaction_date', '<=', $data['closing_date'])->where('currency', 'TRY')->where('type', 'income')->sum('amount');
+        $expense = (float) CashTransaction::whereDate('transaction_date', '<=', $data['closing_date'])->where('currency', 'TRY')->where('type', 'expense')->sum('amount');
         $expected = $opening + $income - $expense;
         $closing = CashClosing::updateOrCreate(
             ['closing_date' => $data['closing_date']],
@@ -111,6 +127,7 @@ class CashController extends Controller
             'description' => ['required', 'string', 'max:255'],
             'type' => ['required', Rule::in(['income', 'expense'])],
             'amount' => ['required', 'numeric', 'gt:0'],
+            'currency' => ['nullable', Rule::in(['TRY', 'EUR'])],
             'payment_type' => ['required', Rule::in(['cash', 'credit_card', 'transfer', 'room_charge'])],
             'category_id' => ['nullable', 'integer', 'exists:cash_categories,id'],
             'document_no' => ['nullable', 'string', 'max:100'],
@@ -121,6 +138,8 @@ class CashController extends Controller
                 throw ValidationException::withMessages(['category_id' => 'İşlem türüne uygun aktif bir kategori seçiniz.']);
             }
         }
+
+        $data['currency'] = $data['currency'] ?? 'TRY';
 
         return $data;
     }

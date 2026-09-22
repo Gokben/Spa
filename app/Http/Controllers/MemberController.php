@@ -5,7 +5,10 @@ namespace App\Http\Controllers;
 use App\Http\Requests\MemberRequest;
 use App\Http\Resources\MemberResource;
 use App\Models\Member;
+use App\Models\MemberPayment;
+use App\Models\Reservation;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Validation\ValidationException;
 
 class MemberController extends Controller
 {
@@ -25,6 +28,51 @@ class MemberController extends Controller
         return new MemberResource($member);
     }
 
+    public function services(Member $member): JsonResponse
+    {
+        $reservations = Reservation::query()
+            ->whereBelongsTo($member)
+            ->with([
+                'employee:id,first_name,last_name',
+                'items' => fn ($query) => $query->where('type', 'package')->orderBy('id'),
+            ])
+            ->orderByDesc('reservation_date')
+            ->orderByDesc('start_time')
+            ->get();
+
+        $services = $reservations->flatMap(function (Reservation $reservation) {
+            $items = $reservation->items;
+            if ($items->isEmpty()) {
+                $items = collect([(object) [
+                    'id' => null,
+                    'name' => $reservation->service_name,
+                    'unit_price' => null,
+                    'currency' => 'EUR',
+                ]]);
+            }
+
+            return $items->map(fn ($item) => [
+                'id' => $item->id,
+                'reservation_id' => $reservation->id,
+                'reservation_date' => $reservation->reservation_date?->format('Y-m-d'),
+                'start_time' => substr((string) $reservation->start_time, 0, 5),
+                'end_time' => substr((string) $reservation->end_time, 0, 5),
+                'service_name' => $item->name,
+                'employee_name' => $reservation->employee
+                    ? trim($reservation->employee->first_name.' '.$reservation->employee->last_name)
+                    : null,
+                'status' => $reservation->status,
+                'unit_price' => $item->unit_price,
+                'currency' => $item->currency,
+            ]);
+        })->values();
+
+        return response()->json(['data' => [
+            'member' => ['id' => $member->id, 'memberNo' => $member->member_no, 'name' => $member->full_name],
+            'services' => $services,
+        ]]);
+    }
+
     public function store(MemberRequest $request): MemberResource
     {
         return new MemberResource(Member::create($this->attributes($request->validated())));
@@ -35,6 +83,24 @@ class MemberController extends Controller
         $member->update($this->attributes($request->validated()));
 
         return new MemberResource($member->refresh());
+    }
+
+    public function destroy(Member $member): JsonResponse
+    {
+        if (MemberPayment::query()->whereBelongsTo($member)->exists()) {
+            throw ValidationException::withMessages([
+                'member' => 'Tahsilat kaydı bulunan misafir silinemez. Önce Hizmetler ekranındaki tahsilatları kaldırın.',
+            ]);
+        }
+
+        $photoPath = $member->photo_path;
+        $member->delete();
+
+        if ($photoPath && str_starts_with($photoPath, 'members/')) {
+            \Illuminate\Support\Facades\Storage::disk('local')->delete($photoPath);
+        }
+
+        return response()->json(['message' => 'Misafir kaydı silindi.']);
     }
 
     public function uploadPhoto(\Illuminate\Http\Request $request, Member $member): MemberResource
