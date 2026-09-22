@@ -9,6 +9,7 @@ use App\Http\Controllers\EmployeeController;
 use App\Http\Controllers\EmployeeScheduleController;
 use App\Http\Controllers\MemberController;
 use App\Http\Controllers\MemberPaymentController;
+use App\Http\Controllers\MemberMeasurementController;
 use App\Http\Controllers\OccupationController;
 use App\Http\Controllers\ReservationController;
 use App\Http\Controllers\ServiceGroupController;
@@ -34,6 +35,10 @@ Route::middleware(SpaAuthenticate::class)->prefix('api')->group(function () {
     Route::get('members/{member}/payments', [MemberPaymentController::class, 'index']);
     Route::post('members/{member}/payments', [MemberPaymentController::class, 'store']);
     Route::delete('members/{member}/payments/{payment}', [MemberPaymentController::class, 'destroy']);
+    Route::get('members/{member}/measurements', [MemberMeasurementController::class, 'index']);
+    Route::post('members/{member}/measurements', [MemberMeasurementController::class, 'store']);
+    Route::put('members/{member}/measurements/{measurement}', [MemberMeasurementController::class, 'update']);
+    Route::delete('members/{member}/measurements/{measurement}', [MemberMeasurementController::class, 'destroy']);
     Route::apiResource('members', MemberController::class)->only(['index', 'show', 'store', 'update', 'destroy']);
     Route::apiResource('work-shifts', WorkShiftController::class)->only(['index', 'store', 'update', 'destroy']);
     Route::get('business-hours', [BusinessHourController::class, 'index']);

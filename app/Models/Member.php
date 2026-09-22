@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Member extends Model
 {
@@ -27,5 +28,10 @@ class Member extends Model
             'valid_through' => 'date:Y-m-d',
             'contract_amount' => 'decimal:2',
         ];
+    }
+
+    public function measurements(): HasMany
+    {
+        return $this->hasMany(MemberMeasurement::class);
     }
 }

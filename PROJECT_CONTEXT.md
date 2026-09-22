@@ -435,9 +435,29 @@ Git Version Control içindeki otomatik dağıtım ekranı geçmişte “Yükleni
 - 22 Eylül 2026: Rezervasyon Girişi > Misafir seçimi başlığının sağına `+` düğmesi eklendi. Düğmenin fare ipucu ve erişilebilir adı `Yeni Misafir`dir; tıklandığında boş Yeni Misafir kartını açar. Canlıya aktarılmadı.
 - 22 Eylül 2026: Güncel SPA değişiklikleri `spa-live-20260922-131717.zip` paketiyle canlıdaki `/home/krpsoftc/spa-app` dizinine çıkarıldı. Yalnızca `MemberController.php`, `ReservationController.php`, `resources/views/spa.blade.php` ve `routes/web.php` güncellendi; veritabanı migration'ı uygulanmadı, `.env` ve canlı kayıtlar korunmuştur. cPanel çıkarma sonucu dört dosya için başarılı doğrulandı. Canlı sayfa yenilenip geçici giriş açıldı; Türkçe/İngilizce bayrak seçicisi, `Misafir seçildi` bildirimi ve `Hizmet Grupları` metninin yeni sürümde bulunduğu doğrulandı.
 - 22 Eylül 2026: Misafir bazlı tahsilat altyapısı canlıya alındı. Misafirler > Hizmetler ekranında toplam hizmet, ödenen ve kalan borç özetleri; rezervasyon seçerek Nakit, Kredi Kartı, Havale/EFT veya Oda Hesabı yöntemiyle Euro tahsilat girişi; tahsilat geçmişi ve tahsilat silme işlemleri eklendi. Her tahsilat seçilen rezervasyon ve misafire bağlanır, aynı anda Ön Kasa'ya EUR gelir hareketi oluşturur; fazla tahsilat engellenir. Bağlı kasa hareketi doğrudan değiştirilemez/silinemez; tahsilatlı rezervasyon ve misafir de tahsilat kaldırılmadan silinemez. Ön Kasa TL bakiyesi Euro hareketlerle karıştırılmaz. Canlı MariaDB'de `cash_transactions.currency`, `member_payments` tablosu ve `2026_09_22_000000_create_member_payments_table` migration kaydı 1/1/1 olarak doğrulandı. Canlı arayüzde Ödeme Al düğmesi, özetler, hizmet listesi ve tahsilat geçmişi kontrol edildi; gerçek tahsilat/test kaydı oluşturulmadı. Yerel regresyonlarda toplam 11 test / 55 doğrulama geçti.
+- 22 Eylül 2026: Rezervasyon Girişi başlık çubuğuna eksik küçült ve büyüt/geri yükle düğmeleri eklendi. Küçültme rezervasyon penceresini görev çubuğuna indirir; büyütme düğmesi pencereyi tam ekran ve önceki boyutu arasında değiştirir. Kapat düğmesi Takvime dön davranışını korur. Yerel tarayıcıda üç düğmenin görünmesi, büyüt/geri yükle ve küçültüp görev çubuğundan geri açma akışları doğrulandı. Canlıya aktarılmadı.
+- 22 Eylül 2026: Kurulum penceresi daraltıldığında sekme başlıklarının sığması için pencere genişliğine bağlı responsive tipografi eklendi. Sekmeler mevcut genişliği eşit paylaşır; yazı boyutu 1100, 800 ve 600 piksel eşiklerinde sırasıyla 12, 10 ve 9 piksele iner. Geniş görünümde yazılımın 14 piksel Verdana standardı korunur. Yerel Kurulum penceresinin 840 piksel genişliğinde tüm sekmelerin taşmadan göründüğü doğrulandı. Canlıya aktarılmadı.
+- 22 Eylül 2026: Misafirler listesindeki kişi ikonu `Ölçümler` olarak düzenlendi. Tıklandığında misafire bağlı ölçüm tarihçesini ve iç ayrıntı/form ekranını açar. Tanita BC-418 çıktısındaki tarih, vücut tipi, cinsiyet, yaş, boy, kilo, BMI, BMR, yağ oranı/kütlesi, yağsız kütle, toplam su, tüm vücut ve uzuv empedansları ile sağ/sol kol-bacak ve gövde bölgesel analiz alanları desteklenir; ayrıca kullanıcı tarafından girilen Yorum alanı bulunur. `member_measurements` tablosu ve CRUD API uçları eklendi; yerel SQLite migrationı uygulandı. API kayıt/listeleme/güncelleme/silme testi 1 test / 9 doğrulamayla geçti. Yerel arayüzde Ölçümler iç ekranı, boş tarihçe ve Yeni Ölçüm formundaki tüm bölümler doğrulandı. Canlıya aktarılmadı.
 
 ## Yeni bir Codex görevi başlatırken
 
 Şu komut yeterlidir:
 
 > `E:\kirpi\spa-web\AGENTS.md` ve `E:\kirpi\spa-web\PROJECT_CONTEXT.md` dosyalarını tamamen oku, mevcut git durumunu kontrol et ve SPA projesine kaldığımız yerden devam et.
+### 2026-09-22 - Başlat menüsü ikon yenilemesi
+
+- Başlat menüsündeki karakter tabanlı simgeler, her menü öğesine özel çizgi SVG ikonlarla değiştirildi.
+- İkonlara Sofitel yeşil/altın temasına uyumlu kutu, hover ve aktif durum stilleri eklendi.
+- Alt menü ikonlarının boyut ve girintileri ana menüden bağımsız düzenlendi.
+- Yerel tarayıcıda Başlat menüsü açılarak hizalama ve görünüm doğrulandı.
+### 2026-09-22 - Türkçe tarih biçimi standardizasyonu
+
+- Kullanıcıya gösterilen tarihler `gg.aa.yyyy`, tarih-saat değerleri `gg.aa.yyyy ss:dd` biçiminde ortaklaştırıldı.
+- Tarayıcı dili İngilizce olsa da form tarih alanlarının Türkçe görünmesi için ortak görünen alan/ISO gizli değer altyapısı eklendi; API ve veritabanı kayıt biçimi değişmedi.
+- Rezervasyon web taleplerindeki ham ISO tarih ve SMS geçmişindeki tarayıcıya bağlı tarih-saat gösterimi düzeltildi.
+- Dinamik açılan misafir, personel, rezervasyon, stok, kasa, tahsilat ve ölçüm formlarındaki tarih alanları da otomatik kapsama alındı.
+- Yerel tarayıcıda misafir kartında doğum, başlangıç ve bitiş tarihleri görsel olarak doğrulandı.
+### 2026-09-22 - Misafir kartı başlığı sadeleştirmesi
+
+- Kayıtlı misafir kartı başlığından `Misafir Kartı` metni ve misafir numarası kaldırıldı.
+- Başlıkta yalnızca misafirin adı soyadı gösteriliyor.
