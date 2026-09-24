@@ -583,6 +583,13 @@ Git Version Control içindeki otomatik dağıtım ekranı geçmişte “Yükleni
 - Sürüm numarası üretme kuralları değiştirilmeden görev çubuğundaki `Vrs: 24096.04` gösterimi `V24096.04` biçimine kısaltıldı.
 - Değişiklik yalnızca yerelde yapıldı; canlıya aktarılmadı.
 
+# 2026-09-25 — 24096.08 canlı dağıtımı
+
+- Sabit indirimin TL bazında hesaplanması, Giriş/Çıkış geçmişindeki Not sütunu ve başlık düğmelerinin hizalama düzeltmeleri canlıya aktarıldı.
+- `.xlsx` üretimindeki XML bildirimleri, PHP `short_open_tag` etkin sunucularda Blade sözdizimi hatası oluşturmaması için güvenli biçimde parçalı oluşturuldu.
+- Canlı uygulamanın yeniden açıldığı ve sürümün `V24096.08` olduğu doğrulandı.
+- Dağıtım paketleri ile yerel/veritabanı dosyaları GitHub yedeğine dahil edilmedi.
+
 # 2026-09-24 — Tahsilatta baz kur görünürlüğü
 
 - Ödeme alma formunda seçilen ödeme tarihi ve para birimine ait TCMB kuru `Baz Alınan Kur` alanında gösterilir.
@@ -623,3 +630,91 @@ Git Version Control içindeki otomatik dağıtım ekranı geçmişte “Yükleni
 - Rezervasyon seçimi yalnızca hizmet adını gösterecek şekilde sadeleştirildi, `Tahsil Edilecek` etiketi `Ödeme` olarak değiştirildi ve para birimi değiştiğinde ödeme tutarının anında yeniden hesaplanması canlıya aktarıldı.
 - Canlı `.env` ve veritabanı korunarak yalnızca `resources/views/spa.blade.php` ile `public/release.json` güncellendi; şema değişikliği yapılmadı.
 - Canlı uygulamada `V24096.05`, sade rezervasyon metni ve € seçiminde `270.00` ödeme tutarı doğrulandı.
+
+# 2026-09-24 — Misafir üyelik geçmişi
+
+- Misafir kartında sözleşme düğmelerinin soluna `Geçmiş` düğmesi eklendi.
+- Üyelik geçmişi varsayılan kart ekranında gösterilmez; yalnızca `Geçmiş` düğmesine basıldığında ayrı bir pencere açılır.
+- Açılan tabloda üyelik türü, başlangıç tarihi, bitiş tarihi ve bu tarih aralığındaki giriş/çıkış kayıtlarından hesaplanan geliş sayısı tek satırda gösterilir.
+- Değişiklik yerelde doğrulandı; canlıya aktarılmadı.
+
+# 2026-09-24 — Genel tarih biçimi
+
+- Yazılımdaki tarih girişleri `gg.aa.yyyy`, tarih-saat girişleri `gg.aa.yyyy ss:dd` biçiminde gösterilecek şekilde denetlendi.
+- Rezervasyon takviminin dönem ve gün tarihleri de uzun ay adları yerine `gg.aa.yyyy` biçimine getirildi; API'ye gönderilen ISO tarih değerleri korunur.
+- Misafir kartı ile giriş/çıkış ekranındaki tarih değerleri ve boş alan yer tutucuları yerelde doğrulandı.
+- Değişiklikler henüz canlıya aktarılmadı.
+
+# 2026-09-24 — Misafir muhasebe indirimi
+
+- Muhasebe özetinde `Toplam Hizmet` alanından sonra `İndirim` alanı eklendi.
+- Kullanıcı indirimi yüzde (`%`) veya hizmetlerin baz para biriminde sabit tutar (`€`) olarak seçip uygulayabilir.
+- İndirim veritabanında misafir bazında saklanır; rezervasyon borçlarına oransal dağıtılır ve kalan borç ile azami tahsilat tutarına yansır.
+- Yerel veritabanı migrasyonu uygulandı; 8 ödeme testi ve 49 doğrulama başarıyla geçti.
+- Değişiklikler henüz canlıya aktarılmadı.
+# 2026-09-24 — Excel aktarımları ve giriş/çıkış alanları
+
+- Misafir listesindeki `Excel'e Aktar` düğmesi, ekranda filtrelenmiş olarak görünen misafirleri Excel uyumlu `.xls` dosyasına aktaracak şekilde çalışır hale getirildi.
+- Misafir `Giriş / Çıkış` penceresine `Excel'e Aktar` düğmesi eklendi; tarih, giriş, çıkış, süre ve not bilgileri dışa aktarılıyor.
+- Giriş ve çıkış tarih alanları daraltıldı; saat alanları genişletilerek saat değerlerinin tamamının görünmesi sağlandı.
+- Değişiklikler yalnızca yerel ortamda yapıldı; canlıya aktarılmadı.
+# 2026-09-24 — Tek alanlı indirim girişi
+
+- Muhasebe özetindeki indirim türü açılır listesi kaldırıldı.
+- İndirim tek metin alanından giriliyor: `%10` yüzde indirimi, `250` ise toplam hizmet tutarından düşülecek sabit tutarı ifade ediyor.
+- Yüzde işaretiyle başlayan değerlerde üst sınır 100 olarak hem arayüzde hem sunucuda korunuyor.
+- Sabit indirim, toplam hizmet tutarını aşarsa mevcut hesaplama kuralı gereği en fazla toplam hizmet kadar uygulanıyor.
+- Değişiklik yalnızca yerel ortamda yapıldı; canlıya aktarılmadı.
+# 2026-09-24 — Excel dışa aktarma biçimi
+
+- Misafir Listesi ve Giriş/Çıkış dışa aktarımları eski HTML tabanlı `.xls` yerine gerçek Office Open XML `.xlsx` dosyası üretecek şekilde değiştirildi.
+- Üretilen çalışma kitabında başlık satırı biçimlendiriliyor ve ilk satır sabitleniyor.
+- Değişiklik yalnızca yerel ortamda yapıldı; canlıya aktarılmadı.
+# 2026-09-24 — Giriş/Çıkış araç çubuğu
+
+- Giriş/Çıkış penceresinin üst bölümü Misafir Listesi ile aynı açık renkli araç çubuğu biçimine çevrildi.
+- Araç çubuğunda soldan sağa `Yeni` ve `Excel'e Aktar` işlemleri yer alıyor.
+- Misafir adı üst satırdan kaldırıldı; pencere başlığındaki isim korunuyor.
+- Değişiklik yalnızca yerel ortamda yapıldı; canlıya aktarılmadı.
+# 2026-09-24 — Giriş/Çıkış formu yerleşimi ve saat biçimi
+
+- Giriş/Çıkış formu, pencere büyütüldüğünde tarih ve saat alanlarının kullanılabilir genişliği eşit biçimde artıracak esnek sütun yapısına geçirildi.
+- `Giriş Tarihi`, `Giriş Saati`, `Çıkış Tarihi` ve `Çıkış Saati` etiketlerinin iki satıra bölünmesi engellendi.
+- Saat alanları tarayıcının AM/PM gösterimi yerine `ss:dd` biçiminde 24 saatlik metin girişi kullanıyor; `00:00–23:59` aralığı doğrulanıyor.
+- Giriş/Çıkış geçmişi tablosunda tarih ve saat hücrelerinin üst üste binmesini önlemek için sütun genişlikleri sabitlendi.
+- Tarih sütunu `150px` olarak ayrıldı; düzenle ve sil düğmeleri standart hizmet/ölçüm eylem düğmelerinin ölçü ve renkleriyle eşitlendi.
+- Değişiklik yalnızca yerel ortamda yapıldı; canlıya aktarılmadı.
+# 2026-09-24 — İndirim hesaplama geri bildirimi
+
+- İndirim alanına değer yazılırken indirim tutarı ve kalan borç anlık olarak ön hesaplanıyor.
+- `Enter` tuşu, onay düğmesiyle aynı şekilde indirimi kaydediyor.
+- `%10` yerel doğrulamasında indirim `₺1.224,35`, kalan borç `₺11.019,12` olarak hesaplandı ve sunucuya kaydedildi.
+- Değişiklik yalnızca yerel ortamda yapıldı; canlıya aktarılmadı.
+# 2026-09-24 — İndirim onay düğmesi kaldırıldı
+
+- İndirim alanındaki yeşil onay düğmesi kaldırıldı.
+- İndirim değeri alandan çıkıldığında veya Enter tuşuna basıldığında otomatik kaydediliyor; yazım sırasında ön hesaplama devam ediyor.
+- Değişiklik yalnızca yerel ortamda yapıldı; canlıya aktarılmadı.
+
+# 2026-09-24 — 24096.06 canlı dağıtımı
+
+- `spa-live-20260924-1805.zip` içindeki uygulama, arayüz, rota, migration ve sürüm dosyaları canlı `spa-app` dizinine çıkarıldı.
+- `members` tablosuna `discount_type` ve `discount_value` sütunları eklendi; `2026_09_24_020000_add_discount_to_members_table` migration kaydı işlendi.
+- Canlı uygulamanın açıldığı, Misafirler listesinin yüklendiği ve sürümün `V24096.06` olduğu doğrulandı.
+- Mevcut canlı kayıtlar ve `.env` korundu.
+
+# 2026-09-24 — Sabit indirimin TL olarak hesaplanması
+
+- Muhasebe özetinde sabit indirim alanına girilen tutar artık ekranda gösterilen para birimi olan TL kabul ediliyor.
+- Sabit TL indirimi, kayıt sırasında geçerli EUR kuruna bölünerek sistemin baz para birimine çevriliyor; yüzde indirimi davranışı değişmedi.
+- `2243.46` yerel doğrulamasında indirim `₺2.243,46`, kalan borç `₺10.000,00` olarak doğru ön izlendi.
+- Düzeltme yalnızca yerelde yapıldı; canlıya aktarılmadı.
+
+# 2026-09-25 — Giriş/Çıkış pencere ve geçmiş görünümü
+
+- Giriş/Çıkış penceresinin başlık çubuğundaki küçült, büyüt ve kapat düğmelerinin sağ sınırdan taşması engellendi.
+- Başlık kontrol grubu `22x20px` ölçüsünde tutuldu. Kullanıcı isteğiyle Giriş/Çıkış başlık şeridi `33px` yapıldı ve kontrol düğmeleri şeridin üst kenarına hizalandı; sağ boşluk `7px` olarak korundu.
+- Giriş/Çıkış Geçmişi tablosuna `Not` sütunu eklendi; boş notlar `—` olarak gösteriliyor.
+- Uzun notlar hücrede kısaltılıyor ve üzerine gelindiğinde tam metin başlık bilgisi olarak erişilebilir durumda.
+- Yerelde `Selam` notunun geçmiş satırında gösterildiği ve pencere düğmelerinin sınırlar içinde kaldığı doğrulandı.
+- Değişiklik yalnızca yerelde yapıldı; canlıya aktarılmadı.

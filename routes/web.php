@@ -38,6 +38,7 @@ Route::middleware(SpaAuthenticate::class)->prefix('api')->group(function () {
     Route::get('members/{member}/photo', [MemberController::class, 'photo']);
     Route::get('members/{member}/services', [MemberController::class, 'services']);
     Route::get('members/{member}/payments', [MemberPaymentController::class, 'index']);
+    Route::put('members/{member}/discount', [MemberPaymentController::class, 'updateDiscount']);
     Route::post('members/{member}/payments', [MemberPaymentController::class, 'store']);
     Route::put('members/{member}/payments/{payment}', [MemberPaymentController::class, 'update']);
     Route::delete('members/{member}/payments/{payment}', [MemberPaymentController::class, 'destroy']);

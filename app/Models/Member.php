@@ -14,7 +14,7 @@ class Member extends Model
         'member_no', 'full_name', 'first_name', 'last_name', 'identity_number', 'occupation', 'birth_date', 'blood_group',
         'address', 'phone', 'email', 'emergency_contact_name', 'emergency_phone',
         'membership_type', 'duration_months', 'valid_from', 'valid_through',
-        'payment_type', 'contract_amount', 'invoice_address', 'status',
+        'payment_type', 'contract_amount', 'discount_type', 'discount_value', 'invoice_address', 'status',
     ];
 
     protected $hidden = ['identity_number'];
@@ -27,6 +27,7 @@ class Member extends Model
             'valid_from' => 'date:Y-m-d',
             'valid_through' => 'date:Y-m-d',
             'contract_amount' => 'decimal:2',
+            'discount_value' => 'decimal:2',
         ];
     }
 

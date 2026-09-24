@@ -52,6 +52,31 @@ class MemberPaymentApiTest extends TestCase
         ])->assertUnprocessable()->assertJsonValidationErrors('reservation_id');
     }
 
+    public function test_member_discount_can_be_applied_as_percent_or_fixed_amount(): void
+    {
+        $user = User::factory()->create();
+        [$member, $reservationId] = $this->memberWithReservation();
+
+        $this->actingAs($user)->putJson("/api/members/{$member->id}/discount", [
+            'discount_type' => 'percent', 'discount_value' => 10,
+        ])->assertOk()
+            ->assertJsonPath('data.summary.total', 170)
+            ->assertJsonPath('data.summary.discount', 17)
+            ->assertJsonPath('data.summary.net_total', 153)
+            ->assertJsonPath('data.summary.remaining', 153)
+            ->assertJsonPath('data.reservations.0.remaining', 153);
+
+        $this->actingAs($user)->putJson("/api/members/{$member->id}/discount", [
+            'discount_type' => 'fixed', 'discount_value' => 25,
+        ])->assertOk()
+            ->assertJsonPath('data.summary.discount', 25)
+            ->assertJsonPath('data.summary.remaining', 145);
+
+        $this->assertDatabaseHas('members', [
+            'id' => $member->id, 'discount_type' => 'fixed', 'discount_value' => 25,
+        ]);
+    }
+
     public function test_deleting_payment_also_removes_linked_cash_transaction(): void
     {
         $user = User::factory()->create();

@@ -20,6 +20,23 @@ class MemberPaymentController extends Controller
         return response()->json(['data' => $this->paymentData($member)]);
     }
 
+    public function updateDiscount(Request $request, Member $member): JsonResponse
+    {
+        $data = $request->validate([
+            'discount_type' => ['nullable', Rule::in(['percent', 'fixed'])],
+            'discount_value' => ['required', 'numeric', 'min:0'],
+        ]);
+        if (($data['discount_type'] ?? null) === 'percent' && (float) $data['discount_value'] > 100) {
+            throw ValidationException::withMessages(['discount_value' => 'Yüzde indirim 100 değerini aşamaz.']);
+        }
+        $member->update([
+            'discount_type' => (float) $data['discount_value'] > 0 ? ($data['discount_type'] ?? 'percent') : null,
+            'discount_value' => round((float) $data['discount_value'], 2),
+        ]);
+
+        return response()->json(['data' => $this->paymentData($member->refresh())]);
+    }
+
     public function store(Request $request, Member $member, TcmbExchangeRateService $exchangeRates): JsonResponse
     {
         $data = $request->validate([
@@ -44,7 +61,7 @@ class MemberPaymentController extends Controller
         if (!$reservation) {
             throw ValidationException::withMessages(['reservation_id' => 'Seçilen rezervasyon bu misafire ait değil.']);
         }
-        $due = $this->reservationDue($reservation);
+        $due = $this->discountedReservationDue($member, $reservation->id);
         $paid = (float) MemberPayment::where('reservation_id', $reservation->id)->sum(DB::raw('COALESCE(amount_eur, amount)'));
         $remaining = round(max(0, $due - $paid), 2);
         if ($amountEur > $remaining) {
@@ -125,7 +142,7 @@ class MemberPaymentController extends Controller
         $rateToTry = $currency === 'TRY' ? 1.0 : ($rates[$currency] ?? null);
         $amountTry = $rateToTry === null ? null : round($amount * $rateToTry, 2);
         $amountEur = $currency === 'EUR' ? $amount : round($amountTry / $rates['EUR'], 2);
-        $due = $this->reservationDue($reservation);
+        $due = $this->discountedReservationDue($member, $reservation->id);
         $paid = (float) MemberPayment::where('reservation_id', $reservation->id)->where('id', '!=', $payment->id)
             ->sum(DB::raw('COALESCE(amount_eur, amount)'));
         if ($amountEur > round(max(0, $due - $paid), 2)) {
@@ -172,16 +189,20 @@ class MemberPaymentController extends Controller
             ->whereBelongsTo($member)
             ->with(['items' => fn ($query) => $query->where('currency', 'EUR')->orderBy('id')])
             ->orderByDesc('reservation_date')->orderByDesc('start_time')->get();
+        [$discountedDues, $discountAmount] = $this->discountedDues($member, $reservations);
         $paidByReservation = MemberPayment::query()->where('member_id', $member->id)
             ->selectRaw('reservation_id, SUM(COALESCE(amount_eur, amount)) as total')
             ->groupBy('reservation_id')->pluck('total', 'reservation_id');
-        $reservationRows = $reservations->map(function (Reservation $reservation) use ($paidByReservation) {
-            $due = $this->reservationDue($reservation);
+        $reservationRows = $reservations->map(function (Reservation $reservation) use ($paidByReservation, $discountedDues) {
+            $gross = $this->reservationDue($reservation);
+            $due = (float) ($discountedDues[$reservation->id] ?? $gross);
             $paid = (float) ($paidByReservation[$reservation->id] ?? 0);
             return [
                 'id' => $reservation->id,
                 'date' => $reservation->reservation_date?->format('Y-m-d'),
                 'service_name' => $reservation->service_name,
+                'gross_total' => round($gross, 2),
+                'discount' => round(max(0, $gross - $due), 2),
                 'total' => round($due, 2),
                 'paid' => round($paid, 2),
                 'remaining' => round(max(0, $due - $paid), 2),
@@ -195,7 +216,11 @@ class MemberPaymentController extends Controller
         return [
             'member' => ['id' => $member->id, 'memberNo' => $member->member_no, 'name' => $member->full_name],
             'summary' => [
-                'total' => round((float) $reservationRows->sum('total'), 2),
+                'total' => round((float) $reservationRows->sum('gross_total'), 2),
+                'discount' => round($discountAmount, 2),
+                'discount_type' => $member->discount_type,
+                'discount_value' => (float) $member->discount_value,
+                'net_total' => round((float) $reservationRows->sum('total'), 2),
                 'paid' => round((float) $reservationRows->sum('paid'), 2),
                 'remaining' => round((float) $reservationRows->sum('remaining'), 2),
                 'currency' => 'EUR',
@@ -209,6 +234,38 @@ class MemberPaymentController extends Controller
     private function reservationDue(Reservation $reservation): float
     {
         return round((float) $reservation->items->where('currency', 'EUR')->sum('unit_price'), 2);
+    }
+
+    private function discountedReservationDue(Member $member, int $reservationId): float
+    {
+        $reservations = Reservation::query()->whereBelongsTo($member)
+            ->with(['items' => fn ($query) => $query->where('currency', 'EUR')->orderBy('id')])
+            ->orderBy('id')->get();
+        [$dues] = $this->discountedDues($member, $reservations);
+
+        return (float) ($dues[$reservationId] ?? 0);
+    }
+
+    private function discountedDues(Member $member, $reservations): array
+    {
+        $grossByReservation = $reservations->mapWithKeys(fn (Reservation $reservation) => [
+            $reservation->id => $this->reservationDue($reservation),
+        ]);
+        $grossTotal = round((float) $grossByReservation->sum(), 2);
+        $value = max(0, (float) $member->discount_value);
+        $discount = $member->discount_type === 'percent'
+            ? round($grossTotal * min(100, $value) / 100, 2)
+            : min($grossTotal, round($value, 2));
+        $remainingDiscount = $discount;
+        $lastId = $grossByReservation->keys()->last();
+        $dues = $grossByReservation->map(function (float $gross, int $id) use ($grossTotal, $discount, &$remainingDiscount, $lastId) {
+            $share = $id === $lastId ? $remainingDiscount : round($grossTotal > 0 ? $discount * $gross / $grossTotal : 0, 2);
+            $share = min($gross, max(0, $share));
+            $remainingDiscount = round(max(0, $remainingDiscount - $share), 2);
+            return round(max(0, $gross - $share), 2);
+        });
+
+        return [$dues, $discount];
     }
 
     private function paymentPayload(MemberPayment $payment): array
