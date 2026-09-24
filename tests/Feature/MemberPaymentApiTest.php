@@ -68,6 +68,27 @@ class MemberPaymentApiTest extends TestCase
         $this->assertDatabaseMissing('cash_transactions', ['id' => $cashId]);
     }
 
+    public function test_payment_and_linked_cash_transaction_can_be_updated(): void
+    {
+        $user = User::factory()->create();
+        [$member, $reservationId] = $this->memberWithReservation();
+        $paymentId = $this->actingAs($user)->postJson("/api/members/{$member->id}/payments", [
+            'reservation_id' => $reservationId, 'paid_at' => '2026-09-22',
+            'amount' => 50, 'payment_type' => 'cash',
+        ])->json('data.payment.id');
+        $cashId = DB::table('member_payments')->where('id', $paymentId)->value('cash_transaction_id');
+
+        $this->actingAs($user)->putJson("/api/members/{$member->id}/payments/{$paymentId}", [
+            'reservation_id' => $reservationId, 'paid_at' => '2026-09-23',
+            'amount' => 70, 'payment_type' => 'transfer', 'note' => 'Düzeltildi',
+        ])->assertOk()
+            ->assertJsonPath('data.payment.amount', '70.00')
+            ->assertJsonPath('data.payment.note', 'Düzeltildi');
+
+        $this->assertDatabaseHas('member_payments', ['id' => $paymentId, 'amount' => 70, 'payment_type' => 'transfer']);
+        $this->assertDatabaseHas('cash_transactions', ['id' => $cashId, 'amount' => 70, 'payment_type' => 'transfer']);
+    }
+
     public function test_installment_payment_is_limited_to_three_installments(): void
     {
         $user = User::factory()->create();

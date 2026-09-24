@@ -554,3 +554,72 @@ Git Version Control içindeki otomatik dağıtım ekranı geçmişte “Yükleni
 
 - Başlat menüsündeki `Görünüm Ayarları` seçeneği ile arka plan ve renk seçim paneli kaldırıldı.
 - Kullanılmayan tema JavaScript'i ve ilgili stiller temizlendi; masaüstü kalıcı olarak varsayılan Sofitel yeşil görünümünü kullanıyor.
+
+# 2026-09-24 — Kurulumda Kurlar sekmesi
+
+- Kurulum penceresinde Hizmetler sekmesinin yanına `Kurlar` sekmesi eklendi.
+- Sekmede veritabanındaki son USD/EUR kur tarihi, döviz alış-satış ve efektif alış-satış değerleri gösterilir.
+- `TCMB'den Şimdi Güncelle` düğmesi USD ve EUR kurlarını anında yeniler.
+
+# 2026-09-24 — Giriş/çıkış alanlarının ayrılması
+
+- Misafir giriş/çıkış formundaki birleşik tarih-saat kutuları ayrı giriş tarihi, giriş saati, çıkış tarihi ve çıkış saati alanlarına dönüştürüldü.
+- Çıkış tarihi ve saati birlikte girilmediğinde kayıt engellenir; mevcut API ve veritabanı tarih-saat biçimi korunur.
+- `Yeni Giriş / Çıkış` düğmesi `Yeni` olarak kısaltıldı.
+
+# 2026-09-24 — Para birimi simgeleri
+
+- Misafir tahsilat formundaki para birimi seçenekleri metin yerine `₺`, `$` ve `€` simgeleriyle gösterilir.
+- Sunucuya gönderilen TRY, USD ve EUR kodları değişmeden korunur.
+
+# 2026-09-24 — 24096.03 canlı dağıtımı
+
+- `spa-live-20260924-1535.zip` paketi `/home/krpsoftc/spa-app` dizinine çıkarıldı.
+- `ExchangeRateController.php`, `resources/views/spa.blade.php`, `routes/web.php` ve `public/release.json` güncellendi; canlı `.env` ve mevcut veriler korundu.
+- Canlıda `Vrs: 24096.03`, Kurulum > Kurlar sekmesi, ayrı giriş/çıkış tarih-saat alanları, kısaltılmış `Yeni` düğmesi ve `₺/$/€` para birimi seçenekleri doğrulandı.
+
+# 2026-09-24 — Sürüm etiketi biçimi
+
+- Sürüm numarası üretme kuralları değiştirilmeden görev çubuğundaki `Vrs: 24096.04` gösterimi `V24096.04` biçimine kısaltıldı.
+- Değişiklik yalnızca yerelde yapıldı; canlıya aktarılmadı.
+
+# 2026-09-24 — Tahsilatta baz kur görünürlüğü
+
+- Ödeme alma formunda seçilen ödeme tarihi ve para birimine ait TCMB kuru `Baz Alınan Kur` alanında gösterilir.
+- Tahsilat geçmişine `Baz Kur` sütunu eklendi; her tahsilatın kaydedilirken kullanılan TL dönüşüm kuru burada görünür.
+- Ödeme formundaki `Not` etiketi ve giriş alanı alt satırın başına taşındı.
+- Değişiklikler yalnızca yerelde yapıldı; canlıya aktarılmadı.
+
+# 2026-09-24 — Tahsilat eylemleri
+
+- Tahsilat geçmişinin `Eylem` sütununa standart düzenleme ve kırmızı silme ikonları eklendi.
+- Düzenleme işlemi tahsilatı forma yükler; kayıt güncellendiğinde bağlı Ön Kasa hareketi de aynı işlem içinde güncellenir.
+- Değişiklik yalnızca yerelde yapıldı; canlıya aktarılmadı.
+
+# 2026-09-24 — Ödeme formu etiketleri
+
+- Ödeme formundaki alan adlarının sonunda görünen yıldız işaretleri kaldırıldı.
+- Zorunlu alanların doğrulama kuralları korunarak yalnızca görsel etiketler değiştirildi.
+- Değişiklik yalnızca yerelde yapıldı; canlıya aktarılmadı.
+
+# 2026-09-24 — 24096.04 canlı dağıtımı
+
+- `spa-live-20260924-1553.zip` paketi cPanel üzerinden `/home/krpsoftc/spa-app` dizinine çıkarıldı.
+- Tahsilat düzenleme/silme eylemleri, baz alınan kur gösterimi, ödeme tarihi bazlı kur sorgusu, yıldızsız ödeme etiketleri ve `V24096.04` sürüm gösterimi canlıya aktarıldı.
+- Canlı `.env` ve MySQL verileri korunarak yalnızca uygulama denetleyicileri, görünüm, rotalar ve sürüm dosyası güncellendi; şema değişikliği yapılmadı.
+- Canlı uygulamada `V24096.04`, `Baz Alınan Kur`, `Baz Kur` sütunu ve yıldızsız ödeme alan adları doğrulandı.
+
+# 2026-09-24 — Tahsilat para birimi dönüşümü
+
+- Rezervasyon seçimindeki uzun rezervasyon numarası, tarih ve kalan borç metni kaldırılarak yalnızca hizmet adı gösterildi.
+- Para birimi değişiklik olayının tarayıcı olayı yanlışlıkla `mevcut değeri koru` seçeneği olarak algılaması düzeltildi.
+- Tahsil edilecek tutar artık ₺, $ veya € seçildiğinde seçilen para biriminin kayıtlı kuruna göre anında yeniden hesaplanır.
+- Ödeme formundaki `Tahsil Edilecek` etiketi `Ödeme` olarak kısaltıldı.
+- Değişiklik yalnızca yerelde yapıldı; canlıya aktarılmadı.
+
+# 2026-09-24 — 24096.05 canlı dağıtımı
+
+- `spa-live-20260924-1622.zip` paketi cPanel üzerinden `/home/krpsoftc/spa-app` dizinine çıkarıldı.
+- Rezervasyon seçimi yalnızca hizmet adını gösterecek şekilde sadeleştirildi, `Tahsil Edilecek` etiketi `Ödeme` olarak değiştirildi ve para birimi değiştiğinde ödeme tutarının anında yeniden hesaplanması canlıya aktarıldı.
+- Canlı `.env` ve veritabanı korunarak yalnızca `resources/views/spa.blade.php` ile `public/release.json` güncellendi; şema değişikliği yapılmadı.
+- Canlı uygulamada `V24096.05`, sade rezervasyon metni ve € seçiminde `270.00` ödeme tutarı doğrulandı.

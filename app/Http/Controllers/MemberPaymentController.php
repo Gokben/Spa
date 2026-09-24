@@ -97,6 +97,73 @@ class MemberPaymentController extends Controller
         return response()->json([], 204);
     }
 
+    public function update(Request $request, Member $member, MemberPayment $payment, TcmbExchangeRateService $exchangeRates): JsonResponse
+    {
+        abort_unless($payment->member_id === $member->id, 404);
+
+        $data = $request->validate([
+            'reservation_id' => ['required', 'integer', 'exists:reservations,id'],
+            'paid_at' => ['required', 'date'],
+            'amount' => ['required', 'numeric', 'gt:0'],
+            'currency' => ['nullable', Rule::in(['TRY', 'USD', 'EUR'])],
+            'payment_type' => ['required', Rule::in(['cash', 'credit_card', 'transfer', 'room_charge', 'installment'])],
+            'installment_count' => ['nullable', 'required_if:payment_type,installment', 'integer', 'min:1', 'max:3'],
+            'note' => ['nullable', 'string', 'max:255'],
+        ]);
+
+        $reservation = Reservation::query()->whereBelongsTo($member)->find($data['reservation_id']);
+        if (!$reservation) {
+            throw ValidationException::withMessages(['reservation_id' => 'Seçilen rezervasyon bu misafire ait değil.']);
+        }
+
+        $currency = $data['currency'] ?? 'EUR';
+        $amount = round((float) $data['amount'], 2);
+        $rates = null;
+        try { $rates = $exchangeRates->ratesFor($data['paid_at']); } catch (\Throwable $error) {
+            if ($currency !== 'EUR') throw ValidationException::withMessages(['currency' => $error->getMessage()]);
+        }
+        $rateToTry = $currency === 'TRY' ? 1.0 : ($rates[$currency] ?? null);
+        $amountTry = $rateToTry === null ? null : round($amount * $rateToTry, 2);
+        $amountEur = $currency === 'EUR' ? $amount : round($amountTry / $rates['EUR'], 2);
+        $due = $this->reservationDue($reservation);
+        $paid = (float) MemberPayment::where('reservation_id', $reservation->id)->where('id', '!=', $payment->id)
+            ->sum(DB::raw('COALESCE(amount_eur, amount)'));
+        if ($amountEur > round(max(0, $due - $paid), 2)) {
+            throw ValidationException::withMessages(['amount' => 'Tahsilat kalan borçtan fazla olamaz.']);
+        }
+
+        DB::transaction(function () use ($data, $member, $payment, $reservation, $currency, $amount, $rateToTry, $amountTry, $amountEur) {
+            $cashValues = [
+                'transaction_date' => $data['paid_at'],
+                'description' => "Misafir tahsilatı: {$member->member_no} - {$member->full_name} - Rez #{$reservation->id}".($data['payment_type'] === 'installment' ? " - {$data['installment_count']} taksit" : ''),
+                'type' => 'income',
+                'amount' => $amountTry ?? $amount,
+                'currency' => $amountTry === null ? $currency : 'TRY',
+                'payment_type' => $data['payment_type'],
+                'category_id' => null,
+                'document_no' => 'REZ-'.$reservation->id,
+            ];
+            CashTransaction::query()->whereKey($payment->cash_transaction_id)->update($cashValues);
+            $payment->update([
+                'reservation_id' => $reservation->id,
+                'paid_at' => $data['paid_at'],
+                'amount' => $amount,
+                'currency' => $currency,
+                'exchange_rate_to_try' => $rateToTry,
+                'amount_try' => $amountTry,
+                'amount_eur' => $amountEur,
+                'payment_type' => $data['payment_type'],
+                'installment_count' => $data['payment_type'] === 'installment' ? $data['installment_count'] : null,
+                'note' => $data['note'] ?? null,
+            ]);
+        });
+
+        return response()->json(['data' => [
+            'payment' => $this->paymentPayload($payment->fresh()->load('reservation')),
+            'account' => $this->paymentData($member),
+        ]]);
+    }
+
     private function paymentData(Member $member): array
     {
         try { $currentRates = app(TcmbExchangeRateService::class)->ratesFor(now('Europe/Istanbul')->toDateString(), false); }

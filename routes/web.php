@@ -8,6 +8,7 @@ use App\Http\Controllers\CashController;
 use App\Http\Controllers\CurrentAccountController;
 use App\Http\Controllers\EmployeeController;
 use App\Http\Controllers\EmployeeScheduleController;
+use App\Http\Controllers\ExchangeRateController;
 use App\Http\Controllers\MemberController;
 use App\Http\Controllers\MemberPaymentController;
 use App\Http\Controllers\MemberMeasurementController;
@@ -38,6 +39,7 @@ Route::middleware(SpaAuthenticate::class)->prefix('api')->group(function () {
     Route::get('members/{member}/services', [MemberController::class, 'services']);
     Route::get('members/{member}/payments', [MemberPaymentController::class, 'index']);
     Route::post('members/{member}/payments', [MemberPaymentController::class, 'store']);
+    Route::put('members/{member}/payments/{payment}', [MemberPaymentController::class, 'update']);
     Route::delete('members/{member}/payments/{payment}', [MemberPaymentController::class, 'destroy']);
     Route::get('members/{member}/measurements', [MemberMeasurementController::class, 'index']);
     Route::post('members/{member}/measurements', [MemberMeasurementController::class, 'store']);
@@ -56,6 +58,8 @@ Route::middleware(SpaAuthenticate::class)->prefix('api')->group(function () {
     Route::apiResource('work-groups', WorkGroupController::class)->only(['index', 'store', 'update', 'destroy']);
     Route::apiResource('categories', CategoryController::class)->only(['index', 'store', 'update', 'destroy']);
     Route::apiResource('service-groups', ServiceGroupController::class)->only(['index', 'store', 'update', 'destroy']);
+    Route::get('exchange-rates', [ExchangeRateController::class, 'index']);
+    Route::post('exchange-rates/refresh', [ExchangeRateController::class, 'refresh']);
     Route::apiResource('employees', EmployeeController::class)->only(['index', 'show', 'store', 'update']);
     Route::post('employees/{employee}/photo', [EmployeeController::class, 'uploadPhoto']);
     Route::get('employee-schedules', [EmployeeScheduleController::class, 'index']);
