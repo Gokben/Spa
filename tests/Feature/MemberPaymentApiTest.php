@@ -3,6 +3,7 @@
 namespace Tests\Feature;
 
 use App\Models\Member;
+use App\Models\ExchangeRate;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\DB;
@@ -65,6 +66,50 @@ class MemberPaymentApiTest extends TestCase
 
         $this->assertDatabaseMissing('member_payments', ['id' => $paymentId]);
         $this->assertDatabaseMissing('cash_transactions', ['id' => $cashId]);
+    }
+
+    public function test_installment_payment_is_limited_to_three_installments(): void
+    {
+        $user = User::factory()->create();
+        [$member, $reservationId] = $this->memberWithReservation();
+
+        $this->actingAs($user)->postJson("/api/members/{$member->id}/payments", [
+            'reservation_id' => $reservationId, 'paid_at' => '2026-09-22',
+            'amount' => 50, 'payment_type' => 'installment', 'installment_count' => 4,
+        ])->assertUnprocessable()->assertJsonValidationErrors('installment_count');
+
+        $this->actingAs($user)->postJson("/api/members/{$member->id}/payments", [
+            'reservation_id' => $reservationId, 'paid_at' => '2026-09-22',
+            'amount' => 50, 'payment_type' => 'installment', 'installment_count' => 3,
+        ])->assertCreated()
+            ->assertJsonPath('data.payment.payment_type', 'installment')
+            ->assertJsonPath('data.payment.installment_count', 3);
+
+        $this->assertDatabaseHas('member_payments', [
+            'member_id' => $member->id, 'payment_type' => 'installment', 'installment_count' => 3,
+        ]);
+    }
+
+    public function test_foreign_currency_payment_keeps_original_amount_and_turkish_lira_value(): void
+    {
+        $user = User::factory()->create();
+        [$member, $reservationId] = $this->memberWithReservation();
+        foreach ([['USD', 40], ['EUR', 50]] as [$code, $rate]) {
+            ExchangeRate::create([
+                'rate_date' => '2026-09-22', 'currency_code' => $code, 'currency_name' => $code,
+                'forex_buying' => $rate, 'forex_selling' => $rate,
+            ]);
+        }
+
+        $response = $this->actingAs($user)->postJson("/api/members/{$member->id}/payments", [
+            'reservation_id' => $reservationId, 'paid_at' => '2026-09-22',
+            'amount' => 100, 'currency' => 'USD', 'payment_type' => 'cash',
+        ])->assertCreated();
+
+        $response->assertJsonPath('data.payment.currency', 'USD')
+            ->assertJsonPath('data.payment.amount_try', '4000.00')
+            ->assertJsonPath('data.payment.amount_eur', '80.00');
+        $this->assertDatabaseHas('cash_transactions', ['amount' => 4000, 'currency' => 'TRY']);
     }
 
     public function test_member_and_reservation_with_payment_cannot_be_deleted(): void

@@ -24,8 +24,10 @@ class DatabaseSeeder extends Seeder
         }
 
         Member::query()->updateOrCreate(['member_no' => '035'], [
-            'full_name' => 'DENİZ YILMAZ', 'identity_number' => null, 'occupation' => 'ÖRNEK MESLEK',
-            'birth_date' => '1990-01-01', 'address' => 'Örnek Mah. No:1 İstanbul', 'phone' => '0500 000 00 01',
+            'full_name' => 'DENİZ YILMAZ', 'first_name' => 'DENİZ', 'last_name' => 'YILMAZ',
+            'identity_number' => null, 'occupation' => 'ÖRNEK MESLEK',
+            'birth_date' => '1990-01-01', 'blood_group' => null,
+            'address' => 'Örnek Mah. No:1 İstanbul', 'phone' => '0500 000 00 01',
             'email' => 'deniz.yilmaz@example.test', 'emergency_contact_name' => 'ÖRNEK KİŞİ (Yakını)',
             'emergency_phone' => '0500 000 00 02', 'membership_type' => 'Süresiz', 'duration_months' => 1,
             'valid_from' => '2026-07-18', 'valid_through' => '2026-08-18', 'payment_type' => 'Kredi Kartı',

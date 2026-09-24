@@ -38,8 +38,8 @@ class MemberApiTest extends TestCase
             ->assertOk()->assertJsonPath('data.memberNo', 'T-001');
 
         $payload = [
-            'memberNo' => 'T-001', 'name' => 'TEST ÜYE', 'identity' => '00000000000',
-            'occupation' => 'TEST', 'birthDate' => '1990-01-01', 'address' => 'Test adresi',
+            'memberNo' => 'T-001', 'firstName' => 'TEST', 'lastName' => 'ÜYE', 'identity' => '00000000000',
+            'occupation' => 'TEST', 'birthDate' => '1990-01-01', 'bloodGroup' => 'A+', 'address' => 'Test adresi',
             'phone' => '0500 000 00 00', 'email' => 'member@example.test',
             'emergencyName' => 'TEST YAKINI', 'emergencyPhone' => '0500 000 00 01',
             'membershipType' => 'Yıllık', 'durationMonths' => 12,
@@ -49,7 +49,19 @@ class MemberApiTest extends TestCase
         ];
 
         $this->actingAs($user)->putJson("/api/members/{$member->id}", $payload)
-            ->assertOk()->assertJsonPath('data.name', 'TEST ÜYE');
+            ->assertOk()
+            ->assertJsonPath('data.name', 'TEST ÜYE')
+            ->assertJsonPath('data.firstName', 'TEST')
+            ->assertJsonPath('data.lastName', 'ÜYE')
+            ->assertJsonPath('data.bloodGroup', 'A+');
+
+        $this->assertDatabaseHas('members', [
+            'id' => $member->id,
+            'first_name' => 'TEST',
+            'last_name' => 'ÜYE',
+            'full_name' => 'TEST ÜYE',
+            'blood_group' => 'A+',
+        ]);
 
         $this->assertNotSame('00000000000', DB::table('members')->where('id', $member->id)->value('identity_number'));
     }
@@ -64,6 +76,25 @@ class MemberApiTest extends TestCase
             ->assertJsonPath('message', 'Misafir kaydı silindi.');
 
         $this->assertDatabaseMissing('members', ['id' => $member->id]);
+    }
+
+    public function test_identity_number_must_contain_exactly_eleven_digits(): void
+    {
+        $user = User::factory()->create();
+        $member = $this->member();
+        $payload = [
+            'memberNo' => 'T-001', 'firstName' => 'TEST', 'lastName' => 'ÜYE',
+            'identity' => '1234567890', 'membershipType' => 'Aylık', 'status' => 'aktif',
+        ];
+
+        $this->actingAs($user)->putJson("/api/members/{$member->id}", $payload)
+            ->assertUnprocessable()
+            ->assertJsonValidationErrors(['identity']);
+
+        $payload['identity'] = '1234567890A';
+        $this->actingAs($user)->putJson("/api/members/{$member->id}", $payload)
+            ->assertUnprocessable()
+            ->assertJsonValidationErrors(['identity']);
     }
 
     public function test_authenticated_user_can_list_each_reserved_service_for_member(): void
@@ -99,7 +130,7 @@ class MemberApiTest extends TestCase
     private function member(): Member
     {
         return Member::create([
-            'member_no' => 'T-001', 'full_name' => 'ÖRNEK ÜYE',
+            'member_no' => 'T-001', 'full_name' => 'ÖRNEK ÜYE', 'first_name' => 'ÖRNEK', 'last_name' => 'ÜYE',
             'membership_type' => 'Aylık', 'status' => 'aktif',
         ]);
     }

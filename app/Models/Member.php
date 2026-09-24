@@ -11,7 +11,7 @@ class Member extends Model
     use HasFactory;
 
     protected $fillable = [
-        'member_no', 'full_name', 'identity_number', 'occupation', 'birth_date',
+        'member_no', 'full_name', 'first_name', 'last_name', 'identity_number', 'occupation', 'birth_date', 'blood_group',
         'address', 'phone', 'email', 'emergency_contact_name', 'emergency_phone',
         'membership_type', 'duration_months', 'valid_from', 'valid_through',
         'payment_type', 'contract_amount', 'invoice_address', 'status',
@@ -33,5 +33,10 @@ class Member extends Model
     public function measurements(): HasMany
     {
         return $this->hasMany(MemberMeasurement::class);
+    }
+
+    public function visits(): HasMany
+    {
+        return $this->hasMany(MemberVisit::class);
     }
 }

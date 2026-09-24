@@ -134,9 +134,12 @@ class MemberController extends Controller
     private function attributes(array $data): array
     {
         return [
-            'member_no' => $data['memberNo'], 'full_name' => $data['name'],
+            'member_no' => $data['memberNo'],
+            'first_name' => trim($data['firstName']), 'last_name' => trim($data['lastName']),
+            'full_name' => trim($data['firstName'].' '.$data['lastName']),
             'identity_number' => $data['identity'] ?? null, 'occupation' => $data['occupation'] ?? null,
-            'birth_date' => $data['birthDate'] ?? null, 'address' => $data['address'] ?? null,
+            'birth_date' => $data['birthDate'] ?? null, 'blood_group' => $data['bloodGroup'] ?? null,
+            'address' => $data['address'] ?? null,
             'phone' => $data['phone'] ?? null, 'email' => $data['email'] ?? null,
             'emergency_contact_name' => $data['emergencyName'] ?? null, 'emergency_phone' => $data['emergencyPhone'] ?? null,
             'membership_type' => $data['membershipType'], 'duration_months' => $data['durationMonths'] ?? null,

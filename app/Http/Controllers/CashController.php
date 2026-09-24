@@ -60,7 +60,7 @@ class CashController extends Controller
     public function updateTransaction(Request $request, CashTransaction $cashTransaction): JsonResponse
     {
         if (MemberPayment::where('cash_transaction_id', $cashTransaction->id)->exists()) {
-            throw ValidationException::withMessages(['transaction' => 'Misafir tahsilatları, misafirin Hizmetler ekranından yönetilir.']);
+            throw ValidationException::withMessages(['transaction' => 'Misafir tahsilatları, misafir kartının Muhasebe sekmesinden yönetilir.']);
         }
         $cashTransaction->update($this->transactionData($request));
 
@@ -70,7 +70,7 @@ class CashController extends Controller
     public function destroyTransaction(CashTransaction $cashTransaction): JsonResponse
     {
         if (MemberPayment::where('cash_transaction_id', $cashTransaction->id)->exists()) {
-            throw ValidationException::withMessages(['transaction' => 'Misafir tahsilatları, misafirin Hizmetler ekranından silinir.']);
+            throw ValidationException::withMessages(['transaction' => 'Misafir tahsilatları, misafir kartının Muhasebe sekmesinden silinir.']);
         }
         $cashTransaction->delete();
 
@@ -127,8 +127,8 @@ class CashController extends Controller
             'description' => ['required', 'string', 'max:255'],
             'type' => ['required', Rule::in(['income', 'expense'])],
             'amount' => ['required', 'numeric', 'gt:0'],
-            'currency' => ['nullable', Rule::in(['TRY', 'EUR'])],
-            'payment_type' => ['required', Rule::in(['cash', 'credit_card', 'transfer', 'room_charge'])],
+            'currency' => ['nullable', Rule::in(['TRY', 'USD', 'EUR'])],
+            'payment_type' => ['required', Rule::in(['cash', 'credit_card', 'transfer', 'room_charge', 'installment'])],
             'category_id' => ['nullable', 'integer', 'exists:cash_categories,id'],
             'document_no' => ['nullable', 'string', 'max:100'],
         ]);

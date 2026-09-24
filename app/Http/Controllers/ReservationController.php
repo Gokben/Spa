@@ -90,6 +90,16 @@ class ReservationController extends Controller
         ]);
     }
 
+    public function updateStatus(Request $request, Reservation $reservation): JsonResponse
+    {
+        $data = $request->validate([
+            'status' => ['required', Rule::in(['planned', 'confirmed', 'completed', 'cancelled', 'no_show'])],
+        ]);
+        $reservation->update($data);
+
+        return response()->json(['data' => $reservation->refresh()]);
+    }
+
     public function destroy(Reservation $reservation): JsonResponse
     {
         if (MemberPayment::where('reservation_id', $reservation->id)->exists()) {

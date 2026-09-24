@@ -461,3 +461,96 @@ Git Version Control içindeki otomatik dağıtım ekranı geçmişte “Yükleni
 
 - Kayıtlı misafir kartı başlığından `Misafir Kartı` metni ve misafir numarası kaldırıldı.
 - Başlıkta yalnızca misafirin adı soyadı gösteriliyor.
+# 2026-09-24 — Masaüstü sürüm göstergesi
+
+- Sağ alt köşedeki saat kaldırıldı ve yerine `Versiyon ggaaY.sıra` biçimindeki yazılım sürümü yerleştirildi.
+- Golf yazılımındaki sürüm sistemiyle aynı kurallar kullanıldı: İstanbul tarihine göre gün-ay-yılın son hanesi ve aynı gündeki yayın sıra numarası.
+- `public/release.json` sürüm kaynağı, `/api/app-release` doğrulanmış ve önbelleksiz API uç noktası, `npm run release:prepare` yayın hazırlama komutu eklendi.
+- Arayüz sürüm bilgisini açılışta ve dakikada bir yeniler; bilgi alınamazsa son gösterilen değeri korur.
+
+# 2026-09-24 — Misafir kartı üyelik başlığı
+
+- Misafir kartındaki `ÜYELİK BİLGİLERİ` ara başlığı kaldırıldı; üyelik alanları mevcut konumunda korunuyor.
+
+# 2026-09-24 — Misafir adı, yaşı ve kan grubu
+
+- Misafir kartındaki tek `Adı Soyadı` alanı ayrı `Ad` ve `Soyad` girişlerine dönüştürüldü; birleşik ad mevcut liste ve rezervasyon uyumluluğu için sunucuda üretilmeye devam ediyor.
+- Doğum tarihi değiştiğinde güncel tarihe göre otomatik hesaplanan salt okunur `Yaş` alanı eklendi.
+- `Kan Grubu` alanı A, B, AB ve 0 gruplarının pozitif/negatif seçenekleriyle eklendi.
+- Mevcut misafir adlarını ad/soyad sütunlarına aktaran veritabanı geçişi eklendi.
+
+# 2026-09-24 — Misafir kartı üyelik işlemleri
+
+- Misafir kartındaki üyelik alanının sağ altına `Sözleşme`, `Sözleşme Yükle` ve `Sağlık Geçmişi` işlem butonları eklendi.
+
+# 2026-09-24 — Ödeme takibinin Muhasebe sekmesine taşınması
+
+- Misafir kartındaki `ÖDEME TAAHHÜTNAMESİ` başlığı ve eski statik ödeme alanları kaldırıldı.
+- Toplam hizmet tutarı, ödenen tutar, kalan borç, rezervasyon bazlı ödeme alma formu ve tahsilat geçmişi misafir kartının `Muhasebe` sekmesine taşındı.
+- Tahsilat silme işlemi ve bağlı Ön Kasa gelirini kaldırma davranışı korunuyor.
+- Misafir listesindeki `Hizmetler` penceresi yalnızca rezervasyonlu hizmetleri göstermeye ayrıldı.
+
+# 2026-09-24 — Hizmetler başlığından üyelik numarası
+
+- Misafirin Hizmetler penceresindeki başlık ve özet alanından üyelik numarası kaldırıldı; yalnızca misafir adı gösteriliyor.
+
+# 2026-09-24 — Kısa sürüm etiketi
+
+- Sağ alt köşedeki sürüm göstergesi `Versiyon` yerine `Vrs:` etiketiyle kısaltıldı.
+
+# 2026-09-24 — Misafir Hizmetler ekranından hizmet ekleme
+
+- Misafirin Hizmetler penceresine `Hizmet Ekle` butonu eklendi.
+- Buton mevcut rezervasyon giriş ekranını açar ve ilgili misafiri otomatik seçer; kullanıcı hizmet, tarih, saat ve terapisti belirleyip rezervasyonu kaydedebilir.
+
+# 2026-09-24 — Ölçümler başlığından üyelik numarası
+
+- Misafirin Ölçümler penceresindeki üst başlık ve özet alanından üyelik numarası kaldırıldı; yalnızca misafir adı gösteriliyor.
+
+# 2026-09-24 — Ölçüm satırından düzenleme
+
+- Ölçüm tarihçesindeki bir satırın veri alanlarına tıklanınca ilgili ölçüm sağdaki ayrıntı bölümünde düzenleme modunda açılıyor.
+- Düzenleme ve silme işlem düğmelerinin mevcut davranışı korundu; satırlara üzerine gelme vurgusu eklendi.
+
+# 2026-09-24 — Misafir belge düğmeleri görünümü
+
+- Sözleşme, sözleşme yükleme ve sağlık geçmişi düğmeleri normal durumda renkli ikon olarak gösteriliyor.
+- Fareyle üzerine gelindiğinde veya klavyeyle odaklandığında düğme genişleyerek işlem adını gösteriyor.
+
+# 2026-09-24 — Misafir kartında üçlü alan düzeni
+
+- Geniş ekranda misafir kartının her satırında üç etiket–veri alanı çifti gösterilecek şekilde form 6 kolonlu ızgaraya dönüştürüldü.
+- Adres gibi geniş alanlar tam satırı kullanıyor; orta ve dar ekranlarda sırasıyla iki ve tek veri alanlı uyarlanabilir düzen korunuyor.
+
+# 2026-09-24 — Belge işlem ikonları
+
+- Sözleşme ikonu imzalı belge, sözleşme yükleme ikonu yukarı ok–yükleme simgesiyle değiştirildi.
+- Belge ve sağlık geçmişi ikonları daha büyük ve belirgin renklerle gösteriliyor.
+
+# 2026-09-24 — TC Kimlik No doğrulaması
+
+- Misafir kartındaki TC Kimlik No alanı girildiğinde tam 11 rakam olma zorunluluğu getirildi.
+- Eksik, fazla veya harf içeren değerler hem tarayıcıda hem API doğrulamasında reddediliyor.
+
+# 2026-09-24 — Üyelik alanlarında dörtlü düzen
+
+- Üyelik Türü, Süresi, Başlangıç ve Bitiş alanları geniş ekranda aynı satırda dört veri alanı olarak yerleştirildi.
+- Kişisel bilgilerdeki üçlü düzen korunurken üyelik alanları orta ve dar ekranlarda iki ve tek alanlı düzene geçiyor.
+
+# 2026-09-24 — Taksitli ödeme
+
+- Misafir tahsilatındaki ödeme türlerine `Taksit` seçeneği eklendi.
+- Taksit seçildiğinde 1–3 arasında taksit sayısı seçiliyor; API üçten fazla taksiti reddediyor.
+- Taksit sayısı tahsilat kaydında saklanıyor, tahsilat geçmişinde ve bağlı Ön Kasa açıklamasında gösteriliyor.
+
+# 2026-09-24 — Çoklu para birimi ve TCMB kurları
+
+- Misafir tahsilatlarında varsayılan TL olmak üzere TL, USD ve EUR seçimi eklendi.
+- Yabancı para tutarı, kullanılan TCMB döviz alış kuru, sabit TL karşılığı ve rezervasyon borç kontrolü için EUR karşılığı tahsilat kaydında saklanıyor.
+- TCMB USD/EUR döviz alış-satış ve efektif alış-satış kurları tarihsel olarak `exchange_rates` tablosunda tutuluyor.
+- `exchange-rates:refresh` komutu TCMB günlük bülteni yayımlandıktan sonra çalışması için her gün Europe/Istanbul saat diliminde 16:00'ya zamanlandı; ödeme sırasında güncel kur yoksa otomatik yenileme deneniyor ve başarısızlıkta son kayıtlı kur kullanılıyor.
+
+# 2026-09-24 — Görünüm Ayarları kaldırıldı
+
+- Başlat menüsündeki `Görünüm Ayarları` seçeneği ile arka plan ve renk seçim paneli kaldırıldı.
+- Kullanılmayan tema JavaScript'i ve ilgili stiller temizlendi; masaüstü kalıcı olarak varsayılan Sofitel yeşil görünümünü kullanıyor.

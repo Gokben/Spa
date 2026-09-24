@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\AppReleaseController;
 use App\Http\Controllers\BusinessHourController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\CashController;
@@ -10,6 +11,7 @@ use App\Http\Controllers\EmployeeScheduleController;
 use App\Http\Controllers\MemberController;
 use App\Http\Controllers\MemberPaymentController;
 use App\Http\Controllers\MemberMeasurementController;
+use App\Http\Controllers\MemberVisitController;
 use App\Http\Controllers\OccupationController;
 use App\Http\Controllers\ReservationController;
 use App\Http\Controllers\ServiceGroupController;
@@ -25,6 +27,8 @@ Route::get('/', function () {
     return view('spa');
 });
 
+Route::get('/api/app-release', AppReleaseController::class);
+
 Route::post('/login', [AuthController::class, 'store'])->middleware('guest')->name('login');
 Route::post('/logout', [AuthController::class, 'destroy'])->middleware('auth');
 
@@ -39,6 +43,11 @@ Route::middleware(SpaAuthenticate::class)->prefix('api')->group(function () {
     Route::post('members/{member}/measurements', [MemberMeasurementController::class, 'store']);
     Route::put('members/{member}/measurements/{measurement}', [MemberMeasurementController::class, 'update']);
     Route::delete('members/{member}/measurements/{measurement}', [MemberMeasurementController::class, 'destroy']);
+    Route::get('members/{member}/visits', [MemberVisitController::class, 'index']);
+    Route::post('members/{member}/visits', [MemberVisitController::class, 'store']);
+    Route::put('members/{member}/visits/{visit}', [MemberVisitController::class, 'update']);
+    Route::delete('members/{member}/visits/{visit}', [MemberVisitController::class, 'destroy']);
+    Route::post('members/{member}/visits/{visit}/checkout', [MemberVisitController::class, 'checkout']);
     Route::apiResource('members', MemberController::class)->only(['index', 'show', 'store', 'update', 'destroy']);
     Route::apiResource('work-shifts', WorkShiftController::class)->only(['index', 'store', 'update', 'destroy']);
     Route::get('business-hours', [BusinessHourController::class, 'index']);
@@ -66,6 +75,7 @@ Route::middleware(SpaAuthenticate::class)->prefix('api')->group(function () {
     Route::delete('cash/categories/{cashCategory}', [CashController::class, 'destroyCategory']);
     Route::put('cash/closing', [CashController::class, 'saveClosing']);
     Route::apiResource('reservations', ReservationController::class)->only(['index', 'show', 'store', 'update', 'destroy']);
+    Route::patch('reservations/{reservation}/status', [ReservationController::class, 'updateStatus']);
     Route::apiResource('packages', SpaPackageController::class)->only(['index', 'store', 'update', 'destroy']);
     Route::apiResource('current-accounts', CurrentAccountController::class)->only(['index', 'show', 'store', 'update', 'destroy']);
     Route::get('sms', [SmsController::class, 'index']);
